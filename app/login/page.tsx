@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function LoginPage() {
@@ -67,7 +68,13 @@ export default function LoginPage() {
           </p>
 
           {/* Submit button */}
-          <div className="flex justify-end">
+          <div className="flex items-center justify-between">
+            <Link
+              href="/register"
+              className="text-sm text-gray-500 underline hover:text-black"
+            >
+              ยังไม่มีบัญชี? สมัครสมาชิก
+            </Link>
             <button
               type="submit"
               className="rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800"
