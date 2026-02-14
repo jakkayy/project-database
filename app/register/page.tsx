@@ -2,19 +2,33 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { register } from "../lib/apiServices/auth.service";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log("Register email:", email);
-    console.log("Register password:", password);
-  };
+    setError("");
+
+    try {
+      await register({ firstname, lastname, email, password });
+
+      router.push("/");
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message || "Register failed");
+    }
+  }
+
+
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-white">
@@ -33,7 +47,7 @@ export default function RegisterPage() {
         </h1>
 
         {/* Form */}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleRegister}>
           <div className="mb-6">
             <input
               type="text"
