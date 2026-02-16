@@ -65,7 +65,7 @@ export default async function ProfilePage() {
         <Link href="/favorites" className="hover:text-black pb-3 -mb-4">
           รายการโปรด
         </Link>
-        <Link href="#" className="hover:text-black pb-3 -mb-4">
+        <Link href="/setting" className="hover:text-black pb-3 -mb-4">
           การตั้งค่า
         </Link>
       </div>
