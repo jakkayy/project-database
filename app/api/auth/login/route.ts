@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     }
 
     const token = signToken({
-        id: user.id,
+        user_id: user.id,
         role: user.role,
     });
 
@@ -39,7 +39,5 @@ export async function POST(req: Request) {
         path: "/",
     });
 
-    return NextResponse.json({
-        user: { user_id: user.id, role: user.role }
-    });
+    return NextResponse.json({ user_id: user.id, role: user.role });
 }

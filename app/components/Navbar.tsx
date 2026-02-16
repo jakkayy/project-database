@@ -1,32 +1,64 @@
+import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
+import { verifyToken } from "../lib/jwt";
+import { prisma } from "../lib/prisma";
 
-export default function Navbar() {
+export default async function Navbar() {
+  const token = (await cookies()).get("access_token")?.value;
+
+  let account = null;
+
+  if (token) {
+    try {
+      const user = verifyToken(token);
+
+      account = await prisma.user.findUnique({
+        where: { id: user.user_id },
+        select: { firstname: true }
+      });
+    } catch {
+      account = null;
+    }
+  }
+
   return (
     <header className="sticky top-0 z-50">
-      {/* Top bar */}
       <div className="flex items-center justify-between bg-gray-100 px-10 py-2">
         <Image src="/jordan.svg" alt="Jordan" width={20} height={20} />
+
         <div className="flex items-center gap-1 text-xs text-black">
           <Link href="#" className="px-2 hover:text-gray-500">
             ค้นหาร้าน
           </Link>
+
           <span className="text-gray-300">|</span>
+
           <Link href="#" className="px-2 hover:text-gray-500">
             ความช่วยเหลือ
           </Link>
+
           <span className="text-gray-300">|</span>
+
           <Link href="/register" className="px-2 hover:text-gray-500">
             เข้าร่วมกับเรา
           </Link>
+
           <span className="text-gray-300">|</span>
-          <Link href="/login" className="px-2 hover:text-gray-500">
-            ลงชื่อเข้าใช้
-          </Link>
+
+          {account ? (
+            <Link href="/profile" className="px-2 hover:text-gray-500">
+              สวัสดีคุณ {account.firstname}
+            </Link>
+          ) : (
+            <Link href="/login" className="px-2 hover:text-gray-500">
+              ลงชื่อเข้าใช้
+            </Link>
+          )}
         </div>
       </div>
-
-    <nav className="flex items-center justify-between border-b border-gray-200 bg-white px-10 py-3">
+      
+      <nav className="flex items-center justify-between border-b border-gray-200 bg-white px-10 py-3">
       {/* Logo */}
       <Link href="/">
         <Image src="/nike.svg" alt="Nike" width={60} height={24} />
