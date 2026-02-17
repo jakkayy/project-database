@@ -6,7 +6,7 @@ import { Role } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-    const { email, password} = await req.json();
+    const { email, password } = await req.json();
 
     const user = await prisma.user.findUnique({
         where: { email: email },
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     }
 
     const token = signToken({
-        user_id: user.id,
+        user_id: user.user_id,
         role: user.role,
     });
 
@@ -39,5 +39,5 @@ export async function POST(req: Request) {
         path: "/",
     });
 
-    return NextResponse.json({ user_id: user.id, role: user.role });
+    return NextResponse.json({ user_id: user.user_id, role: user.role });
 }

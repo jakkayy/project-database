@@ -29,13 +29,13 @@ export async function POST(req: Request) {
             password: hashPassword,
         },
         select: {
-            id: true,
+            user_id: true,
             role: true,
         }
     });
 
     const token = signToken({
-        id: user.id,
+        id: user.user_id,
         role: user.role,
     });
     
@@ -46,6 +46,6 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({
-        user: { user_id: user.id, role: user.role }
+        user: { user_id: user.user_id, role: user.role }
     });
 }
