@@ -1,6 +1,6 @@
-import Navbar from "./components/Navbar";
-import NewArrivals from "./components/NewArrivals";
-import ShopBySport from "./components/ShopBySport";
+import Navbar from "@/app/components/Navbar";
+import NewArrivals from "@/app/components/NewArrivals";
+import ShopBySport from "@/app/components/ShopBySport";
 
 export default function Home() {
   return (

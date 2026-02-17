@@ -1,6 +1,6 @@
-import Navbar from "../components/Navbar";
-import CartItem from "../components/CartItem";
-import CartSummary from "../components/CartSummary";
+import Navbar from "../../components/Navbar";
+import CartItem from "../../components/CartItem";
+import CartSummary from "../../components/CartSummary";
 
 const cartItems = [
   {
