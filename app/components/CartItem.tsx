@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { deleteCart, updateCartItem } from "../lib/apiServices/user.service";
 
 interface CartItemProps {
+  cartItem_id: number;
   image: string;
   name: string;
   description: string;
@@ -11,9 +13,11 @@ interface CartItemProps {
   size: string;
   price: string;
   initialQty?: number;
+  onRemove: (id: number) => void;
 }
 
 export default function CartItem({
+  cartItem_id,
   image,
   name,
   description,
@@ -21,6 +25,7 @@ export default function CartItem({
   size,
   price,
   initialQty = 1,
+  onRemove
 }: CartItemProps) {
   const [qty, setQty] = useState(initialQty);
 
@@ -55,7 +60,18 @@ export default function CartItem({
       {/* Actions: delete, qty, add, wishlist */}
       <div className="mt-4 flex items-center gap-3 pl-40">
         {/* Delete */}
-        <button className="text-gray-400 hover:text-black">
+        <button
+          onClick={async () => {
+            try {
+              console.log("sending id:", cartItem_id);
+              await deleteCart(cartItem_id); 
+              onRemove(cartItem_id);          
+            } catch (err) {
+              console.error("Failed to remove item", err);
+            }
+          }}
+          className="text-gray-400 hover:text-black"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -74,7 +90,14 @@ export default function CartItem({
 
         {/* Minus */}
         <button
-          onClick={() => setQty((q) => Math.max(1, q - 1))}
+          onClick={async () => {
+            try {
+              await updateCartItem(cartItem_id, "decrease");
+              setQty((q) => Math.max(1, q - 1));
+            } catch (err) {
+              console.error(err);
+            }
+          }}
           className="flex h-7 w-7 items-center justify-center rounded-full border border-gray-300 text-gray-600 hover:border-black hover:text-black"
         >
           <svg
@@ -94,7 +117,14 @@ export default function CartItem({
 
         {/* Plus */}
         <button
-          onClick={() => setQty((q) => q + 1)}
+          onClick={async () => {
+            try {
+              await updateCartItem(cartItem_id, "increase");
+              setQty((q) => q + 1);
+            } catch (err) {
+              console.error(err);
+            }
+          }}
           className="flex h-7 w-7 items-center justify-center rounded-full border border-gray-300 text-gray-600 hover:border-black hover:text-black"
         >
           <svg
@@ -113,7 +143,7 @@ export default function CartItem({
           </svg>
         </button>
 
-        {/* Wishlist */}
+        {/* Favorite */}
         <button className="text-gray-400 hover:text-black">
           <svg
             xmlns="http://www.w3.org/2000/svg"
