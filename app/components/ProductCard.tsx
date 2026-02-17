@@ -33,6 +33,8 @@ export default function ProductCard({
     </div>
   );
 
+  console.log("IMAGE:", image);
+
   if (slug) {
     return <Link href={`/product/${slug}`}>{content}</Link>;
   }
