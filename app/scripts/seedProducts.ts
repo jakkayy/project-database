@@ -26,7 +26,7 @@ async function seed() {
         slug: "air-zoom-alpha",
         category: "Running",
         basePrice: 4900,
-        images: ["http://localhost:3000/_next/image?url=https%3A%2F%2Fstatic.nike.com%2Fa%2Fimages%2Ft_web_pw_592_v2%2Ff_auto%2Fu_9ddf04c7-2a9a-4d76-add1-d15af8f0263d%2Cc_scale%2Cfl_relative%2Cw_1.0%2Ch_1.0%2Cfl_layer_apply%2F802aa7ae-10bf-46b4-ac61-9ddf0f79f890%2FAIR%2BZOOM%2BALPHAFLY%2BNEXT%2525%2B3.png&w=640&q=75"],
+        images: ["https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto,u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/477abbf8-b37a-4fe6-b516-08e294a8487a/AIR+ZOOM+ALPHAFLY+NEXT%25+3.png"],
         variants: [
           {
             color: "Black",
