@@ -1,43 +1,27 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
-
-const products = [
-  {
-    image: "/products/shoe1.svg",
-    name: 'Book 2 "Spiridon" EP',
-    category: "รองเท้าบาสเก็ตบอล",
-    price: "฿5,400",
-  },
-  {
-    image: "/products/shoe2.svg",
-    name: 'Air Jordan 9 Retro "Flint Grey and French Blue"',
-    category: "รองเท้าผู้ชาย",
-    price: "฿7,500",
-  },
-  {
-    image: "/products/shoe3.svg",
-    name: "Nike ACG Ultrafly Trail",
-    category: "รองเท้าวิ่งเทรล",
-    price: "฿8,700",
-  },
-  {
-    image: "/products/shoe4.svg",
-    name: "Nike Air Max Dn",
-    category: "รองเท้าผู้ชาย",
-    price: "฿6,300",
-  },
-  {
-    image: "/products/shoe5.svg",
-    name: "Nike Dunk Low Retro",
-    category: "รองเท้าผู้ชาย",
-    price: "฿3,800",
-  },
-];
+import { getAllProduct } from "../lib/apiServices/user.service";
 
 export default function NewArrivals() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [products, setProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const data = await getAllProduct();
+
+      const mapped = data.map((p: any) => ({
+        ...p,
+        image: p.images?.[0] || "",
+      }));
+
+      setProducts(mapped);
+    };
+
+    fetchProducts();
+  }, []);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
