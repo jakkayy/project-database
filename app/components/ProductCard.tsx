@@ -1,19 +1,22 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface ProductCardProps {
   image: string;
   name: string;
   category: string;
-  price: string;
+  basePrice: string;
+  slug?: string;
 }
 
 export default function ProductCard({
   image,
   name,
   category,
-  price,
+  basePrice,
+  slug,
 }: ProductCardProps) {
-  return (
+  const content = (
     <div className="min-w-75 shrink-0 cursor-pointer">
       <div className="mb-3 aspect-square w-full overflow-hidden bg-gray-100">
         <Image
@@ -26,7 +29,13 @@ export default function ProductCard({
       </div>
       <h3 className="text-base font-medium text-black">{name}</h3>
       <p className="text-sm text-gray-500">{category}</p>
-      <p className="mt-1 text-base text-black">{price}</p>
+      <p className="mt-1 text-base text-black">{basePrice} ฿</p>
     </div>
   );
+
+  if (slug) {
+    return <Link href={`/product/${slug}`}>{content}</Link>;
+  }
+
+  return content;
 }
