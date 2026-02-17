@@ -14,7 +14,7 @@ export default async function Navbar() {
       const user = verifyToken(token);
 
       account = await prisma.user.findUnique({
-        where: { id: user.user_id },
+        where: { user_id: user.user_id },
         select: { firstname: true }
       });
     } catch {
