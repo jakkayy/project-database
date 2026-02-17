@@ -47,7 +47,7 @@ export default async function Navbar() {
           <span className="text-gray-300">|</span>
 
           {account ? (
-            <Link href="/user/profile" className="px-2 hover:text-gray-500">
+            <Link href="/profile" className="px-2 hover:text-gray-500">
               สวัสดีคุณ {account.firstname}
             </Link>
           ) : (
@@ -120,7 +120,7 @@ export default async function Navbar() {
         </div>
 
         {/* Wishlist */}
-        <Link href="/user/favorites" className="p-1">
+        <Link href="/favorites" className="p-1">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -138,7 +138,7 @@ export default async function Navbar() {
         </Link>
 
         {/* Cart */}
-        <Link href="/user/cart" className="p-1">
+        <Link href="/cart" className="p-1">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

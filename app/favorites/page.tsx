@@ -1,5 +1,5 @@
-import Navbar from "../../components/Navbar";
-import FavoritesItem from "../../components/FavoritesItem";
+import Navbar from "@/app/components/Navbar";
+import FavoritesItem from "@/app/components/FavoritesItem";
 
 const favoritesItems = [
   {
