@@ -17,9 +17,14 @@ export default function LoginPage() {
     setError("");
 
     try {
-      await login({ email, password });
+      const res = await login({ email, password });
 
-      router.push("/");
+      if (res.role === "ADMIN") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/");
+      }
+      
       router.refresh();
     } catch (err: any) {
       setError(err.message || "Login failed");
