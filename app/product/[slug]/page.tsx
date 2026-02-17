@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { addCart } from "@/app/lib/apiServices/user.service";
 
 interface Variant {
   color: string;
@@ -48,6 +49,29 @@ export default function ProductDetailPage() {
     }
     if (slug) fetchProduct();
   }, [slug]);
+
+  const handleAddToCart = async () => {
+    if (!product) return;
+
+    // if (!selectedSize) {
+    //   alert("กรุณาเลือกไซส์ก่อน");
+    //   return;
+    // }
+
+    try {
+      await addCart({
+        product_id: product._id,
+        quantity: 1,
+        basePrice: product.basePrice,
+      });
+
+      alert("เพิ่มลงตะกร้าแล้ว");
+    } catch (error) {
+      console.error(error);
+      alert("เกิดข้อผิดพลาด");
+    }
+  };
+
 
   if (loading) {
     return (
@@ -246,7 +270,9 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Add to cart button */}
-            <button className="mt-8 w-full rounded-full bg-black py-4 text-base font-medium text-white transition-colors hover:bg-gray-800">
+            <button 
+              onClick={handleAddToCart}
+              className="mt-8 w-full rounded-full bg-black py-4 text-base font-medium text-white transition-colors hover:bg-gray-800">
               เพิ่มในตะกร้า
             </button>
 
