@@ -1,5 +1,5 @@
-import Navbar from "../../components/Navbar";
-import SettingContent from "../../components/SettingContent";
+import Navbar from "@/app//components/Navbar";
+import SettingContent from "@/app/components/SettingContent";
 
 export default function SettingPage() {
   return (

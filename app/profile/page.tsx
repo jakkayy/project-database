@@ -25,9 +25,9 @@ export default async function ProfilePage() {
   try {
     const payload = verifyToken(token);
     user = await prisma.user.findUnique({
-      where: { id: payload.user_id },
+      where: { user_id: payload.user_id },
       select: {
-        id: true,
+        user_id: true,
         firstname: true,
         lastname: true,
         email: true,
