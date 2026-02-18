@@ -38,14 +38,6 @@ export default function CartSummary({ subtotal, total }: CartSummaryProps) {
       <button className="mt-8 w-full rounded-full bg-black py-4 text-base font-medium text-white transition-colors hover:bg-gray-800">
         สมาชิกชำระเงิน
       </button>
-
-      {/* PayPal */}
-      <div className="mt-3 flex w-full items-center justify-center rounded-full border border-gray-300 py-3">
-        <span className="text-base font-bold italic text-blue-800">
-          Pay
-        </span>
-        <span className="text-base font-bold italic text-blue-500">Pal</span>
-      </div>
     </div>
   );
 }
