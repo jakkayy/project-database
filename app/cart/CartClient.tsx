@@ -16,12 +16,18 @@ export default function CartClient({ items, total }: Props) {
     setCartItems(prev => prev.filter(item => item.cartItem_id !== id));
   };
 
+  const handleQuantityChange = (id: number, newQty: number) => {
+    setCartItems(prev =>
+      prev.map(item =>
+        item.cartItem_id === id ? { ...item, quantity: newQty } : item
+      )
+    );
+  };
+
   const newTotal = cartItems.reduce(
-    (sum, item) => sum + item.price,
+    (sum, item) => sum + item.price * item.quantity,
     0
   );
-
-  console.log(items);
 
   return (
     <div className="mx-auto max-w-7xl px-10 py-10">
@@ -44,6 +50,7 @@ export default function CartClient({ items, total }: Props) {
               })}
               initialQty={item.quantity}
               onRemove={handleRemove}
+              onQuantityChange={handleQuantityChange}
             />
           ))}
         </div>

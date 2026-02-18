@@ -14,6 +14,7 @@ interface CartItemProps {
   price: string;
   initialQty?: number;
   onRemove: (id: number) => void;
+  onQuantityChange?: (id: number, newQty: number) => void;
 }
 
 export default function CartItem({
@@ -25,7 +26,8 @@ export default function CartItem({
   size,
   price,
   initialQty = 1,
-  onRemove
+  onRemove,
+  onQuantityChange
 }: CartItemProps) {
   const [qty, setQty] = useState(initialQty);
 
@@ -92,8 +94,18 @@ export default function CartItem({
         <button
           onClick={async () => {
             try {
+              if (qty === 1) {
+                await deleteCart(cartItem_id);
+                onRemove(cartItem_id);
+                return;
+              }
+
               await updateCartItem(cartItem_id, "decrease");
-              setQty((q) => Math.max(1, q - 1));
+
+              const newQty = qty - 1;
+              setQty(newQty);
+              onQuantityChange?.(cartItem_id, newQty);
+
             } catch (err) {
               console.error(err);
             }
@@ -120,7 +132,11 @@ export default function CartItem({
           onClick={async () => {
             try {
               await updateCartItem(cartItem_id, "increase");
-              setQty((q) => q + 1);
+
+              const newQty = qty + 1;
+              setQty(newQty);
+              onQuantityChange?.(cartItem_id, newQty);
+
             } catch (err) {
               console.error(err);
             }
