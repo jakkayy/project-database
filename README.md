@@ -1,4 +1,4 @@
-# Database Project — Nike-Style E-Commerce
+# Database Project — Niko E-Commerce
 
 ระบบ E-Commerce สไตล์ Nike สร้างด้วย **Next.js 16 (App Router)** ใช้ฐานข้อมูลแบบ Polyglot โดยเก็บข้อมูลผู้ใช้/ออเดอร์ใน **MySQL (Prisma)** และข้อมูลสินค้าใน **MongoDB (Mongoose)**
 
