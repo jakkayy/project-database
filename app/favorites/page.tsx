@@ -8,6 +8,12 @@ const favoritesItems = [
     category: "รองเท้าผู้ชาย",
     price: "฿3,700",
   },
+  {
+    image: "/products/shoe1.svg",
+    name: "Nike Mercury '07",
+    category: "รองเท้าฟุตบอลผู้ชาย",
+    price: "฿4,000",
+  },
 ];
 
 export default function FavoritesPage() {
