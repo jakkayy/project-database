@@ -7,7 +7,7 @@ export async function POST(req: Request) {
     const token = (await cookies()).get("access_token")?.value;
     const user = requireAuth(token, "USER");
 
-    const { product_id, quantity, basePrice } = await req.json();
+    const { product_id, quantity, basePrice, size } = await req.json();
 
     const cart = await prisma.cart.upsert({
         where: { user_id: user.user_id },
@@ -42,11 +42,12 @@ export async function POST(req: Request) {
             product_id,
             quantity: quantity ?? 1,
             price: basePrice,
+            size: size,
         },
     })
 
     return NextResponse.json({
-        messsage: "Added new item",
+        message: "Added new item",
         item,
     })
 }
