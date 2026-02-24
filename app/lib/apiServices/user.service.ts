@@ -12,6 +12,7 @@ export function addCart(data: {
     product_id: string, 
     quantity: number,
     basePrice: number,
+    size: string,
 }) {
     return apiFetch("/api/cart/add-cart", {
         method: "POST",

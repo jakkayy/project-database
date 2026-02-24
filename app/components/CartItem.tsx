@@ -52,7 +52,7 @@ export default function CartItem({
             <p className="mt-1 text-sm text-gray-500">{description}</p>
             <p className="text-sm text-gray-500">{color}</p>
             <p className="mt-1 text-sm font-medium text-black">
-              ไซส์ {size}
+              size {size}
             </p>
           </div>
           <p className="text-base text-black">{price}</p>

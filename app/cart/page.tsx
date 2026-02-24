@@ -38,12 +38,15 @@ export default async function CartPage() {
         product_id: item.product_id,
         quantity: item.quantity,
         price: Number(item.price), 
+        size: item.size,
         createdAt: item.createdAt,
         product: product
           ? {
               name: product.name,
               images: product.images,
               category: product.category,
+              color: product.color,
+              basePrice: product.basePrice,
             }
           : null,
       };

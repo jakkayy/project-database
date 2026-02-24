@@ -10,6 +10,7 @@ interface Props {
 }
 
 export default function CartClient({ items, total }: Props) {
+  console.log("เช็คข้อมูลที่ได้รับจาก API:", items);
   const [cartItems, setCartItems] = useState(items);
 
   const handleRemove = (id: number) => {
@@ -42,8 +43,8 @@ export default function CartClient({ items, total }: Props) {
               image={item.product?.images?.[0]}
               name={item.product?.name}
               description={item.product?.category}
-              color="-"
-              size="-"
+              color={item.product?.color}
+              size={item.size}
               price={item.price.toLocaleString("th-TH", {
                 style: "currency",
                 currency: "THB",

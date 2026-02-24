@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { prisma } from "@/app/lib/prisma";
@@ -31,13 +33,17 @@ export async function GET() {
         const product = await Product.findById(item.product_id);
 
         return {
-          ...item,
+          cartItem_id: item.cartItem_id, 
+          test_size: item.size,
+          price: item.price,
+          quantity: item.quantity,
           product: product
             ? {
                 name: product.name,
                 images: product.images,
                 category: product.category,
                 basePrice: product.basePrice,
+                color: product.color,
               }
             : null,
         };
