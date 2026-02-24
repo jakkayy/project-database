@@ -50,7 +50,7 @@ model Order {
 model OrderItem {
   orderItem_id        Int      @id @default(autoincrement())
   order_id   Int
-  productId String   // Mongo _id
+  product_id String   // Mongo _id
   quantity  Int
   price     Decimal  @db.Decimal(10,2)
   createdAt DateTime @default(now())
@@ -109,16 +109,17 @@ model Cart {
 }
 
 model CartItem {
-  cartItem_id        Int      @id @default(autoincrement())
-  cart_id    Int
-  product_id String   // MongoDB _id
-  quantity  Int      @default(1)
-  price     Decimal  @db.Decimal(10,2)
+  cartItem_id Int @id @default(autoincrement())
+  cart_id Int
+  product_id String
+  quantity Int @default(1)
+  price Decimal @db.Decimal(10,2)
+  size String
   createdAt DateTime @default(now())
 
-  cart      Cart     @relation(fields: [cart_id], references: [cart_id], onDelete: Cascade)
+  cart Cart @relation(fields: [cart_id], references: [cart_id], onDelete: Cascade)
 
-  @@unique([cart_id, product_id]) // กัน duplicate product ใน cart
+  @@unique([cart_id, product_id])
 }
 
 model Fav{
