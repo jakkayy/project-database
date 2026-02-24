@@ -41,3 +41,29 @@ yarn-error.log*
 next-env.d.ts
 
 /app/generated/prisma
+
+# IDEs
+/.vscode/
+/.idea/
+
+# bun
+bun.lockb
+.bun
+
+# Prisma generated client / runtime files
+/prisma/client
+/node_modules/.prisma
+
+# local DB files
+*.db
+*.sqlite
+*.sqlite3
+
+# caches and build outputs
+.cache
+.turbo
+/dist
+
+# other logs
+pnpm-debug.log*
+server.log
