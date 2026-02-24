@@ -31,8 +31,16 @@ async function seed() {
           {
             color: "Black",
             sizes: [
+              { size: "36", stock: 10 },
+              { size: "37", stock: 8 },
+              { size: "38", stock: 10 },
+              { size: "39", stock: 8 },
+              { size: "40", stock: 10 },
+              { size: "41", stock: 8 },
               { size: "42", stock: 10 },
-              { size: "43", stock: 8 }
+              { size: "43", stock: 8 },
+              { size: "44", stock: 10 },
+              { size: "45", stock: 8 }
             ]
           }
         ],
@@ -49,8 +57,16 @@ async function seed() {
           {
             color: "White",
             sizes: [
-              { size: "41", stock: 6 },
-              { size: "42", stock: 12 }
+              { size: "36", stock: 10 },
+              { size: "37", stock: 8 },
+              { size: "38", stock: 10 },
+              { size: "39", stock: 8 },
+              { size: "40", stock: 10 },
+              { size: "41", stock: 8 },
+              { size: "42", stock: 10 },
+              { size: "43", stock: 8 },
+              { size: "44", stock: 10 },
+              { size: "45", stock: 8 }
             ]
           }
         ],
@@ -67,8 +83,16 @@ async function seed() {
           {
             color: "Red",
             sizes: [
-              { size: "42", stock: 5 },
-              { size: "44", stock: 7 }
+              { size: "36", stock: 10 },
+              { size: "37", stock: 8 },
+              { size: "38", stock: 10 },
+              { size: "39", stock: 8 },
+              { size: "40", stock: 10 },
+              { size: "41", stock: 8 },
+              { size: "42", stock: 10 },
+              { size: "43", stock: 8 },
+              { size: "44", stock: 10 },
+              { size: "45", stock: 8 }
             ]
           }
         ],
