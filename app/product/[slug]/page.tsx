@@ -17,6 +17,7 @@ interface Product {
   slug: string;
   category: string;
   basePrice: number;
+  size: string;
   images: string[];
   variants: Variant[];
   tags: string[];
@@ -68,16 +69,17 @@ export default function ProductDetailPage() {
   const handleAddToCart = async () => {
     if (!product) return;
 
-    // if (!selectedSize) {
-    //   alert("กรุณาเลือกไซส์ก่อน");
-    //   return;
-    // }
+    if (!selectedSize) {
+      alert("กรุณาเลือกไซส์ก่อน");
+      return;
+    }
 
     try {
       await addCart({
         product_id: product._id,
         quantity: 1,
         basePrice: product.basePrice,
+        size: selectedSize,
       });
 
       alert("เพิ่มลงตะกร้าแล้ว");
@@ -276,9 +278,9 @@ export default function ProductDetailPage() {
                         : s.stock === 0
                           ? "cursor-not-allowed border-gray-200 text-gray-300"
                           : "border-gray-300 hover:border-black"
-                    }`}
+                    }`} 
                   >
-                    US {s.size}
+                    EU {s.size}
                   </button>
                 ))}
               </div>
