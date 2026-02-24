@@ -50,3 +50,12 @@ export function updateCartItem(
         body: JSON.stringify({ action }),
     });
 }
+
+export function addFav(data: {
+    product_id: string,
+}) {
+    return apiFetch("/api/favorite/add-fav", {
+        method: "POST",
+        body: JSON.stringify(data),
+    });
+}

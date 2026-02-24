@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { addCart } from "@/app/lib/apiServices/user.service";
+import { addCart, addFav } from "@/app/lib/apiServices/user.service";
 
 interface Variant {
   color: string;
@@ -49,6 +49,21 @@ export default function ProductDetailPage() {
     }
     if (slug) fetchProduct();
   }, [slug]);
+
+  const handleAddToFav = async () => {
+    if (!product) return;
+
+    try {
+      await addFav({
+        product_id: product._id,
+      });
+
+      alert("เพิ่มในรายการโปรดแล้ว");
+    } catch (error) {
+      console.error(error);
+      alert("เกิดข้อผิดพลาด");
+    }
+  };
 
   const handleAddToCart = async () => {
     if (!product) return;
@@ -277,7 +292,9 @@ export default function ProductDetailPage() {
             </button>
 
             {/* Wishlist button */}
-            <button className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 py-4 text-base font-medium transition-colors hover:border-black">
+            <button 
+              onClick={handleAddToFav}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 py-4 text-base font-medium transition-colors hover:border-black">
               รายการโปรด
               <svg
                 xmlns="http://www.w3.org/2000/svg"
