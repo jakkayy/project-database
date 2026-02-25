@@ -1,142 +1,156 @@
-# Database Project — Niko E-Commerce
+# 🛒 Project Database (Docker Dev Version)
 
-ระบบ E-Commerce สไตล์ Nike สร้างด้วย **Next.js 16 (App Router)** ใช้ฐานข้อมูลแบบ Polyglot โดยเก็บข้อมูลผู้ใช้/ออเดอร์ใน **MySQL (Prisma)** และข้อมูลสินค้าใน **MongoDB (Mongoose)**
+โปรเจค E-commerce Fullstack  
+พัฒนาด้วยเทคโนโลยี:
 
-## Tech Stack
+- ⚡ Next.js 16  
+- 🥟 Bun  
+- 🗄 Prisma (MySQL)  
+- 🍃 Mongoose (MongoDB)  
+- 🐳 Docker + Docker Compose  
 
-| Layer | Technology |
-|---|---|
-| **Framework** | Next.js 16 (App Router) |
-| **Language** | TypeScript |
-| **Styling** | Tailwind CSS 4 |
-| **Relational DB** | MySQL 8.0 (via Prisma ORM) |
-| **Document DB** | MongoDB 7 (via Mongoose) |
-| **Auth** | JWT (`jsonwebtoken`) + `bcryptjs` |
-| **Container** | Docker Compose |
+---
 
-## โครงสร้างโปรเจค
+# 🚀 วิธีเริ่มต้นใช้งาน (Development ด้วย Docker)
 
-```
-app/
-├── api/                    # API Routes
-│   ├── auth/
-│   │   ├── login/          # POST  - เข้าสู่ระบบ
-│   │   ├── logout/         # POST  - ออกจากระบบ
-│   │   └── register/       # POST  - สมัครสมาชิก
-│   ├── product/
-│   │   ├── get-all-product/ # GET  - ดึงสินค้าทั้งหมด
-│   │   └── get-by-slug/     # GET  - ดึงสินค้าตาม slug
-│   └── profile/
-│       └── get-account/     # GET  - ดึงข้อมูลบัญชีผู้ใช้
-├── components/             # Shared UI Components
-│   ├── Navbar.tsx
-│   ├── ProductCard.tsx
-│   ├── NewArrivals.tsx
-│   ├── ShopBySport.tsx
-│   ├── CartItem.tsx
-│   ├── CartSummary.tsx
-│   └── ...
-├── lib/                    # Utilities & Services
-│   ├── apiServices/        # Client-side API service functions
-│   ├── auth.ts             # requireAuth helper
-│   ├── jwt.ts              # JWT verify/sign
-│   ├── mongodb.ts          # Mongoose connection (cached)
-│   └── prisma.ts           # Prisma client singleton
-├── models/
-│   └── Product.ts          # Mongoose Product model
-├── scripts/
-│   └── seedProducts.ts     # Seed ข้อมูลสินค้าลง MongoDB
-├── admin/                  # หน้า Admin (dashboard, product, order)
-├── product/[slug]/         # หน้ารายละเอียดสินค้า
-├── cart/                   # หน้าตะกร้าสินค้า
-├── checkout/               # หน้าชำระเงิน
-├── favorites/              # หน้ารายการโปรด
-├── history/                # หน้าประวัติการสั่งซื้อ
-├── profile/                # หน้าโปรไฟล์
-├── setting/                # หน้าตั้งค่า
-├── login/                  # หน้าเข้าสู่ระบบ
-├── register/               # หน้าสมัครสมาชิก
-└── page.tsx                # Homepage
-prisma/
-├── schema.prisma           # Prisma schema (User, Order, Payment, Address)
-└── migrations/             # Migration files
-middleware.ts               # Route protection (Admin routes)
-docker-compose.yml          # MySQL + MongoDB containers
+## 1️⃣ Clone โปรเจค
+
+```bash
+git clone <your-repo-url>
+cd project-database
 ```
 
-## Database Design
+---
 
-### MySQL (Prisma) — ข้อมูลเชิงสัมพันธ์
+## 2️⃣ สร้างไฟล์ Environment
 
-- **User** — ผู้ใช้ (role: USER / ADMIN)
-- **Order** — คำสั่งซื้อ (status: PENDING → PROCESSING → SHIPPED → DELIVERED / CANCELLED)
-- **OrderItem** — รายการสินค้าในออเดอร์ (อ้างอิง `productId` จาก MongoDB)
-- **Payment** — ข้อมูลการชำระเงิน
-- **Address** — ที่อยู่จัดส่ง
-
-### MongoDB (Mongoose) — ข้อมูลสินค้า
-
-- **Product** — name, slug, category, basePrice, images, variants (color + sizes with stock), tags, rating
-
-## Getting Started
-
-### 1. เตรียม Environment
-
-สร้างไฟล์ `.env` ที่ root ของโปรเจค:
+สร้างไฟล์ `.env.local` ที่ root ของโปรเจค
 
 ```env
-DATABASE_URL="mysql://db_user:db_pass@localhost:3307/database_project"
-MONGODB_URI="mongodb://root:root@localhost:27017/mydatabase?authSource=admin"
-JWT_SECRET="your-secret-key"
+DATABASE_URL="mysql://root:root@mysql:3306/database_project"
+MONGODB_URI="mongodb://root:root@mongodb:27017/database_project?authSource=admin"
+JWT_SECRET="supersecretkey123"
 ```
 
-### 2. เริ่ม Database Containers
+⚠ หมายเหตุสำคัญ:
+
+- ต้องใช้ `mysql` และ `mongodb` เป็น hostname (ชื่อ service ใน Docker)
+- ห้ามใช้ `localhost` เมื่อรันผ่าน Docker
+
+---
+
+## 3️⃣ รันโปรเจคด้วย Docker
 
 ```bash
-docker-compose up -d
+docker compose -f docker-compose.dev.yml up --build
 ```
 
-### 3. ติดตั้ง Dependencies
+การรันครั้งแรกจะทำสิ่งต่อไปนี้อัตโนมัติ:
+
+- ติดตั้ง dependencies
+- Sync Prisma schema ด้วย `db push`
+- Seed ข้อมูลสินค้าใน MongoDB
+- เปิด Next.js
+- เปิด Prisma Studio
+
+---
+
+# 🌐 URL สำหรับเข้าใช้งาน
+
+| Service | URL |
+|----------|------|
+| 🖥 Next.js | http://localhost:3000 |
+| 🗄 Prisma Studio | http://localhost:5555 |
+| 🐬 MySQL (จากเครื่อง Host) | localhost:3307 |
+| 🍃 MongoDB (จากเครื่อง Host) | localhost:27017 |
+
+---
+
+# 🧩 โครงสร้างฐานข้อมูล
+
+## 🟢 MySQL (ผ่าน Prisma)
+
+ใช้สำหรับ:
+
+- Users  
+- Orders  
+- Cart  
+- Transactions  
+
+ในโหมดพัฒนา จะ sync schema ด้วย:
 
 ```bash
-npm install
+bunx prisma db push
 ```
 
-### 4. Setup Prisma (MySQL)
+---
+
+## 🟢 MongoDB (ผ่าน Mongoose)
+
+ใช้สำหรับ:
+
+- Products  
+- Variants  
+- Catalog แบบ dynamic  
+
+ไฟล์ seed อยู่ที่:
+
+```
+app/scripts/seedProducts.ts
+```
+
+---
+
+# 🔄 คำสั่งที่ใช้บ่อยในการพัฒนา
+
+## 🔁 ล้างและสร้างใหม่ทั้งหมด (Reset Database)
 
 ```bash
-npx prisma migrate dev
-npx prisma generate
+docker compose -f docker-compose.dev.yml down -v
+docker compose -f docker-compose.dev.yml up --build
 ```
 
-### 5. Seed ข้อมูลสินค้า (MongoDB)
+---
+
+## 🌱 รัน Seed เองแบบ manual (จริงๆ docker รันให้แล้ว)
 
 ```bash
-npx tsx app/scripts/seedProducts.ts
+docker compose exec app bun run app/scripts/seedProducts.ts
 ```
 
-### 6. รัน Development Server
+---
+
+## 🐚 เข้า shell ของ container
 
 ```bash
-npm run dev
+docker compose exec app sh
 ```
 
-เปิด [http://localhost:3000](http://localhost:3000) ในเบราว์เซอร์
+---
 
-## Authentication
+# 🛠 คำสั่ง Prisma (รันใน container)
 
-- ใช้ **JWT** เก็บใน cookie (`access_token`)
-- รหัสผ่านเข้ารหัสด้วย **bcryptjs**
-- **Middleware** ป้องกัน route `/admin/*` — ต้อง login ก่อนเข้าถึง
-- Role-based: `USER` และ `ADMIN`
+```bash
+bunx prisma db push
+bunx prisma generate
+bunx prisma studio
+```
 
-## Features
+---
 
-- **Homepage** — แสดงสินค้ามาใหม่ (ดึงจาก MongoDB API) + หมวดหมู่กีฬา
-- **Product Detail** — หน้ารายละเอียดสินค้า เลือกสี/ไซส์ ดูรูปภาพ
-- **Cart** — ตะกร้าสินค้า + สรุปยอด
-- **Checkout** — หน้าชำระเงิน
-- **Favorites** — รายการโปรด
-- **Order History** — ประวัติการสั่งซื้อ
-- **Profile & Settings** — จัดการข้อมูลส่วนตัว
-- **Admin Dashboard** — จัดการสินค้า, ออเดอร์
+# 📦 Services ใน Docker
+
+| Service | รายละเอียด |
+|----------|------------|
+| app | Next.js + Bun |
+| mysql | MySQL 8 |
+| mongodb | MongoDB 7 |
+
+---
+
+# พร้อมเริ่มพัฒนา
+
+เข้าใช้งาเว็บที่ : http://localhost:3000
+เข้าใช้งาน prisma studio : http://localhost:5555
+
+Happy Coding 🚀
