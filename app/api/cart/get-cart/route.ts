@@ -2,9 +2,9 @@ export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { prisma } from "@/lib/prisma";
-import { requireAuth } from "@/lib/auth";
-import { connectMongo } from "@/lib/mongodb";
+import { prisma } from "lib/prisma";
+import { requireAuth } from "lib/auth";
+import { connectMongo } from "lib/mongodb";
 import Product from "@/app/models/Product";
 
 export async function GET() {

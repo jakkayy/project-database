@@ -1,8 +1,8 @@
-import { requireAuth } from "@/lib/auth";
-import { HttpError } from "@/lib/error";
-import { prisma } from "@/lib/prisma";
+import { requireAuth } from "lib/auth";
+import { prisma } from "lib/prisma";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { HttpError } from "lib/error";
 
 export async function POST(req: Request) {
     try {

@@ -2,7 +2,11 @@
 
 import { useRef, useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
+<<<<<<< HEAD
 import { getAllProduct } from "../../lib/apiServices/user.service";
+=======
+import { getAllProduct } from "lib/apiServices/user.service";
+>>>>>>> 09ee1ef (refactor: move lib)
 
 export default function NewArrivals() {
   const scrollRef = useRef<HTMLDivElement>(null);

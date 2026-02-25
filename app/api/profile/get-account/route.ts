@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/prisma";
+import { prisma } from "lib/prisma";
 import { cookies } from "next/headers";
-import { requireAuth } from "@/lib/auth";
+import { requireAuth } from "lib/auth";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -13,9 +13,9 @@ export async function GET() {
     const userAuth = requireAuth(token);
 
     const user = await prisma.user.findUnique({
-      where: { id: userAuth.user_id },
+      where: { user_id: userAuth.user_id },
       select: {
-        id: true,
+        user_id: true,
         firstname: true,
         lastname: true,
         email: true,

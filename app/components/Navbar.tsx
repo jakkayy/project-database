@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
-import { verifyToken } from "../../lib/jwt";
-import { prisma } from "../../lib/prisma";
+import { verifyToken } from "lib/jwt";
+import { prisma } from "lib/prisma";
 
 export default async function Navbar() {
   const token = (await cookies()).get("access_token")?.value;

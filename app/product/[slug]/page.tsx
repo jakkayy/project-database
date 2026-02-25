@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { addCart, addFav } from "@/lib/apiServices/user.service";
+import { addCart, addFav } from "lib/apiServices/user.service";
 
 interface Variant {
   color: string;
