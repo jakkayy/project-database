@@ -7,19 +7,6 @@ const productSchema = new mongoose.Schema(
     category: String,
     basePrice: Number,
     images: [String],
-
-    variants: [
-      {
-        color: String,
-        sizes: [
-          {
-            size: String,
-            stock: Number,
-          },
-        ],
-      },
-    ],
-
     tags: [String],
     rating: Number,
   },
