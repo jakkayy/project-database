@@ -1,15 +1,9 @@
 import Navbar from "@/app/components/Navbar";
 import CartClient from "./CartClient";
 import { cookies } from "next/headers";
-<<<<<<< HEAD
-import { requireAuth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
-import { connectMongo } from "@/lib/mongodb";
-=======
 import { requireAuth } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { connectMongo } from "lib/mongodb";
->>>>>>> 09ee1ef (refactor: move lib)
 import Product from "@/app/models/Product";
 
 export default async function CartPage() {

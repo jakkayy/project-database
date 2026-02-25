@@ -1,15 +1,7 @@
-<<<<<<< HEAD
-import { prisma } from "@/lib/prisma";
-import { cookies } from "next/headers";
-import bcrypt from "bcryptjs";
-import { signToken } from "@/lib/jwt";
-=======
 import { prisma } from "lib/prisma";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { signToken } from "lib/jwt";
->>>>>>> 09ee1ef (refactor: move lib)
-import { Role } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
