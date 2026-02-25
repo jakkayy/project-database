@@ -16,7 +16,8 @@ services:
         condition: service_healthy
       mongodb:
         condition: service_started
-    command: sh -c "bun install && bunx prisma db push && bun run app/scripts/seedProducts.ts && (bun dev & bunx prisma studio --hostname 0.0.0.0) && wait"
+    command: sh -c "bun install && bunx prisma generate && bunx prisma db push && bun run app/scripts/seedProducts.ts && (bun run dev & bunx prisma studio --hostname 0.0.0.0) && wait"
+
   mysql:
     image: mysql:8.0
     container_name: mysql_db
