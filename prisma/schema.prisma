@@ -37,12 +37,14 @@ enum Role {
 model Order {
   order_id        Int         @id @default(autoincrement())
   user_id    Int
+  address_id Int
   total     Decimal     @db.Decimal(10,2)
   status    OrderStatus @default(PENDING)
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 
   user      User        @relation(fields: [user_id], references: [user_id])
+  address   Address     @relation(fields: [address_id], references: [address_id])
   items     OrderItem[]
   payments  Payment[]
 }
@@ -97,6 +99,7 @@ model Address {
   updatedAt   DateTime @updatedAt
 
   user        User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  orders Order[]
 }
 
 model Cart {
