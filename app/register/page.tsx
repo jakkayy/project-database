@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { register } from "../lib/apiServices/auth.service";
+import { register } from "../../lib/apiServices/auth.service";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");

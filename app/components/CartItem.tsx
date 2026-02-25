@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { deleteCart, updateCartItem } from "../lib/apiServices/user.service";
+import { deleteCart, updateCartItem } from "../../lib/apiServices/user.service";
 
 interface CartItemProps {
   cartItem_id: number;

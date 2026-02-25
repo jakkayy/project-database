@@ -1,6 +1,6 @@
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
-import { requireAuth } from "@/app/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
 export async function GET() {

@@ -1,5 +1,5 @@
-import { signToken } from "@/app/lib/jwt";
-import { prisma } from "@/app/lib/prisma";
+import { signToken } from "@/lib/jwt";
+import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { login } from "../lib/apiServices/auth.service";
+import { login } from "../../lib/apiServices/auth.service";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");

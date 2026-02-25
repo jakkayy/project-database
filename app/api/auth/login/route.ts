@@ -1,7 +1,7 @@
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
-import { signToken } from "@/app/lib/jwt";
+import { signToken } from "@/lib/jwt";
 import { Role } from "@prisma/client";
 import { NextResponse } from "next/server";
 

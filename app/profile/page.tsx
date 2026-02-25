@@ -1,7 +1,7 @@
 import Navbar from "@/app/components/Navbar";
 import { cookies } from "next/headers";
-import { verifyToken } from "@/app/lib/jwt";
-import { prisma } from "@/app/lib/prisma";
+import { verifyToken } from "@/lib/jwt";
+import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 

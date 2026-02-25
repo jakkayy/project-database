@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { addCart, addFav } from "@/app/lib/apiServices/user.service";
+import { addCart, addFav } from "@/lib/apiServices/user.service";
 
 interface Variant {
   color: string;
@@ -60,8 +60,12 @@ export default function ProductDetailPage() {
       });
 
       alert("เพิ่มในรายการโปรดแล้ว");
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      if (error?.status === 401) {
+        alert("กรุณา login ก่อน");
+        return;
+      }
       alert("เกิดข้อผิดพลาด");
     }
   };
