@@ -13,16 +13,22 @@ export default function FavoritesItem({
   category,
   price,
 }: WishlistItemProps) {
+  
+  // สร้างตัวแปรมาเช็ค ถ้า image เป็นค่าว่าง ให้ใช้รูป placeholder แทน
+  const imageSrc = image && image.trim() !== "" ? image : "/products/shoe1.svg";
+
   return (
     <div className="w-full max-w-sm">
       {/* Product image with heart icon */}
       <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
         <Image
-          src={image}
-          alt={name}
+          src={imageSrc} // เปลี่ยนมาใช้ imageSrc ที่เราเช็คแล้ว
+          alt={name || "Product Image"}
           width={600}
           height={600}
           className="h-full w-full object-cover"
+          // แนะนำให้ใส่ตัวนี้ถ้าภาพไม่ขึ้น หรือเพื่อความปลอดภัย
+          unoptimized={imageSrc.startsWith("http") ? false : true} 
         />
         {/* Heart icon */}
         <button className="absolute right-3 top-3">

@@ -1,5 +1,6 @@
 import Navbar from "@/app/components/Navbar";
 import FavoritesItem from "@/app/components/FavoritesItem";
+import FavClient from "./FavClient";
 import { cookies } from "next/headers";
 import { requireAuth } from "lib/auth";
 import { prisma } from "lib/prisma";
@@ -49,23 +50,14 @@ export default async function FavoritesPage() {
     })
   );
 
-  return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-      <div className="mx-auto max-w-7xl px-10 py-10">
-        <h1 className="mb-8 text-2xl font-medium text-black">รายการโปรด</h1>
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
-          {itemsWithProduct.map((item) => (
-            <FavoritesItem
-              key={item.favItem_id}
-              image={item.product?.images?.[0] || "/products/shoe1.svg"}
-              name={item.product?.name || "ไม่พบชื่อสินค้า"}
-              category={item.product?.category || "รองเท้า"}
-              price={item.product?.price ? `฿${item.product.price.toLocaleString()}` : "N/A"}
-            />
-          ))}
-        </div>
-      </div>
+return (
+  <div className="min-h-screen bg-white">
+    <Navbar />
+    <div className="mx-auto max-w-7xl px-10 py-10">
+      <h1 className="mb-8 text-2xl font-medium text-black">รายการโปรด</h1>
+      {/* ส่งข้อมูลที่ประกอบร่างจาก Mongo แล้วเข้าไปที่นี่ */}
+      <FavClient initialItems={itemsWithProduct} />
     </div>
-  );
+  </div>
+);
 }
