@@ -9,7 +9,9 @@ export async function POST(req: Request) {
         const token = (await cookies()).get("access_token")?.value;
         const user = requireAuth(token, "USER");
 
-        const { product_id, quantity, basePrice, size } = await req.json();
+        console.log("DECODED USER:", user);
+
+        const { product_id, quantity, basePrice, size, color } = await req.json();
 
         const cart = await prisma.cart.upsert({
             where: { user_id: user.user_id },
@@ -45,6 +47,7 @@ export async function POST(req: Request) {
                 quantity: quantity ?? 1,
                 price: basePrice,
                 size: size,
+                color: color,
             },
         })
 

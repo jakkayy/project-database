@@ -17,6 +17,7 @@ CREATE TABLE `User` (
 CREATE TABLE `Order` (
     `order_id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER NOT NULL,
+    `address_id` INTEGER NOT NULL,
     `total` DECIMAL(10, 2) NOT NULL,
     `status` ENUM('PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED') NOT NULL DEFAULT 'PENDING',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -32,6 +33,8 @@ CREATE TABLE `OrderItem` (
     `product_id` VARCHAR(191) NOT NULL,
     `quantity` INTEGER NOT NULL,
     `price` DECIMAL(10, 2) NOT NULL,
+    `color` VARCHAR(191) NOT NULL,
+    `size` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`orderItem_id`)
@@ -87,9 +90,10 @@ CREATE TABLE `CartItem` (
     `quantity` INTEGER NOT NULL DEFAULT 1,
     `price` DECIMAL(10, 2) NOT NULL,
     `size` VARCHAR(191) NOT NULL,
+    `color` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    UNIQUE INDEX `CartItem_cart_id_product_id_key`(`cart_id`, `product_id`),
+    UNIQUE INDEX `CartItem_cart_id_product_id_color_size_key`(`cart_id`, `product_id`, `color`, `size`),
     PRIMARY KEY (`cartItem_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -114,8 +118,26 @@ CREATE TABLE `FavItem` (
     PRIMARY KEY (`favItem_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `ProductStock` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `product_id` VARCHAR(24) NOT NULL,
+    `color` VARCHAR(191) NOT NULL,
+    `size` VARCHAR(191) NOT NULL,
+    `stock` INTEGER NOT NULL DEFAULT 0,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    INDEX `ProductStock_product_id_idx`(`product_id`),
+    UNIQUE INDEX `ProductStock_product_id_color_size_key`(`product_id`, `color`, `size`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `Order` ADD CONSTRAINT `Order_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Order` ADD CONSTRAINT `Order_address_id_fkey` FOREIGN KEY (`address_id`) REFERENCES `Address`(`address_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `OrderItem` ADD CONSTRAINT `OrderItem_order_id_fkey` FOREIGN KEY (`order_id`) REFERENCES `Order`(`order_id`) ON DELETE RESTRICT ON UPDATE CASCADE;

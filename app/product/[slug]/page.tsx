@@ -110,6 +110,7 @@ export default function ProductDetailPage() {
         quantity: 1,
         basePrice: product.basePrice,
         size: selectedSize, 
+        color: selectedColor,
       });
 
       alert("เพิ่มลงตะกร้าแล้ว");
