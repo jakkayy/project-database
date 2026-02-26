@@ -13,6 +13,7 @@ export function addCart(data: {
     quantity: number,
     basePrice: number,
     size: string,
+    color: string,
 }) {
     return apiFetch("/api/cart/add-cart", {
         method: "POST",

@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     });
 
     const token = signToken({
-        id: user.user_id,
+        user_id: user.user_id,
         role: user.role,
     });
     
