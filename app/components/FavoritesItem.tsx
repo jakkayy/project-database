@@ -46,14 +46,14 @@ export default function FavoritesItem({
       {/* Product info */}
       <div className="mt-3 flex items-start justify-between">
         <div>
-          <h3 className="text-base font-medium text-black">{name}</h3>
-          <p className="text-sm text-gray-500">{category}</p>
+          <h3 className="text-base font-medium text-white">{name}</h3>
+          <p className="text-sm text-[#C9A84C]">{category}</p>
         </div>
         <p className="text-base text-black">{price}</p>
       </div>
 
       {/* Add to cart button */}
-      <button className="mt-3 rounded-full border border-gray-300 px-5 py-2 text-sm font-medium text-black transition-colors hover:border-black">
+      <button className="mt-3 rounded-full border border-[#C9A84C] px-5 py-2 text-sm font-medium text-[#C9A84C] transition-colors hover:border-black">
         เพิ่มในตะกร้า
       </button>
     </div>

@@ -32,73 +32,78 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-white">
-      <div className="w-full max-w-[460px] px-8 py-12">
-        {/* Logos */}
-        <div className="mb-8 flex items-center justify-center gap-4">
-          <Image src="/nike.svg" alt="Nike" width={40} height={16} />
-          <Image src="/jordan.svg" alt="Jordan" width={28} height={28} />
-        </div>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-black px-4">
+      {/* Logo */}
+      <div className="mb-8 flex flex-col items-center gap-1">
+        <span className="text-2xl font-black uppercase tracking-widest text-white">⬡ APEX</span>
+        <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C9A84C]">High Performance Elite</span>
+      </div>
 
+      {/* Card */}
+      <div className="w-full max-w-[480px] bg-neutral-900 px-10 py-12">
         {/* Heading */}
-        <h1 className="mb-4 text-center text-2xl font-bold leading-tight text-black">
-          ป้อนอีเมลของคุณเพื่อมาร่วมกับเรา หรือ
-          <br />
-          ลงชื่อเข้าใช้
+        <h1 className="mb-2 text-center text-3xl font-black uppercase tracking-tight text-white">
+          เข้าสู่ระบบ
         </h1>
-
+        <p className="mb-8 text-center text-sm text-neutral-400">
+          ยินดีต้อนรับกลับมา
+        </p>
 
         {/* Form */}
         <form onSubmit={handleLogin}>
-          <div className="mb-6">
+          <div className="mb-5">
+            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest text-[#C9A84C]">
+              อีเมล
+            </label>
             <input
               type="email"
-              placeholder="อีเมล*"
+              placeholder="your@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-4 text-base text-black placeholder-gray-400 outline-none transition-colors focus:border-black"
+              className="w-full border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-[#C9A84C]"
               required
             />
           </div>
           <div className="mb-6">
+            <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest text-[#C9A84C]">
+              รหัสผ่าน
+            </label>
             <input
               type="password"
-              placeholder="รหัสผ่าน*"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-4 text-base text-black placeholder-gray-400 outline-none transition-colors focus:border-black"
+              className="w-full border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-[#C9A84C]"
               required
             />
           </div>
 
-          {/* Terms */}
-          <p className="mb-6 text-xs leading-5 text-gray-400">
-            การดำเนินการต่อหมายความว่าคุณยอมรับ
-            <a href="#" className="underline hover:text-gray-600">
-              นโยบายความเป็นส่วนตัว
-            </a>
-            และ
-            <a href="#" className="underline hover:text-gray-600">
-              ข้อกำหนดการใช้ของ Nike
-            </a>
-          </p>
+          {error && (
+            <p className="mb-4 text-xs text-red-400">{error}</p>
+          )}
 
           {/* Submit button */}
-          <div className="flex items-center justify-between">
-            <Link
-              href="/register"
-              className="text-sm text-gray-500 underline hover:text-black"
-            >
-              ยังไม่มีบัญชี? สมัครสมาชิก
+          <button
+            type="submit"
+            className="w-full bg-[#C9A84C] py-4 text-xs font-black uppercase tracking-widest text-black transition-opacity hover:opacity-90"
+          >
+            เข้าสู่ระบบ
+          </button>
+
+          <p className="mt-6 text-center text-sm text-neutral-400">
+            ยังไม่มีบัญชี?{" "}
+            <Link href="/register" className="font-semibold text-[#C9A84C] hover:underline">
+              สมัครสมาชิก
             </Link>
-            <button
-              type="submit"
-              className="rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800"
-            >
-              ดำเนินการต่อ
-            </button>
-          </div>
+          </p>
         </form>
+      </div>
+
+      {/* Footer */}
+      <div className="mt-10 flex gap-6 text-[10px] uppercase tracking-widest text-neutral-600">
+        <a href="#" className="hover:text-neutral-400">นโยบายความเป็นส่วนตัว</a>
+        <a href="#" className="hover:text-neutral-400">เงื่อนไขการใช้งาน</a>
+        <a href="#" className="hover:text-neutral-400">ติดต่อเรา</a>
       </div>
     </div>
   );

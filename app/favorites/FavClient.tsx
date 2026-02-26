@@ -33,7 +33,7 @@ return (
         {/* ปุ่มลบ */}
         <button 
           onClick={() => handleDelete(item.favItem_id)}
-          className="absolute top-2 right-2 bg-white/80 p-1 rounded-full text-red-500 hover:bg-red-50 shadow-sm"
+          className="absolute top-2 right-2 border border-neutral-700 bg-black/80 px-2 py-1 text-[10px] uppercase tracking-widest text-neutral-400 transition-colors hover:border-red-500 hover:text-red-500"
         >
           ลบ
         </button>
