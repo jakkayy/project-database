@@ -10,11 +10,10 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
-  user_id        Int      @id @default(autoincrement())
+  user_id   Int      @id @default(autoincrement())
   firstname String
   lastname  String
   email     String   @unique
@@ -35,38 +34,40 @@ enum Role {
 }
 
 model Order {
-  order_id        Int         @id @default(autoincrement())
+  order_id   Int         @id @default(autoincrement())
   user_id    Int
-  total     Decimal     @db.Decimal(10,2)
-  status    OrderStatus @default(PENDING)
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  address_id Int
+  total      Decimal     @db.Decimal(10, 2)
+  status     OrderStatus @default(PENDING)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 
-  user      User        @relation(fields: [user_id], references: [user_id])
-  items     OrderItem[]
-  payments  Payment[]
+  user     User        @relation(fields: [user_id], references: [user_id])
+  address  Address     @relation(fields: [address_id], references: [address_id])
+  items    OrderItem[]
+  payments Payment[]
 }
 
 model OrderItem {
-  orderItem_id        Int      @id @default(autoincrement())
-  order_id   Int
-  product_id String   // Mongo _id
-  quantity  Int
-  price     Decimal  @db.Decimal(10,2)
-  createdAt DateTime @default(now())
+  orderItem_id Int      @id @default(autoincrement())
+  order_id     Int
+  product_id   String // Mongo _id
+  quantity     Int
+  price        Decimal  @db.Decimal(10, 2)
+  createdAt    DateTime @default(now())
 
-  order     Order    @relation(fields: [order_id], references: [order_id])
+  order Order @relation(fields: [order_id], references: [order_id])
 }
 
 model Payment {
-  payment_id        Int      @id @default(autoincrement())
+  payment_id Int      @id @default(autoincrement())
   order_id   Int
-  amount    Decimal  @db.Decimal(10,2)
-  method    String
-  status    String
-  createdAt DateTime @default(now())
+  amount     Decimal  @db.Decimal(10, 2)
+  method     String
+  status     String
+  createdAt  DateTime @default(now())
 
-  order     Order    @relation(fields: [order_id], references: [order_id])
+  order Order @relation(fields: [order_id], references: [order_id])
 }
 
 enum OrderStatus {
@@ -78,66 +79,79 @@ enum OrderStatus {
 }
 
 model Address {
-  address_id          Int      @id @default(autoincrement())
-  user_id     Int
+  address_id Int @id @default(autoincrement())
+  user_id    Int
 
   firstname   String
   lastname    String
   addressLine String
-  apartment   String?  // ห้อง / อาคาร (optional)
+  apartment   String? // ห้อง / อาคาร (optional)
   city        String
   province    String
   postalCode  String
-  country     String   @default("Thailand")
+  country     String  @default("Thailand")
   phone       String
 
-  isDefault   Boolean  @default(false)
+  isDefault Boolean @default(false)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user        User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  user   User    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  orders Order[]
 }
 
 model Cart {
-  cart_id        Int        @id @default(autoincrement())
-  user_id    Int        @unique
-  createdAt DateTime   @default(now())
+  cart_id   Int      @id @default(autoincrement())
+  user_id   Int      @unique
+  createdAt DateTime @default(now())
 
-  user      User       @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  items     CartItem[]
+  user  User       @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  items CartItem[]
 }
 
 model CartItem {
-  cartItem_id Int @id @default(autoincrement())
-  cart_id Int
-  product_id String
-  quantity Int @default(1)
-  price Decimal @db.Decimal(10,2)
-  size String
-  createdAt DateTime @default(now())
+  cartItem_id Int      @id @default(autoincrement())
+  cart_id     Int
+  product_id  String
+  quantity    Int      @default(1)
+  price       Decimal  @db.Decimal(10, 2)
+  size        String
+  createdAt   DateTime @default(now())
 
   cart Cart @relation(fields: [cart_id], references: [cart_id], onDelete: Cascade)
 
   @@unique([cart_id, product_id])
 }
 
-model Fav{
-  fav_id Int  @id @default(autoincrement())
-  user_id Int @unique
-  createdAt DateTime   @default(now())
+model Fav {
+  fav_id    Int      @id @default(autoincrement())
+  user_id   Int      @unique
+  createdAt DateTime @default(now())
 
-  user      User   @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  items     FavItem[]
+  user  User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  items FavItem[]
 }
 
 model FavItem {
-  favItem_id  Int      @id @default(autoincrement())
-  fav_id Int
-  product_id  String   
-  createdAt   DateTime @default(now())
+  favItem_id Int      @id @default(autoincrement())
+  fav_id     Int
+  product_id String
+  createdAt  DateTime @default(now())
 
-  favorite    Fav @relation(fields: [fav_id], references: [fav_id], onDelete: Cascade)
+  favorite Fav @relation(fields: [fav_id], references: [fav_id], onDelete: Cascade)
 
-  @@unique([fav_id, product_id]) 
+  @@unique([fav_id, product_id])
+}
+
+model ProductStock {
+  id         Int      @id @default(autoincrement())
+  product_id String   @db.VarChar(24) // from MongoDB _id
+  color      String
+  size       String
+  stock      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([product_id, color, size])
 }

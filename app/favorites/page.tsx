@@ -7,9 +7,26 @@ import { prisma } from "lib/prisma";
 import { connectMongo } from "lib/mongodb";
 import Product from "@/app/models/Product"; // โมเดล MongoDB ของคุณ
 
+<<<<<<< HEAD
 export default async function FavoritesPage() {
   const token = (await cookies()).get("access_token")?.value;
   const user = requireAuth(token, "USER");
+=======
+const favoritesItems = [
+  {
+    image: "/products/shoe1.svg",
+    name: "Nike Air Force 1 '07",
+    category: "รองเท้าผู้ชาย",
+    price: "฿3,700",
+  },
+  {
+    image: "/products/shoe1.svg",
+    name: "Nike Mercury '07",
+    category: "รองเท้าฟุตบอลผู้ชาย",
+    price: "฿4,000",
+  },
+];
+>>>>>>> 9af85cdc6913c965724e868bcabe57c8a88502e4
 
   // 1. ดึงรายการ Fav จาก MySQL
   const fav = await prisma.fav.findUnique({
