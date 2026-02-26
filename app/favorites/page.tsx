@@ -5,13 +5,12 @@ import { cookies } from "next/headers";
 import { requireAuth } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { connectMongo } from "lib/mongodb";
-import Product from "@/app/models/Product"; // โมเดล MongoDB ของคุณ
+import Product from "@/app/models/Product";
 
 export default async function FavoritesPage() {
   const token = (await cookies()).get("access_token")?.value;
   const user = requireAuth(token, "USER");
 
-  // 1. ดึงรายการ Fav จาก MySQL
   const fav = await prisma.fav.findUnique({
     where: { user_id: Number(user.user_id) },
     include: { items: true },
@@ -28,10 +27,8 @@ export default async function FavoritesPage() {
     );
   }
 
-  // 2. เชื่อมต่อ MongoDB
   await connectMongo();
 
-  // 3. ดึงข้อมูลสินค้าจาก MongoDB มาผสม (เหมือนที่ทำใน Cart)
   const itemsWithProduct = await Promise.all(
     fav.items.map(async (item) => {
       const product = await Product.findById(item.product_id);
@@ -39,13 +36,12 @@ export default async function FavoritesPage() {
       return {
         favItem_id: item.favItem_id,
         product_id: item.product_id,
-        // ผสมข้อมูลจาก MongoDB เข้าไป
         product: product
           ? {
               name: product.name,
               images: product.images,
               category: product.category,
-              price: product.price, // หรือฟิลด์ราคาใน Mongo ของคุณ
+              price: product.price, 
             }
           : null,
       };
