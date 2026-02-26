@@ -166,7 +166,6 @@ export default function CheckoutPage() {
                   addresses={mockAddresses}
                   selectedAddressId={selectedAddressId}
                   onAddressSelect={handleAddressSelect}
-                  onAddNewAddress={handleAddNewAddress}
                 />
               </div>
             )}
