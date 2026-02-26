@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import CheckoutOrderSummary from "@/app/components/CheckoutOrderSummary";
 import AddressSelector from "@/app/components/AddressSelector";
+import { set } from "mongoose";
 
 const orderItems = [
   {
@@ -178,6 +179,7 @@ export default function CheckoutPage() {
               total="20,300.00"
               items={orderItems}
             />
+          
             
             {/* Pay button */}
             <button className="mt-6 w-full rounded-lg bg-black px-6 py-4 text-sm font-medium text-white transition-colors hover:bg-gray-800">
