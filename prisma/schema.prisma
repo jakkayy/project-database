@@ -10,6 +10,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -19,13 +20,15 @@ model User {
   email     String   @unique
   password  String
   role      Role     @default(USER)
+  balance   Decimal  @default(0) @db.Decimal(10, 2)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orders    Order[]
-  addresses Address[]
-  cart      Cart?
-  fav       Fav?
+  orders       Order[]
+  addresses    Address[]
+  cart         Cart?
+  fav          Fav?
+  transactions Transaction[]
 }
 
 enum Role {
@@ -60,14 +63,36 @@ model OrderItem {
 }
 
 model Payment {
-  payment_id Int      @id @default(autoincrement())
+  payment_id Int           @id @default(autoincrement())
   order_id   Int
-  amount     Decimal  @db.Decimal(10, 2)
-  method     String
-  status     String
-  createdAt  DateTime @default(now())
+  amount     Decimal       @db.Decimal(10, 2)
+  status     PaymentStatus @default(PENDING)
+  createdAt  DateTime      @default(now())
 
   order Order @relation(fields: [order_id], references: [order_id])
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model Transaction {
+  id               Int             @id @default(autoincrement())
+  user_id          Int
+  transfer_user_id Int? // for transfer partner
+  type             TransactionType
+  amount           Decimal         @db.Decimal(10, 2)
+  createdAt        DateTime        @default(now())
+
+  user User @relation(fields: [user_id], references: [user_id])
+}
+
+enum TransactionType {
+  DEPOSIT
+  TRANSFER_OUT
+  TRANSFER_IN
 }
 
 enum OrderStatus {
