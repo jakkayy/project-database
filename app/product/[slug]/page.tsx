@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { addCart, addFav } from "lib/apiServices/user.service";
+import { addCart, addFav, getStock } from "lib/apiServices/user.service";
 
 interface Variant {
   color: string;
@@ -24,14 +24,22 @@ interface Product {
   rating: number;
 }
 
+interface ProductStock {
+  product_id: string;
+  color: string;
+  size: string;
+  stock: number;
+}
+
 export default function ProductDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
 
   const [product, setProduct] = useState<Product | null>(null);
+  const [productStock, setProductStock] = useState<ProductStock[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedColor, setSelectedColor] = useState(0);
+  const [selectedColor, setSelectedColor] = useState<string>("red");
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
   useEffect(() => {
@@ -50,6 +58,24 @@ export default function ProductDetailPage() {
     }
     if (slug) fetchProduct();
   }, [slug]);
+
+  useEffect(() => {
+    async function fetchProductStock() {
+      if (!product) return;
+      if (!selectedColor || !selectedSize) return;
+      try {
+        const data = await getStock({
+          product_id: product._id,
+          color: selectedColor,
+          size: selectedSize,
+        });
+        setProductStock(data);
+      } catch (err) {
+        console.error("Failed to fetch product stock", err);
+      }
+    }
+    fetchProductStock();
+  }, [product, selectedColor, selectedSize]);
 
   const handleAddToFav = async () => {
     if (!product) return;
@@ -83,7 +109,7 @@ export default function ProductDetailPage() {
         product_id: product._id,
         quantity: 1,
         basePrice: product.basePrice,
-        size: selectedSize,
+        size: selectedSize, 
       });
 
       alert("เพิ่มลงตะกร้าแล้ว");
@@ -96,32 +122,31 @@ export default function ProductDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-black" />
+      <div className="flex min-h-screen items-center justify-center bg-black">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-neutral-700 border-t-[#C9A84C]" />
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-white text-black">
-        <h1 className="text-2xl font-medium">ไม่พบสินค้า</h1>
-        <Link href="/" className="mt-4 underline">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-black text-white">
+        <h1 className="text-2xl font-black uppercase">ไม่พบสินค้า</h1>
+        <Link href="/" className="mt-4 text-sm text-neutral-400 underline hover:text-[#C9A84C]">
           กลับหน้าหลัก
         </Link>
       </div>
     );
   }
 
-  const currentVariant = product.variants[selectedColor];
-  const sizes = currentVariant?.sizes || [];
+  const currentVariant = product.variants?.find((v) => v.color.toLowerCase() === selectedColor.toLowerCase());
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen bg-black text-white">
       {/* Top banner */}
-      <div className="bg-gray-100 py-2 text-center text-sm">
+      <div className="bg-neutral-900 py-2 text-center text-xs uppercase tracking-widest text-neutral-400">
         จัดส่งฟรีมาตรฐาน &amp; คืนสินค้าฟรี 30 วัน{" "}
-        <span className="cursor-pointer font-medium underline">
+        <span className="cursor-pointer text-[#C9A84C] underline">
           ดูรายละเอียด
         </span>
       </div>
@@ -138,10 +163,10 @@ export default function ProductDetailPage() {
                   <button
                     key={i}
                     onClick={() => setSelectedImage(i)}
-                    className={`h-16 w-16 overflow-hidden rounded border-2 bg-gray-100 ${
+                    className={`h-16 w-16 overflow-hidden border-2 bg-neutral-900 ${
                       selectedImage === i
-                        ? "border-black"
-                        : "border-transparent"
+                        ? "border-[#C9A84C]"
+                        : "border-transparent hover:border-neutral-600"
                     }`}
                   >
                     <Image
@@ -158,7 +183,7 @@ export default function ProductDetailPage() {
 
             {/* Main image */}
             <div className="relative flex-1">
-              <div className="aspect-square w-full overflow-hidden bg-gray-100">
+              <div className="aspect-square w-full overflow-hidden bg-neutral-900">
                 <Image
                   src={product.images[selectedImage] || "/products/shoe1.svg"}
                   alt={product.name}
@@ -176,7 +201,7 @@ export default function ProductDetailPage() {
                         prev === 0 ? product.images.length - 1 : prev - 1
                       )
                     }
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow"
+                    className="flex h-10 w-10 items-center justify-center border border-neutral-700 bg-neutral-900 text-neutral-300 transition-colors hover:border-[#C9A84C] hover:text-[#C9A84C]"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -199,7 +224,7 @@ export default function ProductDetailPage() {
                         prev === product.images.length - 1 ? 0 : prev + 1
                       )
                     }
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow"
+                    className="flex h-10 w-10 items-center justify-center border border-neutral-700 bg-neutral-900 text-neutral-300 transition-colors hover:border-[#C9A84C] hover:text-[#C9A84C]"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -224,67 +249,55 @@ export default function ProductDetailPage() {
           {/* Right: Product info */}
           <div className="lg:w-100 lg:shrink-0">
             {/* Name & Category */}
-            <h1 className="text-2xl font-medium">{product.name}</h1>
-            <p className="mt-1 text-base text-gray-500">{product.category}</p>
-            <p className="mt-3 text-lg font-medium">
+            <h1 className="text-2xl font-black uppercase tracking-tight text-white">{product.name}</h1>
+            <p className="mt-1 text-xs uppercase tracking-widest text-neutral-500">{product.category}</p>
+            <p className="mt-4 text-2xl font-black text-[#C9A84C]">
               ฿{product.basePrice.toLocaleString()}
             </p>
 
             {/* Color selector */}
-            {product.variants.length > 1 && (
-              <div className="mt-6">
-                <p className="mb-2 text-base font-medium">เลือกสี</p>
-                <div className="flex gap-2">
-                  {product.variants.map((variant, i) => (
-                    <button
-                      key={i}
-                      onClick={() => {
-                        setSelectedColor(i);
-                        setSelectedSize(null);
-                      }}
-                      className={`rounded-full border-2 px-4 py-2 text-sm ${
-                        selectedColor === i
-                          ? "border-black"
-                          : "border-gray-300 hover:border-gray-500"
-                      }`}
-                    >
-                      {variant.color}
-                    </button>
-                  ))}
-                </div>
+            <div className="mt-6">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400">เลือกสี</p>
+              <div className="flex gap-2">
+                {(["red", "black", "white"] as const).map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => {
+                      setSelectedColor(color);
+                      setSelectedSize(null);
+                    }}
+                    className={`border px-4 py-2 text-xs uppercase tracking-wider transition-colors ${
+                      selectedColor === color
+                        ? "border-[#C9A84C] bg-[#C9A84C] text-black"
+                        : "border-neutral-700 text-neutral-300 hover:border-neutral-400"
+                    }`}
+                  >
+                    {color === "red" ? "แดง" : color === "black" ? "ดำ" : "ขาว"}
+                  </button>
+                ))}
               </div>
-            )}
-
-            {/* Single color display */}
-            {product.variants.length === 1 && currentVariant && (
-              <p className="mt-4 text-sm text-gray-500">
-                สี: {currentVariant.color}
-              </p>
-            )}
+            </div>
 
             {/* Size selector */}
             <div className="mt-6">
               <div className="mb-3 flex items-center justify-between">
-                <p className="text-base font-medium">เลือกไซส์</p>
-                <button className="text-sm text-gray-500 underline">
+                <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400">เลือกไซส์</p>
+                <button className="text-xs text-neutral-500 underline hover:text-[#C9A84C]">
                   คำแนะนำในการเลือกไซส์
                 </button>
               </div>
-              <div className="grid grid-cols-3 gap-2">
-                {sizes.map((s) => (
+              <div className="grid grid-cols-5 gap-2">
+                {["36", "37", "38", "39", "40", "41", "42", "43", "44", "45"].map((size) => (
                   <button
-                    key={s.size}
-                    onClick={() => setSelectedSize(s.size)}
-                    disabled={s.stock === 0}
-                    className={`rounded-md border py-3 text-center text-sm transition-colors ${
-                      selectedSize === s.size
-                        ? "border-black bg-black text-white"
-                        : s.stock === 0
-                          ? "cursor-not-allowed border-gray-200 text-gray-300"
-                          : "border-gray-300 hover:border-black"
-                    }`} 
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`border py-3 text-center text-xs uppercase tracking-wider transition-colors ${
+                      selectedSize === size
+                        ? "border-[#C9A84C] bg-[#C9A84C] text-black font-bold"
+                        : "border-neutral-700 text-neutral-300 hover:border-neutral-400"
+                    }`}
                   >
-                    EU {s.size}
+                    EU {size}
                   </button>
                 ))}
               </div>
@@ -293,14 +306,17 @@ export default function ProductDetailPage() {
             {/* Add to cart button */}
             <button 
               onClick={handleAddToCart}
-              className="mt-8 w-full rounded-full bg-black py-4 text-base font-medium text-white transition-colors hover:bg-gray-800">
-              เพิ่มในตะกร้า
+              className="mt-8 flex w-full items-center justify-center gap-2 bg-[#C9A84C] py-4 text-xs font-black uppercase tracking-widest text-black transition-opacity hover:opacity-90">
+              เพิ่มลงตะกร้า
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-4 w-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+              </svg>
             </button>
 
             {/* Wishlist button */}
             <button 
               onClick={handleAddToFav}
-              className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 py-4 text-base font-medium transition-colors hover:border-black">
+              className="mt-3 flex w-full items-center justify-center gap-2 border border-neutral-700 py-4 text-xs font-black uppercase tracking-widest text-neutral-300 transition-colors hover:border-[#C9A84C] hover:text-[#C9A84C]">
               รายการโปรด
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -319,32 +335,30 @@ export default function ProductDetailPage() {
             </button>
 
             {/* Product details section */}
-            <div className="mt-8 border-t border-gray-200 pt-6">
-              <p className="text-sm leading-relaxed text-gray-600">
+            <div className="mt-8 border-t border-neutral-800 pt-6">
+              <p className="text-xs leading-relaxed text-neutral-500">
                 {product.tags && product.tags.length > 0 && (
-                  <span className="mb-2 block">
+                  <span className="mb-2 block uppercase tracking-wider">
                     แท็ก: {product.tags.join(", ")}
                   </span>
                 )}
               </p>
 
               {currentVariant && (
-                <ul className="mt-4 space-y-1 text-sm text-gray-600">
-                  <li>
-                    • สีที่แสดง: {currentVariant.color}
-                  </li>
+                <ul className="mt-4 space-y-1 text-xs uppercase tracking-wider text-neutral-500">
+                  <li>• สีที่แสดง: {currentVariant.color}</li>
                 </ul>
               )}
             </div>
 
             {/* Rating */}
             {product.rating && (
-              <div className="mt-6 border-t border-gray-200 pt-6">
+              <div className="mt-6 border-t border-neutral-800 pt-6">
                 <div className="flex items-center justify-between">
-                  <span className="text-base font-medium">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
                     รีวิว ({product.rating})
                   </span>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 text-[#C9A84C]">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <svg
                         key={star}
@@ -357,7 +371,7 @@ export default function ProductDetailPage() {
                         }
                         stroke="currentColor"
                         strokeWidth={1.5}
-                        className="h-5 w-5"
+                        className="h-4 w-4"
                       >
                         <path
                           strokeLinecap="round"

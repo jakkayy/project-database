@@ -17,10 +17,10 @@ export default async function CartPage() {
 
   if (!cart || cart.items.length === 0) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-black">
         <Navbar />
-        <div className="p-10 text-center text-gray-500">
-          ยังไม่มีสินค้าในตะกร้า
+        <div className="px-10 py-20 text-center">
+          <p className="text-neutral-500">ยังไม่มีสินค้าในตะกร้า</p>
         </div>
       </div>
     );
@@ -59,7 +59,7 @@ export default async function CartPage() {
   );
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-black">
       <Navbar />
       <CartClient items={itemsWithProduct} total={total} />
     </div>

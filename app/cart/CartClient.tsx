@@ -32,10 +32,14 @@ export default function CartClient({ items, total }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl px-10 py-10">
-      <div className="flex gap-12">
-        <div className="flex-1">
-          <h1 className="mb-4 text-2xl font-medium text-black">ตะกร้า</h1>
+      {/* Page heading */}
+      <div className="mb-10">
+        <h1 className="text-4xl font-black uppercase text-white">ตะกร้าสินค้า</h1>
+        <p className="mt-1 text-sm text-neutral-400">ตรวจสอบรายการสินค้าที่คุณเลือกไว้</p>
+      </div>
 
+      <div className="flex gap-10">
+        <div className="flex-1">
           {cartItems.map((item) => (
             <CartItem
               key={item.cartItem_id}
@@ -56,7 +60,7 @@ export default function CartClient({ items, total }: Props) {
           ))}
         </div>
 
-        <div className="w-80 shrink-0">
+        <div className="w-96 shrink-0">
           <CartSummary
             subtotal={newTotal.toLocaleString("th-TH", {
               style: "currency",

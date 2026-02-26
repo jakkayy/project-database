@@ -60,3 +60,15 @@ export function addFav(data: {
         body: JSON.stringify(data),
     });
 }
+
+export function getStock(data: {
+    product_id: string,
+    color: string,
+    size: string,
+}) {
+    return apiFetch("/api/product/get-stock", {
+        method: "POST",
+        body: JSON.stringify(data),
+    });
+}
+

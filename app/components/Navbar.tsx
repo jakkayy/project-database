@@ -24,75 +24,75 @@ export default async function Navbar() {
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="flex items-center justify-between bg-gray-100 px-10 py-2">
-        <Image src="/jordan.svg" alt="Jordan" width={20} height={20} />
+      <div className="flex items-center justify-between bg-neutral-900 px-10 py-2">
+        <Image src="/jordan.svg" alt="Jordan" width={20} height={20} className="invert" />
 
-        <div className="flex items-center gap-1 text-xs text-black">
-          <Link href="#" className="px-2 hover:text-gray-500">
+        <div className="flex items-center gap-1 text-xs text-neutral-300">
+          <Link href="#" className="px-2 hover:text-[#C9A84C]">
             ค้นหาร้าน
           </Link>
 
-          <span className="text-gray-300">|</span>
+          <span className="text-neutral-600">|</span>
 
-          <Link href="#" className="px-2 hover:text-gray-500">
+          <Link href="#" className="px-2 hover:text-[#C9A84C]">
             ความช่วยเหลือ
           </Link>
 
-          <span className="text-gray-300">|</span>
+          <span className="text-neutral-600">|</span>
 
-          <Link href="/register" className="px-2 hover:text-gray-500">
+          <Link href="/register" className="px-2 hover:text-[#C9A84C]">
             เข้าร่วมกับเรา
           </Link>
 
-          <span className="text-gray-300">|</span>
+          <span className="text-neutral-600">|</span>
 
           {account ? (
-            <Link href="/profile" className="px-2 hover:text-gray-500">
+            <Link href="/profile" className="px-2 hover:text-[#C9A84C]">
               สวัสดีคุณ {account.firstname}
             </Link>
           ) : (
-            <Link href="/login" className="px-2 hover:text-gray-500">
+            <Link href="/login" className="px-2 hover:text-[#C9A84C]">
               ลงชื่อเข้าใช้
             </Link>
           )}
         </div>
       </div>
       
-      <nav className="flex items-center justify-between border-b border-gray-200 bg-white px-10 py-3">
+      <nav className="flex items-center justify-between border-b border-neutral-800 bg-black px-10 py-3">
       {/* Logo */}
       <Link href="/">
-        <Image src="/nike.svg" alt="Nike" width={60} height={24} />
+        <Image src="/nike.svg" alt="Nike" width={60} height={24} className="invert" />
       </Link>
 
       {/* Nav Links */}
-      <ul className="flex items-center gap-6 text-sm font-medium text-black">
+      <ul className="flex items-center gap-6 text-sm font-medium text-neutral-200">
         <li>
-          <Link href="#" className="hover:text-gray-500">
+          <Link href="#" className="hover:text-[#C9A84C] transition-colors">
             ข้อเสนอจำกัดเวลา
           </Link>
         </li>
         <li>
-          <Link href="#" className="hover:text-gray-500">
+          <Link href="#" className="hover:text-[#C9A84C] transition-colors">
             ใหม่และโดดเด่น
           </Link>
         </li>
         <li>
-          <Link href="#" className="hover:text-gray-500">
+          <Link href="#" className="hover:text-[#C9A84C] transition-colors">
             ผู้ชาย
           </Link>
         </li>
         <li>
-          <Link href="#" className="hover:text-gray-500">
+          <Link href="#" className="hover:text-[#C9A84C] transition-colors">
             ผู้หญิง
           </Link>
         </li>
         <li>
-          <Link href="#" className="hover:text-gray-500">
+          <Link href="#" className="hover:text-[#C9A84C] transition-colors">
             เด็ก
           </Link>
         </li>
         <li>
-          <Link href="#" className="hover:text-gray-500">
+          <Link href="#" className="hover:text-[#C9A84C] transition-colors">
             SNKRS
           </Link>
         </li>
@@ -101,14 +101,14 @@ export default async function Navbar() {
       {/* Right side: Search, Wishlist, Cart */}
       <div className="flex items-center gap-4">
         {/* Search */}
-        <div className="flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2">
+        <div className="flex items-center gap-2 rounded-full bg-neutral-800 px-4 py-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className="h-4 w-4 text-gray-600"
+            className="h-4 w-4 text-neutral-400"
           >
             <path
               strokeLinecap="round"
@@ -116,11 +116,11 @@ export default async function Navbar() {
               d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
             />
           </svg>
-          <span className="text-sm text-gray-400">ค้นหา</span>
+          <span className="text-sm text-neutral-500">ค้นหา</span>
         </div>
 
         {/* Wishlist */}
-        <Link href="/favorites" className="p-1">
+        <Link href="/favorites" className="p-1 text-neutral-300 hover:text-[#C9A84C] transition-colors">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -138,7 +138,7 @@ export default async function Navbar() {
         </Link>
 
         {/* Cart */}
-        <Link href="/cart" className="p-1">
+        <Link href="/cart" className="p-1 text-neutral-300 hover:text-[#C9A84C] transition-colors">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

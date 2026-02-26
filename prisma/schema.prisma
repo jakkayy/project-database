@@ -10,6 +10,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -54,6 +55,8 @@ model OrderItem {
   product_id   String // Mongo _id
   quantity     Int
   price        Decimal  @db.Decimal(10, 2)
+  color        String
+  size         String
   createdAt    DateTime @default(now())
 
   order Order @relation(fields: [order_id], references: [order_id])
@@ -117,11 +120,12 @@ model CartItem {
   quantity    Int      @default(1)
   price       Decimal  @db.Decimal(10, 2)
   size        String
+  color       String  
   createdAt   DateTime @default(now())
 
   cart Cart @relation(fields: [cart_id], references: [cart_id], onDelete: Cascade)
 
-  @@unique([cart_id, product_id])
+  @@unique([cart_id, product_id, color, size])
 }
 
 model Fav {
@@ -154,4 +158,5 @@ model ProductStock {
   updatedAt  DateTime @updatedAt
 
   @@unique([product_id, color, size])
+  @@index([product_id])
 }
