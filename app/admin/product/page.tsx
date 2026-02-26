@@ -2,133 +2,159 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import AdminSidebar from "../../components/AdminSidebar";
+import AdminNav from "../../components/AdminNav";
 
-const categories = ["All Footwear", "Apparel", "Accessories"];
+const categories = ["Footwear", "Apparel", "Accessories"];
 
 const products = [
   {
     image: "/products/shoe1.svg",
-    name: "Nike Air Force 1 '07",
-    sku: "CW2288-111",
-    category: "Men's Shoes",
-    stock: 8400,
-    price: 110.0,
-    status: "In Stock",
-    statusColor: "text-green-600",
+    name: "Apex Carbon Runner",
+    subtitle: "Midnight / Gold Edition",
+    sku: "SKU-88291",
+    category: "Footwear",
+    stock: 124,
+    price: 485.0,
+    status: "IN STOCK",
   },
   {
     image: "/products/shoe2.svg",
-    name: "Nike Dunk Low Retro",
-    sku: "DD1391-100",
-    category: "Men's Shoes",
+    name: "Stealth Comp Tech-Tee",
+    subtitle: "Seamless / Matte Black",
+    sku: "SKU-77302",
+    category: "Apparel",
     stock: 12,
-    price: 115.0,
-    status: "Low Stock",
-    statusColor: "text-orange-500",
+    price: 120.0,
+    status: "OUT OF STOCK",
   },
 ];
 
+function StatusBadge({ status }: { status: string }) {
+  if (status === "IN STOCK") {
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-800/50 bg-emerald-900/40 px-3 py-1 text-xs font-semibold text-emerald-400">
+        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+        IN STOCK
+      </span>
+    );
+  }
+  if (status === "LOW STOCK") {
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-800/50 bg-amber-900/40 px-3 py-1 text-xs font-semibold text-amber-400">
+        <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+        LOW STOCK
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-red-800/50 bg-red-900/40 px-3 py-1 text-xs font-semibold text-red-400">
+      <span className="h-1.5 w-1.5 rounded-full bg-red-400" />
+      OUT OF STOCK
+    </span>
+  );
+}
+
 export default function AdminProductPage() {
-  const [activeCategory, setActiveCategory] = useState("All Footwear");
+  const [activeCategory, setActiveCategory] = useState("Footwear");
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <AdminSidebar />
+    <div className="min-h-screen bg-[#0d0f14]">
+      <AdminNav />
 
       {/* Main content */}
-      <main className="flex-1 px-8 py-6">
-        {/* Top bar */}
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold tracking-wide text-black uppercase">
-            Products Inventory
-          </h1>
-          <div className="flex items-center gap-4">
-            {/* Search */}
-            <div className="flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-4 w-4 text-gray-400"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                />
-              </svg>
-              <input
-                type="text"
-                placeholder="Search SKU, Order ID..."
-                className="w-40 bg-transparent text-sm text-black placeholder-gray-400 outline-none"
-              />
-            </div>
-            {/* Notification bell */}
-            <button className="p-1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-5 w-5 text-black"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
-                />
-              </svg>
-            </button>
+      <main className="mx-auto max-w-7xl px-8 py-8">
+        {/* Title + Add Product */}
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-black uppercase tracking-wider text-white">
+              Product Inventory
+            </h1>
           </div>
+          <button className="flex items-center gap-2 rounded-lg bg-amber-400 px-5 py-2.5 text-sm font-bold text-gray-900 transition-colors hover:bg-amber-300">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2.5}
+              stroke="currentColor"
+              className="h-4 w-4"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+            ADD PRODUCT
+          </button>
         </div>
 
-        {/* Category tabs + Add Product */}
-        <div className="mt-6 flex items-center justify-between">
-          <div className="flex gap-2">
+        {/* Filters bar */}
+        <div className="mt-8 flex items-center justify-between">
+          {/* Category tabs */}
+          <div className="flex gap-1 rounded-lg bg-[#161920] p-1">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                className={`rounded-md px-5 py-2 text-sm font-medium transition-colors ${
                   activeCategory === cat
-                    ? "bg-black text-white"
-                    : "border border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
+                    ? "bg-white text-gray-900"
+                    : "text-gray-400 hover:text-white"
                 }`}
               >
                 {cat}
               </button>
             ))}
           </div>
-          <button className="rounded-lg bg-orange-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-orange-600">
-            + Add Product
-          </button>
+
+          {/* Search + Advanced */}
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 rounded-lg border border-gray-700 bg-[#161920] px-4 py-2.5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="h-4 w-4 text-gray-500"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"
+                />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search by SKU, Name..."
+                className="w-52 bg-transparent text-sm text-white placeholder-gray-500 outline-none"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Product table */}
-        <div className="mt-6 overflow-hidden rounded-xl border border-gray-100 bg-white">
+        <div className="mt-4 overflow-hidden rounded-xl border border-gray-800 bg-[#161920]">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-100">
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <tr className="border-b border-gray-800">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Product
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   SKU
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Category
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Stock
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Price
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Status
                 </th>
               </tr>
@@ -137,47 +163,110 @@ export default function AdminProductPage() {
               {products.map((product, i) => (
                 <tr
                   key={i}
-                  className="border-b border-gray-50 transition-colors hover:bg-gray-50"
+                  className="border-b border-gray-800/60 transition-colors hover:bg-white/[0.02]"
                 >
+                  {/* Product */}
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                      <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-gray-800">
                         <Image
                           src={product.image}
                           alt={product.name}
-                          width={40}
-                          height={40}
+                          width={48}
+                          height={48}
                           className="h-full w-full object-cover"
                         />
                       </div>
-                      <span className="text-sm font-medium text-black">
-                        {product.name}
-                      </span>
+                      <div>
+                        <p className="text-sm font-semibold text-white">
+                          {product.name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {product.subtitle}
+                        </p>
+                      </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500 font-mono">
+
+                  {/* SKU */}
+                  <td className="px-6 py-4 font-mono text-sm text-gray-400">
                     {product.sku}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
+
+                  {/* Category */}
+                  <td className="px-6 py-4 text-sm text-gray-400">
                     {product.category}
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-black">
-                    {product.stock.toLocaleString()}
+
+                  {/* Stock */}
+                  <td className="px-6 py-4 text-sm font-medium text-white">
+                    {product.stock}
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-black">
+
+                  {/* Price */}
+                  <td className="px-6 py-4 text-sm font-semibold text-amber-400">
                     ${product.price.toFixed(2)}
                   </td>
+
+                  {/* Status */}
                   <td className="px-6 py-4">
-                    <span
-                      className={`text-sm font-medium ${product.statusColor}`}
-                    >
-                      {product.status}
-                    </span>
+                    <StatusBadge status={product.status} />
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+
+          {/* Table footer */}
+          <div className="flex items-center justify-between border-t border-gray-800 px-6 py-4">
+            <p className="text-xs text-gray-500">
+              Showing <span className="font-medium text-white">4</span> of{" "}
+              <span className="font-medium text-white">128</span> products
+            </p>
+            <div className="flex items-center gap-1">
+              <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-700 text-gray-500 transition-colors hover:border-gray-600 hover:text-white">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="h-4 w-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 19.5 8.25 12l7.5-7.5"
+                  />
+                </svg>
+              </button>
+              <button className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-400 text-xs font-bold text-gray-900">
+                1
+              </button>
+              <button className="flex h-8 w-8 items-center justify-center rounded-lg text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-white">
+                2
+              </button>
+              <button className="flex h-8 w-8 items-center justify-center rounded-lg text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-white">
+                3
+              </button>
+              <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-700 text-gray-500 transition-colors hover:border-gray-600 hover:text-white">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="h-4 w-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       </main>
     </div>

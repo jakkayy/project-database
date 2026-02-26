@@ -2,35 +2,35 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import AdminSidebar from "../../components/AdminSidebar";
+import AdminNav from "../../components/AdminNav";
 
 const statCards = [
   {
     title: "TOTAL ORDERS (TODAY)",
     value: "1,240",
     subtitle: "↑ 8.5% vs yesterday",
-    subtitleColor: "text-green-500",
+    subtitleColor: "text-emerald-400",
     borderColor: "border-l-blue-500",
   },
   {
     title: "PROCESSING",
     value: "342",
     subtitle: "Needs fulfillment",
-    subtitleColor: "text-gray-400",
-    borderColor: "border-l-orange-500",
+    subtitleColor: "text-gray-500",
+    borderColor: "border-l-amber-500",
   },
   {
     title: "SHIPPED",
     value: "856",
     subtitle: "Handed to carrier",
-    subtitleColor: "text-gray-400",
-    borderColor: "border-l-green-500",
+    subtitleColor: "text-gray-500",
+    borderColor: "border-l-emerald-500",
   },
   {
     title: "RETURNS",
     value: "42",
     subtitle: "Requires attention",
-    subtitleColor: "text-red-500",
+    subtitleColor: "text-red-400",
     borderColor: "border-l-red-500",
   },
 ];
@@ -42,13 +42,12 @@ const orders = [
     customerName: "Michael Jordan",
     customerEmail: "mj@chicago.com",
     customerInitials: "MJ",
-    customerColor: "bg-purple-100 text-purple-600",
+    customerColor: "bg-purple-900/60 text-purple-400",
     items: ["/products/shoe1.svg"],
     extraItems: 1,
     total: "$240.00",
     status: "Processing",
-    statusStyle: "text-orange-500 border-orange-200 bg-orange-50",
-    statusIcon: "★",
+    statusStyle: "text-amber-400 border-amber-800/50 bg-amber-900/30",
   },
   {
     id: "#ORD-992816",
@@ -56,13 +55,12 @@ const orders = [
     customerName: "Serena Williams",
     customerEmail: "sw@court.com",
     customerInitials: "SW",
-    customerColor: "bg-green-100 text-green-600",
+    customerColor: "bg-emerald-900/60 text-emerald-400",
     items: ["/products/shoe2.svg"],
     extraItems: 0,
     total: "$85.00",
     status: "Shipped",
-    statusStyle: "text-green-600 border-green-200 bg-green-50",
-    statusIcon: "✓",
+    statusStyle: "text-emerald-400 border-emerald-800/50 bg-emerald-900/30",
   },
   {
     id: "#ORD-992815",
@@ -70,13 +68,12 @@ const orders = [
     customerName: "LeBron James",
     customerEmail: "king@la.com",
     customerInitials: "LJ",
-    customerColor: "bg-blue-100 text-blue-600",
+    customerColor: "bg-blue-900/60 text-blue-400",
     items: ["/products/shoe3.svg"],
     extraItems: 0,
     total: "$115.00",
     status: "Delivered",
-    statusStyle: "text-white border-gray-700 bg-gray-800",
-    statusIcon: "",
+    statusStyle: "text-gray-400 border-gray-700 bg-gray-800/60",
   },
   {
     id: "#ORD-992814",
@@ -84,13 +81,12 @@ const orders = [
     customerName: "Tiger Woods",
     customerEmail: "tiger@golf.com",
     customerInitials: "TW",
-    customerColor: "bg-gray-100 text-gray-600",
-    items: ["/products/shoe1.svg"],
+    customerColor: "bg-gray-700/60 text-gray-400",
+    items: ["/products/shoe4.svg"],
     extraItems: 0,
     total: "$45.00",
     status: "Cancelled",
-    statusStyle: "text-red-500 border-red-200 bg-red-50",
-    statusIcon: "✕",
+    statusStyle: "text-red-400 border-red-800/50 bg-red-900/30",
   },
 ];
 
@@ -99,151 +95,82 @@ export default function AdminOrderPage() {
   const [dateFilter, setDateFilter] = useState("Last 7 Days");
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <AdminSidebar />
+    <div className="min-h-screen bg-[#0d0f14]">
+      <AdminNav />
 
-      {/* Main content */}
-      <main className="flex-1 px-8 py-6">
-        {/* Top bar */}
-        <div className="flex items-center justify-between">
+      <main className="mx-auto max-w-7xl px-8 py-8">
+        {/* Title */}
+        <div className="mb-8 flex items-start justify-between">
           <div>
-            <h1 className="text-xl font-bold tracking-wide text-black uppercase">
+            <h1 className="text-3xl font-black uppercase tracking-wider text-white">
               Orders Management
             </h1>
-            <p className="mt-1 text-sm text-gray-400">
-              Manage and track customer fulfillment
-            </p>
-          </div>
-          <div className="flex items-center gap-4">
-            {/* Search */}
-            <div className="flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-4 w-4 text-gray-400"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                />
-              </svg>
-              <input
-                type="text"
-                placeholder="Search Order ID, Name..."
-                className="w-44 bg-transparent text-sm text-black placeholder-gray-400 outline-none"
-              />
-            </div>
-            {/* Notification bell */}
-            <button className="relative p-1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-5 w-5 text-black"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
-                />
-              </svg>
-              <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-orange-500" />
-            </button>
           </div>
         </div>
 
         {/* Stat cards */}
-        <div className="mt-6 grid grid-cols-4 gap-5">
+        <div className="grid grid-cols-4 gap-5">
           {statCards.map((card, i) => (
             <div
               key={i}
-              className={`rounded-xl border border-gray-100 border-l-4 ${card.borderColor} bg-white p-5`}
+              className={`rounded-xl border border-gray-800 border-l-4 ${card.borderColor} bg-[#161920] p-5`}
             >
-              <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
                 {card.title}
               </p>
-              <p className="mt-2 text-3xl font-bold text-black">{card.value}</p>
-              <p className={`mt-1 text-xs ${card.subtitleColor}`}>
+              <p className="mt-3 text-3xl font-black text-white">
+                {card.value}
+              </p>
+              <p className={`mt-1.5 text-xs font-medium ${card.subtitleColor}`}>
                 {card.subtitle}
               </p>
             </div>
           ))}
         </div>
 
-        {/* Filters + Export */}
-        <div className="mt-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {/* Status filter */}
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-black outline-none"
-            >
-              <option>All Status</option>
-              <option>Processing</option>
-              <option>Shipped</option>
-              <option>Delivered</option>
-              <option>Cancelled</option>
-            </select>
-            {/* Date filter */}
-            <select
-              value={dateFilter}
-              onChange={(e) => setDateFilter(e.target.value)}
-              className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-black outline-none"
-            >
-              <option>Last 7 Days</option>
-              <option>Last 30 Days</option>
-              <option>Last 90 Days</option>
-            </select>
-          </div>
-          {/* Export CSV */}
-          <button className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-black transition-colors hover:bg-gray-50">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="h-4 w-4"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
-              />
-            </svg>
-            Export CSV
-          </button>
+        {/* Filters */}
+        <div className="mt-6 flex items-center gap-3">
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="rounded-lg border border-gray-700 bg-[#161920] px-3 py-2 text-sm text-gray-300 outline-none transition-colors hover:border-gray-600"
+          >
+            <option>All Status</option>
+            <option>Processing</option>
+            <option>Shipped</option>
+            <option>Delivered</option>
+            <option>Cancelled</option>
+          </select>
+          <select
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+            className="rounded-lg border border-gray-700 bg-[#161920] px-3 py-2 text-sm text-gray-300 outline-none transition-colors hover:border-gray-600"
+          >
+            <option>Last 7 Days</option>
+            <option>Last 30 Days</option>
+            <option>Last 90 Days</option>
+          </select>
         </div>
 
         {/* Orders table */}
-        <div className="mt-4 overflow-hidden rounded-xl border border-gray-100 bg-white">
+        <div className="mt-4 overflow-hidden rounded-xl border border-gray-800 bg-[#161920]">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-100">
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
-                  Order ID & Date
+              <tr className="border-b border-gray-800">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  Order ID &amp; Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Customer
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Items
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Total
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">
-                  Action
                 </th>
               </tr>
             </thead>
@@ -251,14 +178,14 @@ export default function AdminOrderPage() {
               {orders.map((order, i) => (
                 <tr
                   key={i}
-                  className="border-b border-gray-50 transition-colors hover:bg-gray-50"
+                  className="border-b border-gray-800/60 transition-colors hover:bg-white/[0.02]"
                 >
                   {/* Order ID & Date */}
                   <td className="px-6 py-4">
-                    <p className="text-sm font-semibold text-black">
+                    <p className="font-mono text-sm font-semibold text-white">
                       {order.id}
                     </p>
-                    <p className="text-xs text-gray-400">{order.date}</p>
+                    <p className="text-xs text-gray-500">{order.date}</p>
                   </td>
 
                   {/* Customer */}
@@ -270,10 +197,10 @@ export default function AdminOrderPage() {
                         {order.customerInitials}
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-black">
+                        <p className="text-sm font-medium text-white">
                           {order.customerName}
                         </p>
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-gray-500">
                           {order.customerEmail}
                         </p>
                       </div>
@@ -282,11 +209,11 @@ export default function AdminOrderPage() {
 
                   {/* Items */}
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1.5">
                       {order.items.map((img, j) => (
                         <div
                           key={j}
-                          className="h-10 w-10 overflow-hidden rounded-lg bg-gray-100"
+                          className="h-10 w-10 overflow-hidden rounded-lg bg-gray-800"
                         >
                           <Image
                             src={img}
@@ -298,7 +225,7 @@ export default function AdminOrderPage() {
                         </div>
                       ))}
                       {order.extraItems > 0 && (
-                        <span className="ml-1 text-xs text-gray-400">
+                        <span className="text-xs text-gray-500">
                           +{order.extraItems}
                         </span>
                       )}
@@ -306,27 +233,17 @@ export default function AdminOrderPage() {
                   </td>
 
                   {/* Total */}
-                  <td className="px-6 py-4 text-sm font-medium text-black">
+                  <td className="px-6 py-4 text-sm font-semibold text-amber-400">
                     {order.total}
                   </td>
 
                   {/* Status */}
                   <td className="px-6 py-4">
                     <span
-                      className={`inline-flex items-center gap-1 rounded-full border px-3 py-0.5 text-xs font-medium ${order.statusStyle}`}
+                      className={`inline-flex items-center rounded-full border px-3 py-0.5 text-xs font-semibold ${order.statusStyle}`}
                     >
-                      {order.statusIcon && (
-                        <span>{order.statusIcon}</span>
-                      )}
                       {order.status}
                     </span>
-                  </td>
-
-                  {/* Action */}
-                  <td className="px-6 py-4">
-                    <button className="text-sm text-gray-500 hover:text-black">
-                      View
-                    </button>
                   </td>
                 </tr>
               ))}
@@ -334,28 +251,54 @@ export default function AdminOrderPage() {
           </table>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between border-t border-gray-100 px-6 py-3">
-            <p className="text-xs text-gray-400">
-              Showing <span className="text-black">1</span> to{" "}
-              <span className="text-black">4</span> of{" "}
-              <span className="text-black">1,240</span> results
+          <div className="flex items-center justify-between border-t border-gray-800 px-6 py-4">
+            <p className="text-xs text-gray-500">
+              Showing <span className="font-medium text-white">1</span> to{" "}
+              <span className="font-medium text-white">4</span> of{" "}
+              <span className="font-medium text-white">1,240</span> results
             </p>
             <div className="flex items-center gap-1">
-              <button className="rounded-lg px-3 py-1 text-xs text-gray-400 hover:bg-gray-100">
-                Prev
+              <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-700 text-gray-500 transition-colors hover:border-gray-600 hover:text-white">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="h-4 w-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 19.5 8.25 12l7.5-7.5"
+                  />
+                </svg>
               </button>
-              <button className="rounded-lg bg-blue-600 px-3 py-1 text-xs font-medium text-white">
+              <button className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-400 text-xs font-bold text-gray-900">
                 1
               </button>
-              <button className="rounded-lg px-3 py-1 text-xs text-gray-500 hover:bg-gray-100">
+              <button className="flex h-8 w-8 items-center justify-center rounded-lg text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-white">
                 2
               </button>
-              <button className="rounded-lg px-3 py-1 text-xs text-gray-500 hover:bg-gray-100">
+              <button className="flex h-8 w-8 items-center justify-center rounded-lg text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-white">
                 3
               </button>
-              <span className="px-1 text-xs text-gray-400">...</span>
-              <button className="rounded-lg px-3 py-1 text-xs text-gray-500 hover:bg-gray-100">
-                Next
+              <span className="px-1 text-xs text-gray-600">...</span>
+              <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-700 text-gray-500 transition-colors hover:border-gray-600 hover:text-white">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="h-4 w-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                  />
+                </svg>
               </button>
             </div>
           </div>

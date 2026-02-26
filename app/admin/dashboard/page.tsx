@@ -1,174 +1,206 @@
 "use client";
 
 import Image from "next/image";
-import AdminSidebar from "../../components/AdminSidebar";
+import AdminNav from "../../components/AdminNav";
 
 const statCards = [
   {
-    title: "Today's Sales",
+    title: "TODAY'S SALES",
     value: "$2.4M",
     subtitle: "↑ 12% from yesterday",
-    subtitleColor: "text-green-500",
-    bg: "bg-white",
-    textColor: "text-black",
+    subtitleColor: "text-emerald-400",
+    borderColor: "border-l-emerald-500",
   },
   {
-    title: "Pending Orders",
+    title: "PENDING ORDERS",
     value: "1,240",
     subtitle: "Needs fulfillment",
-    subtitleColor: "text-gray-400",
-    bg: "bg-white",
-    textColor: "text-black",
+    subtitleColor: "text-gray-500",
+    borderColor: "border-l-amber-500",
   },
   {
-    title: "Active Members",
+    title: "ACTIVE MEMBERS",
     value: "45k",
     subtitle: "↑ 300 new today",
-    subtitleColor: "text-green-500",
-    bg: "bg-white",
-    textColor: "text-black",
+    subtitleColor: "text-emerald-400",
+    borderColor: "border-l-blue-500",
   },
   {
-    title: "Live SNKRS Drop",
+    title: "LIVE SNKRS DROP",
     value: "250k",
-    subtitle: "● Entries",
-    subtitleColor: "text-orange-400",
-    bg: "bg-gradient-to-br from-gray-900 to-orange-900",
-    textColor: "text-white",
+    subtitle: "● Entries open",
+    subtitleColor: "text-amber-400",
+    borderColor: "border-l-orange-500",
   },
 ];
 
 const recentOrders = [
   {
+    initials: "AS",
+    avatarColor: "bg-purple-900/60 text-purple-400",
     name: "Amy Smith",
     order: "Order #20001",
     status: "Shipped",
-    statusColor: "text-green-500 bg-green-50 border-green-200",
+    statusStyle: "text-emerald-400 border-emerald-800/50 bg-emerald-900/30",
   },
   {
+    initials: "KO",
+    avatarColor: "bg-blue-900/60 text-blue-400",
     name: "Ken Oren",
     order: "Order #20002",
     status: "Processing",
-    statusColor: "text-orange-500 bg-orange-50 border-orange-200",
+    statusStyle: "text-amber-400 border-amber-800/50 bg-amber-900/30",
+  },
+  {
+    initials: "MJ",
+    avatarColor: "bg-red-900/60 text-red-400",
+    name: "Michael Jordan",
+    order: "Order #20003",
+    status: "Delivered",
+    statusStyle: "text-gray-400 border-gray-700 bg-gray-800/60",
+  },
+  {
+    initials: "SW",
+    avatarColor: "bg-green-900/60 text-green-400",
+    name: "Serena Williams",
+    order: "Order #20004",
+    status: "Cancelled",
+    statusStyle: "text-red-400 border-red-800/50 bg-red-900/30",
   },
 ];
 
-export default function AdminPage() {
-  return (
-    <div className="flex min-h-screen bg-gray-50">
-      <AdminSidebar />
+const chartBars = [
+  { day: "Mon", height: 55, value: "$1.2M" },
+  { day: "Tue", height: 75, value: "$1.8M" },
+  { day: "Wed", height: 60, value: "$1.4M" },
+  { day: "Thu", height: 90, value: "$2.1M" },
+  { day: "Fri", height: 100, value: "$2.4M" },
+  { day: "Sat", height: 70, value: "$1.6M" },
+  { day: "Sun", height: 45, value: "$1.0M" },
+];
 
-      {/* Main content */}
-      <main className="flex-1 px-8 py-6">
-        {/* Top bar */}
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-semibold text-black">DASHBOARD OVERVIEW</h1>
-          <div className="flex items-center gap-4">
-            {/* Search */}
-            <div className="flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-4 w-4 text-gray-400"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                />
-              </svg>
-              <input
-                type="text"
-                placeholder="Search orders, SKU..."
-                className="bg-transparent text-sm text-black placeholder-gray-400 outline-none w-40"
-              />
-            </div>
-            {/* Avatar */}
-            <div className="h-9 w-9 overflow-hidden rounded-full bg-gray-300">
-              <Image
-                src="/nike.svg"
-                alt="Admin"
-                width={36}
-                height={36}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          </div>
+export default function AdminDashboardPage() {
+  return (
+    <div className="min-h-screen bg-[#0d0f14]">
+      <AdminNav />
+
+      <main className="mx-auto max-w-7xl px-8 py-8">
+        {/* Title */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-black uppercase tracking-wider text-white">
+            Dashboard Overview
+          </h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Welcome back. Here&apos;s what&apos;s happening today.
+          </p>
         </div>
 
         {/* Stat cards */}
-        <div className="mt-8 grid grid-cols-4 gap-5">
+        <div className="grid grid-cols-4 gap-5">
           {statCards.map((card, i) => (
             <div
               key={i}
-              className={`rounded-xl ${card.bg} p-5 ${
-                card.bg === "bg-white" ? "border border-gray-100" : ""
-              }`}
+              className={`rounded-xl border border-gray-800 border-l-4 ${card.borderColor} bg-[#161920] p-5`}
             >
-              <p
-                className={`text-xs ${
-                  card.textColor === "text-white"
-                    ? "text-orange-300"
-                    : "text-gray-400"
-                }`}
-              >
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
                 {card.title}
               </p>
-              <p className={`mt-2 text-3xl font-bold ${card.textColor}`}>
+              <p className="mt-3 text-3xl font-black text-white">
                 {card.value}
               </p>
-              <p className={`mt-1 text-xs ${card.subtitleColor}`}>
+              <p className={`mt-1.5 text-xs font-medium ${card.subtitleColor}`}>
                 {card.subtitle}
               </p>
             </div>
           ))}
         </div>
 
-        {/* Bottom section */}
-        <div className="mt-8 grid grid-cols-5 gap-5">
-          {/* Weekly Sales Trend */}
-          <div className="col-span-3 rounded-xl border border-gray-100 bg-white p-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-black">
-                Weekly Sales Trend
-              </h2>
-              <span className="rounded-full border border-gray-200 px-3 py-1 text-xs text-gray-500">
-                Last 7 Days
-              </span>
-            </div>
-            {/* Chart placeholder */}
-            <div className="mt-6 flex h-48 items-center justify-center">
-              <p className="text-sm text-gray-300">
-                {"{"}Chart Graphic Area - Add SVG here in Figma{"}"}
-              </p>
+        {/* Quick stats row */}
+        <div className="mt-6 grid grid-cols-3 gap-5">
+          {/* Top Products */}
+          <div className="col-span-2 rounded-xl border border-gray-800 bg-[#161920] p-6">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-white">
+              Top Selling Products
+            </h2>
+            <div className="mt-4 space-y-3">
+              {[
+                { name: "Apex Carbon Runner", sku: "SKU-88291", sold: 312, pct: 85 },
+                { name: "Velocity Aero-Socks", sku: "SKU-99481", sold: 210, pct: 57 },
+                { name: "Stealth Comp Tech-Tee", sku: "SKU-77302", sold: 148, pct: 40 },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-4">
+                  <div className="h-10 w-10 shrink-0 rounded-lg bg-gray-800">
+                    <Image
+                      src={`/products/shoe${i + 1}.svg`}
+                      alt={item.name}
+                      width={40}
+                      height={40}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="text-sm font-medium text-white truncate">
+                        {item.name}
+                      </p>
+                      <span className="text-xs text-gray-500 ml-2 shrink-0">
+                        {item.sold} sold
+                      </span>
+                    </div>
+                    <div className="h-1.5 w-full rounded-full bg-gray-800">
+                      <div
+                        className="h-1.5 rounded-full bg-amber-400"
+                        style={{ width: `${item.pct}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Recent Orders */}
-          <div className="col-span-2 rounded-xl border border-gray-100 bg-white p-6">
-            <h2 className="text-sm font-semibold text-black">Recent Orders</h2>
-            <div className="mt-4 space-y-4">
-              {recentOrders.map((order, i) => (
-                <div key={i} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-full bg-gray-200" />
-                    <div>
-                      <p className="text-sm font-medium text-black">
-                        {order.name}
-                      </p>
-                      <p className="text-xs text-gray-400">{order.order}</p>
-                    </div>
+          {/* Inventory Alerts */}
+          <div className="rounded-xl border border-gray-800 bg-[#161920] p-6">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-white">
+              Inventory Alerts
+            </h2>
+            <div className="mt-4 space-y-3">
+              {[
+                {
+                  name: "Stealth Comp Tech-Tee",
+                  stock: 12,
+                  badge: "LOW STOCK",
+                  badgeStyle: "text-amber-400 bg-amber-900/30 border-amber-800/50",
+                },
+                {
+                  name: "Titanium Chronos v2",
+                  stock: 0,
+                  badge: "OUT OF STOCK",
+                  badgeStyle: "text-red-400 bg-red-900/30 border-red-800/50",
+                },
+              ].map((alert, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between rounded-lg border border-gray-800 bg-gray-900/40 p-3"
+                >
+                  <div>
+                    <p className="text-xs font-medium text-white">
+                      {alert.name}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      Stock: {alert.stock}
+                    </p>
                   </div>
                   <span
-                    className={`rounded-full border px-3 py-0.5 text-xs font-medium ${order.statusColor}`}
+                    className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold ${alert.badgeStyle}`}
                   >
-                    {order.status}
+                    {alert.badge}
                   </span>
                 </div>
               ))}
+              <button className="w-full rounded-lg border border-gray-700 py-2 text-xs font-medium text-gray-400 transition-colors hover:border-gray-600 hover:text-white">
+                View Inventory →
+              </button>
             </div>
           </div>
         </div>
