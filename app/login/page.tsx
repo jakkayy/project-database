@@ -35,7 +35,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-black px-4">
       {/* Logo */}
       <div className="mb-8 flex flex-col items-center gap-1">
-        <span className="text-2xl font-black uppercase tracking-widest text-white">⬡ APEX</span>
+        <span className="text-2xl font-black uppercase tracking-widest text-white">⬡ NIKO</span>
         <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C9A84C]">High Performance Elite</span>
       </div>
 

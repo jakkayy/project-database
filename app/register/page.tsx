@@ -34,7 +34,7 @@ export default function RegisterPage() {
     <div className="flex min-h-screen flex-col items-center justify-center bg-black px-4 py-12">
       {/* Logo */}
       <div className="mb-8 flex flex-col items-center gap-1">
-        <span className="text-2xl font-black uppercase tracking-widest text-white">⬡ APEX</span>
+        <span className="text-2xl font-black uppercase tracking-widest text-white">⬡ NIKO</span>
         <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#C9A84C]">High Performance Elite</span>
       </div>
 
@@ -42,7 +42,7 @@ export default function RegisterPage() {
       <div className="w-full max-w-[480px] bg-neutral-900 px-10 py-12">
         {/* Heading */}
         <h1 className="mb-2 text-center text-3xl font-black uppercase tracking-tight text-white">
-          Join The Elite
+          สมัครสมาชิก
         </h1>
         <p className="mb-8 text-center text-sm text-neutral-400">
           สร้างบัญชีเพื่อประสบการณ์สูงสุด
