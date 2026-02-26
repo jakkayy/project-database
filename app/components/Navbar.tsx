@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { verifyToken } from "lib/jwt";
 import { prisma } from "lib/prisma";
+import LogoutButton from "./LogoutButton";
 
 export default async function Navbar() {
   const token = (await cookies()).get("access_token")?.value;
@@ -21,6 +22,7 @@ export default async function Navbar() {
       account = null;
     }
   }
+
 
   return (
     <header className="sticky top-0 z-50">
@@ -47,9 +49,16 @@ export default async function Navbar() {
           <span className="text-neutral-600">|</span>
 
           {account ? (
-            <Link href="/profile" className="px-2 hover:text-[#C9A84C]">
-              สวัสดีคุณ {account.firstname}
-            </Link>
+            <>
+              <Link href="/profile" className="px-2 hover:text-[#C9A84C]">
+                สวัสดีคุณ {account.firstname}
+              </Link>
+
+              <span className="text-neutral-600">|</span>
+
+              <LogoutButton />
+            </>
+
           ) : (
             <Link href="/login" className="px-2 hover:text-[#C9A84C]">
               ลงชื่อเข้าใช้
