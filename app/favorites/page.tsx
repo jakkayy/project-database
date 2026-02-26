@@ -15,7 +15,7 @@ export default async function FavoritesPage() {
     where: { user_id: Number(user.user_id) },
     include: { items: true },
   });
-
+  
   if (!fav || fav.items.length === 0) {
     return (
       <div className="min-h-screen bg-black">

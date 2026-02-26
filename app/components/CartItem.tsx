@@ -35,12 +35,12 @@ export default function CartItem({
     <div className="border-b border-neutral-800 py-6">
       <div className="flex gap-5">
         {/* Product image */}
-        <div className="h-32 w-32 shrink-0 overflow-hidden bg-neutral-900">
+        <div className="h-44 w-44 shrink-0 overflow-hidden bg-neutral-900">
           <Image
             src={image}
             alt={name}
-            width={150}
-            height={150}
+            width={200}
+            height={200}
             className="h-full w-full object-cover"
           />
         </div>

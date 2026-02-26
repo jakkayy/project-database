@@ -21,23 +21,14 @@ export default function FavClient({ initialItems }: { initialItems: any[] }) {
 return (
   <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
     {items.map((item) => (
-      <div key={item.favItem_id} className="relative group">
-        <FavoritesItem 
-          // ต้องส่ง item.product.images[0] ไปให้ตรงกับชื่อ prop 'image'
-          image={item.product?.images?.[0] || ""} 
-          name={item.product?.name || "Unknown"}
-          category={item.product?.category || "Category"}
-          price={item.product?.price ? `฿${item.product.price.toLocaleString()}` : "N/A"}
-        />
-        
-        {/* ปุ่มลบ */}
-        <button 
-          onClick={() => handleDelete(item.favItem_id)}
-          className="absolute top-2 right-2 border border-neutral-700 bg-black/80 px-2 py-1 text-[10px] uppercase tracking-widest text-neutral-400 transition-colors hover:border-red-500 hover:text-red-500"
-        >
-          ลบ
-        </button>
-      </div>
+      <FavoritesItem
+        key={item.favItem_id}
+        image={item.product?.images?.[0] || ""}
+        name={item.product?.name || "Unknown"}
+        category={item.product?.category || "Category"}
+        price={item.product?.price ? `฿${item.product.price.toLocaleString()}` : "N/A"}
+        onDelete={() => handleDelete(item.favItem_id)}
+      />
     ))}
   </div>
 );

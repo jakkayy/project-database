@@ -33,21 +33,13 @@ export default function AddressSelector({
   const displayAddresses = showAll ? addresses : addresses.slice(0, 3);
 
   const formatAddress = (address: Address) => {
-    const parts = [
-      `${address.firstname} ${address.lastname}`,
-      address.addressLine,
-    ];
-    
-    if (address.apartment) {
-      parts.push(address.apartment);
-    }
-    
+    const parts = [`${address.firstname} ${address.lastname}`, address.addressLine];
+    if (address.apartment) parts.push(address.apartment);
     parts.push(
       `${address.city} ${address.province} ${address.postalCode}`,
       address.country,
       address.phone
     );
-    
     return parts.filter(Boolean).join(", ");
   };
 
@@ -55,11 +47,11 @@ export default function AddressSelector({
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-medium text-black">เลือกที่อยู่</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-widest text-neutral-400">เลือกที่อยู่</h2>
         {addresses.length > 3 && (
           <button
             onClick={() => setShowAll(!showAll)}
-            className="text-xs text-gray-500 hover:text-black transition-colors"
+            className="text-xs uppercase tracking-wider text-neutral-500 transition-colors hover:text-[#C9A84C]"
           >
             {showAll ? "แสดงน้อยลง" : `แสดงทั้งหมด (${addresses.length})`}
           </button>
@@ -72,10 +64,10 @@ export default function AddressSelector({
           <div
             key={address.address_id}
             onClick={() => onAddressSelect(address.address_id)}
-            className={`relative cursor-pointer rounded-lg border p-4 transition-all ${
+            className={`relative cursor-pointer border p-4 transition-all ${
               selectedAddressId === address.address_id
-                ? "border-black bg-gray-50"
-                : "border-gray-300 hover:border-gray-400"
+                ? "border-[#C9A84C] bg-neutral-800"
+                : "border-neutral-700 hover:border-neutral-500"
             }`}
           >
             {/* Radio button */}
@@ -83,12 +75,12 @@ export default function AddressSelector({
               <div
                 className={`h-4 w-4 rounded-full border-2 ${
                   selectedAddressId === address.address_id
-                    ? "border-black"
-                    : "border-gray-300"
+                    ? "border-[#C9A84C]"
+                    : "border-neutral-600"
                 }`}
               >
                 {selectedAddressId === address.address_id && (
-                  <div className="h-2 w-2 rounded-full bg-black mt-0.5 ml-0.5" />
+                  <div className="ml-0.5 mt-0.5 h-2 w-2 rounded-full bg-[#C9A84C]" />
                 )}
               </div>
             </div>
@@ -97,15 +89,15 @@ export default function AddressSelector({
             <div className="ml-8">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-black">
+                  <p className="text-sm font-bold uppercase tracking-wide text-white">
                     {address.firstname} {address.lastname}
                   </p>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="mt-1 text-xs text-neutral-400">
                     {formatAddress(address)}
                   </p>
                 </div>
                 {address.isDefault && (
-                  <span className="ml-4 px-2 py-1 text-xs bg-black text-white rounded">
+                  <span className="ml-4 bg-[#C9A84C] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-black">
                     ค่าเริ่มต้น
                   </span>
                 )}
@@ -117,7 +109,7 @@ export default function AddressSelector({
         {/* Add new address button */}
         <button
           onClick={() => setShowModal(true)}
-          className="w-full flex items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 p-4 text-sm text-gray-500 hover:border-black hover:text-black transition-colors"
+          className="flex w-full items-center justify-center gap-2 border border-dashed border-neutral-700 p-4 text-xs uppercase tracking-wider text-neutral-500 transition-colors hover:border-[#C9A84C] hover:text-[#C9A84C]"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -125,13 +117,9 @@ export default function AddressSelector({
             viewBox="0 0 24 24"
             strokeWidth={2}
             stroke="currentColor"
-            className="h-5 w-5"
+            className="h-4 w-4"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
           เพิ่มที่อยู่ใหม่
         </button>
@@ -139,12 +127,12 @@ export default function AddressSelector({
 
       {/* Add Address Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="relative w-full max-w-xl rounded-lg bg-white p-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+          <div className="relative w-full max-w-xl bg-neutral-900 p-8">
             {/* Close Button */}
             <button
               onClick={() => setShowModal(false)}
-              className="absolute right-4 top-4 text-gray-400 hover:text-black"
+              className="absolute right-4 top-4 text-neutral-500 transition-colors hover:text-white"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -154,15 +142,11 @@ export default function AddressSelector({
                 stroke="currentColor"
                 className="h-5 w-5"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18 18 6M6 6l12 12"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
               </svg>
             </button>
 
-            <h2 className="mb-6 text-xl font-medium text-black">เพิ่มที่อยู่</h2>
+            <h2 className="mb-6 text-sm font-black uppercase tracking-widest text-white">เพิ่มที่อยู่</h2>
 
             <form className="space-y-4">
               {/* Row 1: ชื่อ + นามสกุล */}
@@ -170,12 +154,12 @@ export default function AddressSelector({
                 <input
                   type="text"
                   placeholder="ชื่อ*"
-                  className="rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                  className="border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-[#C9A84C]"
                 />
                 <input
                   type="text"
                   placeholder="นามสกุล*"
-                  className="rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                  className="border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-[#C9A84C]"
                 />
               </div>
 
@@ -183,14 +167,14 @@ export default function AddressSelector({
               <input
                 type="text"
                 placeholder="ที่อยู่*"
-                className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                className="w-full border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-[#C9A84C]"
               />
 
               {/* Row 3: อพาร์ทเมนต์ */}
               <input
                 type="text"
                 placeholder="อพาร์ทเมนต์, ห้องชุด, อาคาร"
-                className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                className="w-full border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-[#C9A84C]"
               />
 
               {/* Row 4: เมือง + รหัสไปรษณีย์ */}
@@ -198,18 +182,18 @@ export default function AddressSelector({
                 <input
                   type="text"
                   placeholder="เมือง*"
-                  className="rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                  className="border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-[#C9A84C]"
                 />
                 <input
                   type="text"
                   placeholder="รหัสไปรษณีย์*"
-                  className="rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                  className="border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-[#C9A84C]"
                 />
               </div>
 
-              {/* Row 5: จังหวัด + ประเทศ/ภูมิภาค */}
+              {/* Row 5: จังหวัด + ประเทศ */}
               <div className="grid grid-cols-2 gap-4">
-                <select className="rounded-md border border-gray-300 px-4 py-3 text-sm text-gray-500 outline-none focus:border-black">
+                <select className="border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-neutral-400 outline-none transition-colors focus:border-[#C9A84C]">
                   <option value="">จังหวัด*</option>
                   <option value="กรุงเทพมหานคร">กรุงเทพมหานคร</option>
                   <option value="เชียงใหม่">เชียงใหม่</option>
@@ -224,7 +208,7 @@ export default function AddressSelector({
                 </select>
                 <select
                   defaultValue="ไทย"
-                  className="rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                  className="border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white outline-none transition-colors focus:border-[#C9A84C]"
                 >
                   <option value="">ประเทศ/ภูมิภาค*</option>
                   <option value="ไทย">ไทย</option>
@@ -235,15 +219,12 @@ export default function AddressSelector({
               <input
                 type="tel"
                 placeholder="หมายเลขโทรศัพท์*"
-                className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                className="w-full border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-[#C9A84C]"
               />
 
               {/* Checkbox */}
-              <label className="flex items-center gap-2 text-sm text-black">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300"
-                />
+              <label className="flex items-center gap-2 text-sm text-neutral-400">
+                <input type="checkbox" className="h-4 w-4 border-neutral-600 bg-neutral-800 accent-[#C9A84C]" />
                 ตั้งเป็นที่อยู่จัดส่งหลัก
               </label>
 
@@ -252,7 +233,7 @@ export default function AddressSelector({
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="rounded-full bg-black px-8 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
+                  className="bg-[#C9A84C] px-8 py-2.5 text-xs font-black uppercase tracking-widest text-black transition-opacity hover:opacity-90"
                 >
                   บันทึก
                 </button>
