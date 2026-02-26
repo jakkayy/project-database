@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import CheckoutOrderSummary from "@/app/components/CheckoutOrderSummary";
+import AddressSelector from "@/app/components/AddressSelector";
+import { set } from "mongoose";
 
 const orderItems = [
   {
@@ -32,10 +34,77 @@ const orderItems = [
   },
 ];
 
+const mockAddresses = [
+  {
+    address_id: 1,
+    firstname: "สมชาย",
+    lastname: "ใจดี",
+    addressLine: "123 ถนนสุขุมวิท",
+    apartment: "อาคาร ABC ห้อง 501",
+    city: "กรุงเทพมหานคร",
+    province: "คลองเตย",
+    postalCode: "10110",
+    country: "Thailand",
+    phone: "0812345678",
+    isDefault: true,
+  },
+  {
+    address_id: 2,
+    firstname: "สมชาย",
+    lastname: "ใจดี",
+    addressLine: "456 ถนนพหลโยธิน",
+    apartment: "",
+    city: "กรุงเทพมหานคร",
+    province: "พญาไท",
+    postalCode: "10400",
+    country: "Thailand",
+    phone: "0812345678",
+    isDefault: false,
+  },
+  {
+    address_id: 3,
+    firstname: "สมหญิง",
+    lastname: "รักดี",
+    addressLine: "789 ถนนรัชดาภิเษก",
+    apartment: "คอนโด D ชั้น 12",
+    city: "กรุงเทพมหานคร",
+    province: "ดินแดง",
+    postalCode: "10400",
+    country: "Thailand",
+    phone: "0898765432",
+    isDefault: false,
+  },
+  {
+    address_id: 4,
+    firstname: "สมรัก",
+    lastname: "รักดี",
+    addressLine: "789 ถนนรัชดาภิเษก",
+    apartment: "คอนโด D ชั้น 12",
+    city: "กรุงเทพมหานคร",
+    province: "ดินแดง",
+    postalCode: "10400",
+    country: "Thailand",
+    phone: "0898765432",
+    isDefault: false,
+  },
+];
+
 export default function CheckoutPage() {
   const [deliveryMethod, setDeliveryMethod] = useState<"ship" | "pickup">(
     "ship"
   );
+  const [selectedAddressId, setSelectedAddressId] = useState<number>(
+    mockAddresses.find(addr => addr.isDefault)?.address_id || mockAddresses[0]?.address_id
+  );
+
+  const handleAddressSelect = (addressId: number) => {
+    setSelectedAddressId(addressId);
+  };
+
+  const handleAddNewAddress = () => {
+    // TODO: Open modal or navigate to add address page
+    console.log("Add new address");
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -90,154 +159,17 @@ export default function CheckoutPage() {
           <div className="flex-1 max-w-lg">
             <h1 className="text-2xl font-medium text-black">การส่งมอบ</h1>
 
-            {/* Delivery method tabs */}
-            <div className="mt-6 flex">
-              <button
-                onClick={() => setDeliveryMethod("ship")}
-                className={`flex flex-1 items-center justify-center gap-2 rounded-l-lg border px-4 py-3 text-sm font-medium transition-colors ${
-                  deliveryMethod === "ship"
-                    ? "border-black bg-white text-black"
-                    : "border-gray-300 bg-gray-50 text-gray-500"
-                }`}
-              >
-                {/* Truck icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="h-5 w-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"
-                  />
-                </svg>
-                จัดส่งที่บ้าน
-              </button>
-              <button
-                onClick={() => setDeliveryMethod("pickup")}
-                className={`flex flex-1 items-center justify-center gap-2 rounded-r-lg border px-4 py-3 text-sm font-medium transition-colors ${
-                  deliveryMethod === "pickup"
-                    ? "border-black bg-white text-black"
-                    : "border-gray-300 bg-gray-50 text-gray-500"
-                }`}
-              >
-                {/* Location icon */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="h-5 w-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
-                  />
-                </svg>
-                รับที่ร้าน
-              </button>
-            </div>
-
-            {/* Email */}
-            <div className="mt-8">
-              <label className="text-xs text-gray-500">อีเมล *</label>
-              <div className="mt-1 flex items-center justify-between rounded-lg border border-gray-300 px-4 py-3">
-                <span className="text-sm text-black">
-                  niti2042547@gmail.com
-                </span>
-                <span className="h-3 w-3 rounded-full bg-green-500" />
+            {/* Address selection */}
+            {deliveryMethod === "ship" && (
+              <div className="mt-8">
+                <AddressSelector
+                  addresses={mockAddresses}
+                  selectedAddressId={selectedAddressId}
+                  onAddressSelect={handleAddressSelect}
+                  onAddNewAddress={handleAddNewAddress}
+                />
               </div>
-              <p className="mt-1 text-xs text-gray-400">
-                เราจะส่งยืนยันคำสั่งซื้อเมื่อสั่งเสร็จแล้ว
-              </p>
-            </div>
-
-            {/* Name & Address section */}
-            <div className="mt-8">
-              <h2 className="text-base font-medium text-black">
-                ป้อนชื่อและที่อยู่:
-              </h2>
-
-              <div className="mt-4 space-y-4">
-                {/* First name */}
-                <div>
-                  <input
-                    type="text"
-                    placeholder="ชื่อ *"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm text-black placeholder-gray-400 outline-none focus:border-black"
-                  />
-                </div>
-
-                {/* Last name */}
-                <div>
-                  <input
-                    type="text"
-                    placeholder="นามสกุล *"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm text-black placeholder-gray-400 outline-none focus:border-black"
-                  />
-                </div>
-
-                {/* Address search */}
-                <div className="relative">
-                  <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="h-4 w-4 text-gray-400"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                      />
-                    </svg>
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="เริ่มพิมพ์ที่อยู่หรือรหัสไปรษณีย์ *"
-                    className="w-full rounded-lg border border-gray-300 py-3 pl-10 pr-4 text-sm text-black placeholder-gray-400 outline-none focus:border-black"
-                  />
-                </div>
-                <p className="text-xs text-gray-400">
-                  เราไม่ขอจัดส่งไปที่ตู้ ปณ. ฯลฯ.
-                </p>
-              </div>
-            </div>
-
-            {/* Manual address */}
-            <div className="mt-6">
-              <h2 className="text-base font-medium text-black">
-                ป้อนที่อยู่ด้วยตัวเอง
-              </h2>
-
-              <div className="mt-4 space-y-4">
-                {/* Phone */}
-                <div>
-                  <input
-                    type="tel"
-                    placeholder="หมายเลขโทรศัพท์ *"
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm text-black placeholder-gray-400 outline-none focus:border-black"
-                  />
-                </div>
-                <p className="text-xs text-gray-400">
-                  ผู้ให้บริการจัดส่งสินค้าจะการติดต่อคุณเมื่อถึงเวลาในการส่งมอบ
-                </p>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Right: Order summary */}
@@ -247,6 +179,12 @@ export default function CheckoutPage() {
               total="20,300.00"
               items={orderItems}
             />
+          
+            
+            {/* Pay button */}
+            <button className="mt-6 w-full rounded-lg bg-black px-6 py-4 text-sm font-medium text-white transition-colors hover:bg-gray-800">
+              ชำระเงิน
+            </button>
           </div>
         </div>
       </div>

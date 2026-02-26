@@ -5,7 +5,7 @@ import ShopBySport from "@/app/components/ShopBySport";
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
+       <Navbar />
       <NewArrivals />
       <ShopBySport />
     </div>
