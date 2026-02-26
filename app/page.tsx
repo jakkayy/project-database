@@ -7,7 +7,6 @@ export default function Home() {
     <div className="min-h-screen bg-white">
        <Navbar />
       <NewArrivals />
-      <ShopBySport />
     </div>
   );
 }
