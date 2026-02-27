@@ -1,85 +1,100 @@
-"use client";
-
-import Image from "next/image";
 import AdminNav from "../../components/AdminNav";
+import InventoryAlerts from "../components/InventoryAlerts";
+import { prisma } from "lib/prisma";
+import { connectMongo } from "lib/mongodb";
+import Product from "@/app/models/Product";
 
-const statCards = [
-  {
-    title: "TODAY'S SALES",
-    value: "$2.4M",
-    subtitle: "↑ 12% from yesterday",
-    subtitleColor: "text-emerald-400",
-    borderColor: "border-l-emerald-500",
-  },
-  {
-    title: "PENDING ORDERS",
-    value: "1,240",
-    subtitle: "Needs fulfillment",
-    subtitleColor: "text-gray-500",
-    borderColor: "border-l-amber-500",
-  },
-  {
-    title: "ACTIVE MEMBERS",
-    value: "45k",
-    subtitle: "↑ 300 new today",
-    subtitleColor: "text-emerald-400",
-    borderColor: "border-l-blue-500",
-  },
-  {
-    title: "LIVE SNKRS DROP",
-    value: "250k",
-    subtitle: "● Entries open",
-    subtitleColor: "text-amber-400",
-    borderColor: "border-l-orange-500",
-  },
-];
+function formatSales(n: number): string {
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `$${(n / 1_000).toFixed(1)}K`;
+  return `฿${n.toFixed(0)}`;
+}
 
-const recentOrders = [
-  {
-    initials: "AS",
-    avatarColor: "bg-purple-900/60 text-purple-400",
-    name: "Amy Smith",
-    order: "Order #20001",
-    status: "Shipped",
-    statusStyle: "text-emerald-400 border-emerald-800/50 bg-emerald-900/30",
-  },
-  {
-    initials: "KO",
-    avatarColor: "bg-blue-900/60 text-blue-400",
-    name: "Ken Oren",
-    order: "Order #20002",
-    status: "Processing",
-    statusStyle: "text-amber-400 border-amber-800/50 bg-amber-900/30",
-  },
-  {
-    initials: "MJ",
-    avatarColor: "bg-red-900/60 text-red-400",
-    name: "Michael Jordan",
-    order: "Order #20003",
-    status: "Delivered",
-    statusStyle: "text-gray-400 border-gray-700 bg-gray-800/60",
-  },
-  {
-    initials: "SW",
-    avatarColor: "bg-green-900/60 text-green-400",
-    name: "Serena Williams",
-    order: "Order #20004",
-    status: "Cancelled",
-    statusStyle: "text-red-400 border-red-800/50 bg-red-900/30",
-  },
-];
+export default async function AdminDashboardPage() {
+  // Fetch total sales: SUM(price * quantity) for orders with a COMPLETED payment
+  const totalSalesResult = await prisma.$queryRaw<[{ total: string | null }]>`
+    SELECT SUM(oi.price * oi.quantity) AS total
+    FROM OrderItem oi
+    INNER JOIN \`Order\` o ON oi.order_id = o.order_id
+    WHERE EXISTS (
+      SELECT 1 FROM Payment p
+      WHERE p.order_id = o.order_id AND p.status = 'COMPLETED'
+    )
+  `;
+  const totalSalesNum = Number(totalSalesResult[0]?.total ?? 0);
+  const totalSalesFormatted = formatSales(totalSalesNum);
 
-const chartBars = [
-  { day: "Mon", height: 55, value: "$1.2M" },
-  { day: "Tue", height: 75, value: "$1.8M" },
-  { day: "Wed", height: 60, value: "$1.4M" },
-  { day: "Thu", height: 90, value: "$2.1M" },
-  { day: "Fri", height: 100, value: "$2.4M" },
-  { day: "Sat", height: 70, value: "$1.6M" },
-  { day: "Sun", height: 45, value: "$1.0M" },
-];
+  // Fetch pending orders count
+  const pendingOrderCount = await prisma.order.count({
+    where: { status: "PENDING" },
+  });
 
-export default function AdminDashboardPage() {
+  // Fetch top selling products (sum quantity by product_id, top 3)
+  const topSalesRaw = await prisma.orderItem.groupBy({
+    by: ["product_id"],
+    _sum: { quantity: true },
+    orderBy: { _sum: { quantity: "desc" } },
+    take: 3,
+  });
+
+  // Fetch low stock items (stock < 5) from MySQL
+  const lowStockRows = await prisma.productStock.findMany({
+    where: { stock: { lt: 5 } },
+    orderBy: { stock: "asc" },
+  });
+
+  // Merge all product IDs and batch fetch names from MongoDB
+  await connectMongo();
+  const allProductIds = [
+    ...new Set([
+      ...topSalesRaw.map((r) => r.product_id),
+      ...lowStockRows.map((r) => r.product_id),
+    ]),
+  ];
+  const products = await Product.find({ _id: { $in: allProductIds } }).select("_id name");
+  const productMap: Record<string, string> = {};
+  for (const p of products) {
+    productMap[p._id.toString()] = p.name;
+  }
+
+  // Build top selling list with relative percentage bar
+  const maxSold = topSalesRaw[0]?._sum.quantity ?? 1;
+  const topSelling = topSalesRaw.map((r) => ({
+    name: productMap[r.product_id] ?? r.product_id,
+    sold: r._sum.quantity ?? 0,
+    pct: Math.round(((r._sum.quantity ?? 0) / maxSold) * 100),
+  }));
+
+  // Build inventory alerts
+  const inventoryAlerts = lowStockRows.map((row) => ({
+    name: productMap[row.product_id] ?? row.product_id,
+    color: row.color,
+    size: row.size,
+    stock: row.stock,
+    badge: row.stock === 0 ? "OUT OF STOCK" : "LOW STOCK",
+    badgeStyle:
+      row.stock === 0
+        ? "text-red-400 bg-red-900/30 border-red-800/50"
+        : "text-amber-400 bg-amber-900/30 border-amber-800/50",
+  }));
+
+  const statCards = [
+    {
+      title: "TOTAL SALES",
+      value: totalSalesFormatted,
+      subtitle: "From completed payments",
+      subtitleColor: "text-emerald-400",
+      borderColor: "border-l-emerald-500",
+    },
+    {
+      title: "PENDING ORDERS",
+      value: pendingOrderCount.toLocaleString(),
+      subtitle: "Needs fulfillment",
+      subtitleColor: "text-gray-500",
+      borderColor: "border-l-amber-500",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-[#0d0f14]">
       <AdminNav />
@@ -96,7 +111,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Stat cards */}
-        <div className="grid grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 gap-5">
           {statCards.map((card, i) => (
             <div
               key={i}
@@ -116,93 +131,45 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Quick stats row */}
-        <div className="mt-6 grid grid-cols-3 gap-5">
+        <div className="mt-6 grid grid-cols-3 items-start gap-5">
           {/* Top Products */}
           <div className="col-span-2 rounded-xl border border-gray-800 bg-[#161920] p-6">
             <h2 className="text-sm font-bold uppercase tracking-wider text-white">
               Top Selling Products
             </h2>
             <div className="mt-4 space-y-3">
-              {[
-                { name: "Apex Carbon Runner", sku: "SKU-88291", sold: 312, pct: 85 },
-                { name: "Velocity Aero-Socks", sku: "SKU-99481", sold: 210, pct: 57 },
-                { name: "Stealth Comp Tech-Tee", sku: "SKU-77302", sold: 148, pct: 40 },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-4">
-                  <div className="h-10 w-10 shrink-0 rounded-lg bg-gray-800">
-                    <Image
-                      src={`/products/shoe${i + 1}.svg`}
-                      alt={item.name}
-                      width={40}
-                      height={40}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <p className="text-sm font-medium text-white truncate">
-                        {item.name}
-                      </p>
-                      <span className="text-xs text-gray-500 ml-2 shrink-0">
-                        {item.sold} sold
-                      </span>
+              {topSelling.length === 0 ? (
+                <p className="text-xs text-gray-500">ยังไม่มีข้อมูลการขาย</p>
+              ) : (
+                topSelling.map((item, i) => (
+                  <div key={i} className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-800 text-sm font-black text-amber-400">
+                      {i + 1}
                     </div>
-                    <div className="h-1.5 w-full rounded-full bg-gray-800">
-                      <div
-                        className="h-1.5 rounded-full bg-amber-400"
-                        style={{ width: `${item.pct}%` }}
-                      />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-sm font-medium text-white truncate">
+                          {item.name}
+                        </p>
+                        <span className="text-xs text-gray-500 ml-2 shrink-0">
+                          {item.sold} sold
+                        </span>
+                      </div>
+                      <div className="h-1.5 w-full rounded-full bg-gray-800">
+                        <div
+                          className="h-1.5 rounded-full bg-amber-400"
+                          style={{ width: `${item.pct}%` }}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
 
           {/* Inventory Alerts */}
-          <div className="rounded-xl border border-gray-800 bg-[#161920] p-6">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white">
-              Inventory Alerts
-            </h2>
-            <div className="mt-4 space-y-3">
-              {[
-                {
-                  name: "Stealth Comp Tech-Tee",
-                  stock: 12,
-                  badge: "LOW STOCK",
-                  badgeStyle: "text-amber-400 bg-amber-900/30 border-amber-800/50",
-                },
-                {
-                  name: "Titanium Chronos v2",
-                  stock: 0,
-                  badge: "OUT OF STOCK",
-                  badgeStyle: "text-red-400 bg-red-900/30 border-red-800/50",
-                },
-              ].map((alert, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between rounded-lg border border-gray-800 bg-gray-900/40 p-3"
-                >
-                  <div>
-                    <p className="text-xs font-medium text-white">
-                      {alert.name}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      Stock: {alert.stock}
-                    </p>
-                  </div>
-                  <span
-                    className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold ${alert.badgeStyle}`}
-                  >
-                    {alert.badge}
-                  </span>
-                </div>
-              ))}
-              <button className="w-full rounded-lg border border-gray-700 py-2 text-xs font-medium text-gray-400 transition-colors hover:border-gray-600 hover:text-white">
-                View Inventory →
-              </button>
-            </div>
-          </div>
+          <InventoryAlerts alerts={inventoryAlerts} />
         </div>
       </main>
     </div>
