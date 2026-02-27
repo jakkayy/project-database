@@ -17,7 +17,7 @@ export default function SportCard({ image, label }: SportCardProps) {
           className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
         />
       </div>
-      <p className="text-base font-medium text-black">{label}</p>
+      <p className="text-base font-medium text-white">{label}</p>
     </div>
   );
 }

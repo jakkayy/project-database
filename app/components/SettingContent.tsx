@@ -76,21 +76,21 @@ export default function SettingContent() {
   return (
     <>
       {/* Header */}
-      <div className="border-b border-gray-200 px-10 py-6">
-        <h1 className="text-2xl font-medium text-black">การตั้งค่า</h1>
+      <div className="border-b border-neutral-800 px-10 py-6">
+        <h1 className="text-2xl font-medium text-white">การตั้งค่า</h1>
       </div>
 
       <div className="flex">
         {/* Sidebar */}
-        <aside className="w-64 border-r border-gray-200 px-6 py-6">
+        <aside className="w-64 border-r border-neutral-800 px-6 py-6">
           <ul className="space-y-1">
             {sidebarItems.map((item) => (
               <li key={item.label}>
                 <button
                   className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm ${
                     item.active
-                      ? "font-medium text-black"
-                      : "text-gray-600 hover:text-black"
+                      ? "font-medium text-white"
+                      : "text-neutral-400 hover:text-white"
                   }`}
                 >
                   {item.icon}
@@ -103,10 +103,10 @@ export default function SettingContent() {
 
         {/* Main Content */}
         <main className="flex-1 px-16 py-10">
-          <h2 className="text-xl font-medium text-black">
+          <h2 className="text-xl font-medium text-white">
             ที่อยู่ส่งมอบที่บันทึกไว้
           </h2>
-          <p className="mt-4 max-w-lg text-sm leading-relaxed text-gray-500">
+          <p className="mt-4 max-w-lg text-sm leading-relaxed text-neutral-400">
             คุณไม่มีที่อยู่ส่งมอบที่บันทึกไว้ในบัญชีนี้ แนะนำให้เพิ่มที่อยู่ที่นี่
             แล้วระบบจะป้อนข้อมูลให้ช่วงหน้าใน ขั้นตอนเช็คเอาท์
             เพื่อให้การดำเนินการรวดเร็วยิ่งขึ้น
@@ -114,7 +114,7 @@ export default function SettingContent() {
 
           <button
             onClick={() => setShowModal(true)}
-            className="mt-8 rounded-full bg-black px-6 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
+            className="mt-8 rounded-full bg-[#C9A84C] px-6 py-2.5 text-sm font-medium text-black transition hover:bg-[#b8943e]"
           >
             เพิ่มที่อยู่
           </button>
@@ -123,12 +123,12 @@ export default function SettingContent() {
 
       {/* Add Address Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="relative w-full max-w-xl rounded-lg bg-white p-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="relative w-full max-w-xl rounded-lg bg-neutral-900 p-8">
             {/* Close Button */}
             <button
               onClick={() => setShowModal(false)}
-              className="absolute right-4 top-4 text-gray-400 hover:text-black"
+              className="absolute right-4 top-4 text-neutral-500 hover:text-white"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -146,7 +146,7 @@ export default function SettingContent() {
               </svg>
             </button>
 
-            <h2 className="mb-6 text-xl font-medium text-black">เพิ่มที่อยู่</h2>
+            <h2 className="mb-6 text-xl font-medium text-white">เพิ่มที่อยู่</h2>
 
             <form className="space-y-4">
               {/* Row 1: ชื่อ + นามสกุล */}
@@ -154,12 +154,12 @@ export default function SettingContent() {
                 <input
                   type="text"
                   placeholder="ชื่อ*"
-                  className="rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                  className="rounded-md border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-[#C9A84C]"
                 />
                 <input
                   type="text"
                   placeholder="นามสกุล*"
-                  className="rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                  className="rounded-md border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-[#C9A84C]"
                 />
               </div>
 
@@ -167,14 +167,14 @@ export default function SettingContent() {
               <input
                 type="text"
                 placeholder="ที่อยู่*"
-                className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                className="w-full rounded-md border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-[#C9A84C]"
               />
 
               {/* Row 3: อพาร์ทเมนต์ */}
               <input
                 type="text"
                 placeholder="อพาร์ทเมนต์, ห้องชุด, อาคาร"
-                className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                className="w-full rounded-md border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-[#C9A84C]"
               />
 
               {/* Row 4: เมือง + รหัสไปรษณีย์ */}
@@ -182,18 +182,18 @@ export default function SettingContent() {
                 <input
                   type="text"
                   placeholder="เมือง*"
-                  className="rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                  className="rounded-md border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-[#C9A84C]"
                 />
                 <input
                   type="text"
                   placeholder="รหัสไปรษณีย์*"
-                  className="rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                  className="rounded-md border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-[#C9A84C]"
                 />
               </div>
 
               {/* Row 5: จังหวัด + ประเทศ/ภูมิภาค */}
               <div className="grid grid-cols-2 gap-4">
-                <select className="rounded-md border border-gray-300 px-4 py-3 text-sm text-gray-500 outline-none focus:border-black">
+                <select className="rounded-md border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-neutral-400 outline-none focus:border-[#C9A84C]">
                   <option value="">จังหวัด*</option>
                   <option value="กรุงเทพมหานคร">กรุงเทพมหานคร</option>
                   <option value="เชียงใหม่">เชียงใหม่</option>
@@ -208,7 +208,7 @@ export default function SettingContent() {
                 </select>
                 <select
                   defaultValue="ไทย"
-                  className="rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                  className="rounded-md border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white outline-none focus:border-[#C9A84C]"
                 >
                   <option value="">ประเทศ/ภูมิภาค*</option>
                   <option value="ไทย">ไทย</option>
@@ -219,14 +219,14 @@ export default function SettingContent() {
               <input
                 type="tel"
                 placeholder="หมายเลขโทรศัพท์*"
-                className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
+                className="w-full rounded-md border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none focus:border-[#C9A84C]"
               />
 
               {/* Checkbox */}
-              <label className="flex items-center gap-2 text-sm text-black">
+              <label className="flex items-center gap-2 text-sm text-neutral-300">
                 <input
                   type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300"
+                  className="h-4 w-4 rounded border-neutral-600"
                 />
                 ตั้งเป็นที่อยู่จัดส่งหลัก
               </label>
@@ -236,7 +236,7 @@ export default function SettingContent() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="rounded-full bg-black px-8 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
+                  className="rounded-full bg-[#C9A84C] px-8 py-2.5 text-sm font-medium text-black transition hover:bg-[#b8943e]"
                 >
                   บันทึก
                 </button>
