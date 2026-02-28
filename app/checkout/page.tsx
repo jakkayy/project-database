@@ -61,32 +61,7 @@ const mockAddresses = [
     phone: "0812345678",
     isDefault: false,
   },
-  {
-    address_id: 3,
-    firstname: "สมหญิง",
-    lastname: "รักดี",
-    addressLine: "789 ถนนรัชดาภิเษก",
-    apartment: "คอนโด D ชั้น 12",
-    city: "กรุงเทพมหานคร",
-    province: "ดินแดง",
-    postalCode: "10400",
-    country: "Thailand",
-    phone: "0898765432",
-    isDefault: false,
-  },
-  {
-    address_id: 4,
-    firstname: "สมรัก",
-    lastname: "รักดี",
-    addressLine: "789 ถนนรัชดาภิเษก",
-    apartment: "คอนโด D ชั้น 12",
-    city: "กรุงเทพมหานคร",
-    province: "ดินแดง",
-    postalCode: "10400",
-    country: "Thailand",
-    phone: "0898765432",
-    isDefault: false,
-  },
+
 ];
 
 export default function CheckoutPage() {
