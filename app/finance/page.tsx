@@ -86,6 +86,7 @@ export default function FinancePage() {
         setMessage('Deposit successful!');
         setMessageType('success');
         fetchTransactions();
+        window.dispatchEvent(new Event('auth-change'));
       } else {
         setMessage(data.error || 'Deposit failed');
         setMessageType('error');

@@ -16,7 +16,9 @@ export default async function Navbar() {
 
       account = await prisma.user.findUnique({
         where: { user_id: user.user_id },
-        select: { firstname: true }
+        select: { firstname: true,
+                  balance: true
+        }
       });
     } catch {
       account = null;
@@ -92,8 +94,24 @@ export default async function Navbar() {
         </li>
       </ul>
 
-      {/* Right side: Search, Wishlist, Cart */}
+      {/* Right side: Balance, Search, Wishlist, Cart */}
       <div className="flex items-center gap-4">
+        {/* Balance */}
+        <div className="flex items-center gap-4">
+            {account && (
+              <Link href="/finance">
+                <div className="flex items-center gap-2 rounded-full bg-neutral-800 px-4 py-2">
+                  <span className="text-sm font-bold text-[#C9A84C]">
+                    {new Intl.NumberFormat("th-TH", {
+                      style: "currency",
+                      currency: "THB",
+                    }).format(Number(account.balance))}
+                  </span>
+                </div>
+              </Link>
+            )}
+        </div>
+
         {/* Search */}
         <div className="flex items-center gap-2 rounded-full bg-neutral-800 px-4 py-2">
           <svg
