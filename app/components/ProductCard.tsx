@@ -62,7 +62,7 @@ export default function ProductCard({
   };
 
   const content = (
-    <div className="min-w-72 shrink-0 cursor-pointer group">
+    <div className="cursor-pointer group w-full">
       <div className="relative mb-4 aspect-square w-full overflow-hidden bg-neutral-900">
         {badge && (
           <span className="absolute left-3 top-3 z-10 bg-[#C9A84C] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-black">
