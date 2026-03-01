@@ -8,6 +8,7 @@ export default function CheckoutPage() {
   const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
   const [items, setItems] = useState([]);
   const [total, setTotal] = useState(0);
+  const [currentBalance, setCurrentBalance] = useState(0);
 
   const fetchCheckout = async () => {
     try {
@@ -16,6 +17,7 @@ export default function CheckoutPage() {
 
       setItems(data.items);
       setTotal(data.total);
+      setCurrentBalance(data.balance);
     } catch (error) {
       console.error("Failed to fetch checkout:", error);
     }
@@ -33,7 +35,6 @@ export default function CheckoutPage() {
   }, []);
 
   const selectedAddress = addresses.find((a: any) => a.address_id === selectedId);
-
   return (
     <div className="min-h-screen bg-black text-white p-10">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -47,16 +48,11 @@ export default function CheckoutPage() {
         </div>
         <div className="lg:col-span-5">
           <CheckoutOrderSummary 
-            subtotal={Number(total).toLocaleString("th-TH", {
-                style: "currency",
-                currency: "THB",
-              })} 
-            total={Number(total).toLocaleString("th-TH", {
-                style: "currency",
-                currency: "THB",
-              })}
+            subtotal={total} 
+            total={total}
             items={items} 
             selectedAddress={selectedAddress}
+            currentBalance={currentBalance}
           />
           <button 
             disabled={!selectedId}
