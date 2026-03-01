@@ -52,24 +52,6 @@ export default function ClientNavbar() {
         <Image src="/jordan.svg" alt="Jordan" width={20} height={20} className="invert" />
 
         <div className="flex items-center gap-1 text-xs text-neutral-300">
-          <Link href="#" className="px-2 hover:text-[#C9A84C]">
-            ค้นหาร้าน
-          </Link>
-
-          <span className="text-neutral-600">|</span>
-
-          <Link href="#" className="px-2 hover:text-[#C9A84C]">
-            ความช่วยเหลือ
-          </Link>
-
-          <span className="text-neutral-600">|</span>
-
-          <Link href="/register" className="px-2 hover:text-[#C9A84C]">
-            เข้าร่วมกับเรา
-          </Link>
-
-          <span className="text-neutral-600">|</span>
-
           {loading ? (
             <span className="px-2">Loading...</span>
           ) : account ? (
