@@ -6,7 +6,7 @@ import Link from 'next/link';
 import LogoutButton from './LogoutButton';
 
 export default function ClientNavbar() {
-  const [account, setAccount] = useState<{ firstname: string } | null>(null);
+  const [account, setAccount] = useState<{ firstname: string, balance: number } | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchUserData = async () => {
@@ -31,18 +31,10 @@ export default function ClientNavbar() {
 
   useEffect(() => {
     fetchUserData();
-    
-    // Listen for storage changes (for cross-tab sync)
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'auth_change') {
-        fetchUserData();
-      }
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('auth-change', fetchUserData);
     
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('auth-change', fetchUserData);
     };
   }, []);
 
@@ -116,8 +108,24 @@ export default function ClientNavbar() {
           </li>
         </ul>
 
-        {/* Right side: Search, Wishlist, Finance, Cart */}
+        {/* Right side: Balance, Search, Wishlist, Cart */}
         <div className="flex items-center gap-4">
+          {/* Balance */}
+          <div className="flex items-center gap-4">
+              {account && (
+                <Link href="/finance">
+                  <div className="flex items-center gap-2 rounded-full bg-neutral-800 px-4 py-2">
+                    <span className="text-sm font-bold text-[#C9A84C]">
+                      {new Intl.NumberFormat("th-TH", {
+                        style: "currency",
+                        currency: "THB",
+                      }).format(Number(account.balance))}
+                    </span>
+                  </div>
+                </Link>
+              )}
+          </div>
+
           {/* Search */}
           <div className="flex items-center gap-2 rounded-full bg-neutral-800 px-4 py-2">
             <svg
