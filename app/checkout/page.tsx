@@ -6,6 +6,20 @@ import CheckoutOrderSummary from "@/app/components/CheckoutOrderSummary";
 export default function CheckoutPage() {
   const [addresses, setAddresses] = useState([]);
   const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
+  const [items, setItems] = useState([]);
+  const [total, setTotal] = useState(0);
+
+  const fetchCheckout = async () => {
+    try {
+      const res = await fetch("/api/checkout");
+      const data = await res.json();
+
+      setItems(data.items);
+      setTotal(data.total);
+    } catch (error) {
+      console.error("Failed to fetch checkout:", error);
+    }
+  };
 
   const fetchAddresses = async () => {
     const res = await fetch("/api/address");
@@ -13,7 +27,10 @@ export default function CheckoutPage() {
     setAddresses(data);
   };
 
-  useEffect(() => { fetchAddresses(); }, []);
+  useEffect(() => {
+    fetchAddresses();
+    fetchCheckout();
+  }, []);
 
   const selectedAddress = addresses.find((a: any) => a.address_id === selectedId);
 
@@ -30,7 +47,15 @@ export default function CheckoutPage() {
         </div>
         <div className="lg:col-span-5">
           <CheckoutOrderSummary 
-            subtotal="20,300" total="20,300" items={[]} 
+            subtotal={Number(total).toLocaleString("th-TH", {
+                style: "currency",
+                currency: "THB",
+              })} 
+            total={Number(total).toLocaleString("th-TH", {
+                style: "currency",
+                currency: "THB",
+              })}
+            items={items} 
             selectedAddress={selectedAddress}
           />
           <button 
