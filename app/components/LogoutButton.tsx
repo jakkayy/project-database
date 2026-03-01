@@ -2,13 +2,22 @@
 
 import { useRouter } from "next/navigation";
 
-export default function LogoutButton() {
+interface LogoutButtonProps {
+  onLogout?: () => void;
+}
+
+export default function LogoutButton({ onLogout }: LogoutButtonProps) {
   const router = useRouter();
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", {
       method: "POST",
     });
+
+    // Call custom onLogout if provided
+    if (onLogout) {
+      onLogout();
+    }
 
     router.push("/login");
     router.refresh(); 

@@ -68,6 +68,9 @@ export default async function ProfilePage() {
         <Link href="/setting" className="pb-3 -mb-4 transition-colors hover:text-white">
           การตั้งค่า
         </Link>
+        <Link href="/finance" className="hover:text-black pb-3 -mb-4">
+          การเงิน
+        </Link>
       </div>
 
       {/* Profile Info */}
