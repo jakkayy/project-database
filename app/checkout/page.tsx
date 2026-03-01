@@ -35,9 +35,9 @@ export default function CheckoutPage() {
           />
           <button 
             disabled={!selectedId}
-            className={`w-full py-4 mt-6 font-black uppercase text-xs tracking-widest transition-all ${selectedId ? "bg-[#C9A84C] text-black" : "bg-neutral-800 text-neutral-500 cursor-not-allowed"}`}
+            className={`w-full py-4 mt-6 font-black uppercase text-xs tracking-widest transition-all ${selectedId ? "bg-[#C9A84C] text-black hover:opacity-90" : "bg-neutral-800 text-neutral-500 cursor-not-allowed"}`}
           >
-            {selectedId ? "ชำระเงิน" : "กรุณาเลือกที่อยู่"}
+            {selectedId ? "ชำระเงิน" : "กรุณาเลือกที่อยู่จัดส่ง"}
           </button>
         </div>
       </div>
