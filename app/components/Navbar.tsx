@@ -64,11 +64,6 @@ export default async function Navbar() {
       <ul className="flex items-center gap-6 text-sm font-medium text-neutral-200">
         <li>
           <Link href="#" className="hover:text-[#C9A84C] transition-colors">
-            ข้อเสนอจำกัดเวลา
-          </Link>
-        </li>
-        <li>
-          <Link href="#" className="hover:text-[#C9A84C] transition-colors">
             ใหม่และโดดเด่น
           </Link>
         </li>
@@ -85,11 +80,6 @@ export default async function Navbar() {
         <li>
           <Link href="#" className="hover:text-[#C9A84C] transition-colors">
             เด็ก
-          </Link>
-        </li>
-        <li>
-          <Link href="#" className="hover:text-[#C9A84C] transition-colors">
-            SNKRS
           </Link>
         </li>
       </ul>
