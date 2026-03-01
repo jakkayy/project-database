@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { addCart, addFav, getStock } from "lib/apiServices/user.service";
+import { toast } from "sonner";
 
 interface Variant {
   color: string;
@@ -85,14 +86,21 @@ export default function ProductDetailPage() {
         product_id: product._id,
       });
 
-      alert("เพิ่มในรายการโปรดแล้ว");
+      toast.success("เพิ่มในรายการโปรดแล้ว", {
+        description: product.name,
+        icon: "♡",
+      });
     } catch (error: any) {
       console.error(error);
       if (error?.status === 401) {
-        alert("กรุณา login ก่อน");
+        toast.error("กรุณา Login ก่อน", {
+          description: "เข้าสู่ระบบเพื่อบันทึกรายการโปรด",
+        });
         return;
       }
-      alert("เกิดข้อผิดพลาด");
+      toast.error("เกิดข้อผิดพลาด", {
+        description: "ไม่สามารถเพิ่มรายการโปรดได้ กรุณาลองใหม่",
+      });
     }
   };
 
@@ -100,7 +108,9 @@ export default function ProductDetailPage() {
     if (!product) return;
 
     if (!selectedSize) {
-      alert("กรุณาเลือกไซส์ก่อน");
+      toast.warning("กรุณาเลือกไซส์ก่อน", {
+        description: "เลือกไซส์ที่ต้องการด้านบน",
+      });
       return;
     }
 
@@ -113,10 +123,15 @@ export default function ProductDetailPage() {
         color: selectedColor,
       });
 
-      alert("เพิ่มลงตะกร้าแล้ว");
+      toast.success("เพิ่มลงตะกร้าแล้ว", {
+        description: `${product.name} — EU ${selectedSize}`,
+        icon: "🛒",
+      });
     } catch (error) {
       console.error(error);
-      alert("เกิดข้อผิดพลาด");
+      toast.error("เกิดข้อผิดพลาด", {
+        description: "ไม่สามารถเพิ่มสินค้าได้ กรุณาลองใหม่",
+      });
     }
   };
 

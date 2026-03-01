@@ -22,53 +22,49 @@ export default function CheckoutOrderSummary({
 }: CheckoutOrderSummaryProps) {
   return (
     <div>
-      <h2 className="text-xl font-medium text-black">สรุปคำสั่งซื้อ</h2>
+      <h2 className="text-sm font-black uppercase tracking-widest text-white">ORDER SUMMARY</h2>
 
       {/* Subtotal & Shipping */}
       <div className="mt-4 space-y-2">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-600">
-            ยอดรวมย่อย{" "}
-            <span className="inline-block h-4 w-4 rounded-full border border-gray-400 text-center text-xs leading-4 text-gray-400">
-              ?
-            </span>
-          </span>
-          <span className="text-black">฿{subtotal}</span>
+        <div className="flex items-center justify-between text-xs">
+          <span className="uppercase tracking-wider text-neutral-400">SUBTOTAL</span>
+          <span className="text-white">฿{subtotal}</span>
         </div>
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-600">การจัดส่ง/การส่งมอบ</span>
-          <span className="text-black">ฟรี</span>
+        <div className="flex items-center justify-between text-xs">
+          <span className="uppercase tracking-wider text-neutral-400">SHIPPING</span>
+          <span className="font-semibold text-[#C9A84C]">FREE</span>
         </div>
       </div>
 
       {/* Free shipping bar */}
       <div className="mt-3">
-        <p className="text-xs text-green-700">คุณได้สิทธิ์จัดส่งสินค้าฟรี</p>
-        <div className="mt-1 h-1.5 w-full rounded-full bg-gray-200">
-          <div className="h-1.5 w-full rounded-full bg-green-600" />
+        <p className="text-xs uppercase tracking-wider text-[#C9A84C]">คุณได้สิทธิ์จัดส่งสินค้าฟรี</p>
+        <div className="mt-1 h-0.5 w-full bg-neutral-700">
+          <div className="h-full w-full bg-[#C9A84C]" />
         </div>
       </div>
 
       {/* Divider */}
-      <div className="mt-4 border-t border-gray-200 pt-3">
-        <div className="flex items-center justify-between text-sm font-medium">
-          <span className="text-black">ยอดรวม</span>
-          <span className="text-black">฿{total}</span>
-        </div>
+      <div className="my-4 border-t border-neutral-800" />
+
+      {/* Total */}
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-black uppercase tracking-widest text-white">TOTAL</span>
+        <span className="text-xl font-black text-[#C9A84C]">฿{total}</span>
       </div>
 
       {/* Estimated delivery */}
-      <div className="mt-6 border-t border-gray-200 pt-4">
-        <p className="text-sm text-gray-600">
-          มาถึง ศุกร์ 20 ก.พ. - พฤหัส 26 ก.พ.
+      <div className="mt-4 border-t border-neutral-800 pt-4">
+        <p className="text-xs uppercase tracking-wider text-neutral-500">
+          มาถึง ศุกร์ 20 ก.พ. — พฤหัส 26 ก.พ.
         </p>
       </div>
 
       {/* Order items */}
-      <div className="mt-4 space-y-6">
+      <div className="mt-4 space-y-5">
         {items.map((item, index) => (
           <div key={index} className="flex gap-4">
-            <div className="h-25 w-25 shrink-0 overflow-hidden bg-gray-100">
+            <div className="h-24 w-24 shrink-0 overflow-hidden bg-neutral-800">
               <Image
                 src={item.image}
                 alt={item.name}
@@ -78,15 +74,13 @@ export default function CheckoutOrderSummary({
               />
             </div>
             <div className="flex-1 text-xs">
-              <p className="font-medium text-black leading-tight">
-                {item.description}
+              <p className="font-bold uppercase tracking-wide text-white leading-tight">
+                {item.name}
               </p>
-              <p className="mt-0.5 font-medium text-black">{item.name}</p>
-              <p className="mt-1 text-gray-500">จำนวน {item.qty}</p>
-              <p className="text-gray-500">
-                ไซส์ US {item.size}
-              </p>
-              <p className="mt-1 font-medium text-black">฿{item.price}</p>
+              <p className="mt-0.5 uppercase tracking-wider text-neutral-500">{item.description}</p>
+              <p className="mt-1 text-neutral-500">จำนวน {item.qty}</p>
+              <p className="text-neutral-500">ไซส์ US {item.size}</p>
+              <p className="mt-1 font-bold text-[#C9A84C]">฿{item.price}</p>
             </div>
           </div>
         ))}

@@ -24,8 +24,15 @@ export async function POST(req: Request) {
     }
 
     // 3. เพิ่มสินค้าลงใน FavItem (ใช้ upsert เพื่อกัน error ถ้าซ้ำ หรือจะใช้ create ปกติก็ได้เพราะมี @@unique กันไว้)
-    const favoriteItem = await prisma.favItem.create({
-      data: {
+    const favoriteItem = await prisma.favItem.upsert({
+      where: {
+        fav_id_product_id: {
+          fav_id: userFav.fav_id,
+          product_id: product_id,
+        },
+      },
+      update: {},
+      create: {
         fav_id: userFav.fav_id,
         product_id: product_id,
       },

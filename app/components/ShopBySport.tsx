@@ -39,14 +39,14 @@ export default function ShopBySport() {
     <section className="px-10 py-8">
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-2xl font-medium text-black">
+        <h2 className="text-2xl font-black uppercase tracking-tight text-white">
           เลือกซื้อตามประเภทกีฬา
         </h2>
         <div className="flex items-center gap-3">
           {/* Left arrow */}
           <button
             onClick={() => scroll("left")}
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 transition-colors hover:bg-gray-200"
+            className="flex h-10 w-10 items-center justify-center border border-neutral-700 bg-neutral-900 text-neutral-300 transition-colors hover:border-[#C9A84C] hover:text-[#C9A84C]"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +54,7 @@ export default function ShopBySport() {
               viewBox="0 0 24 24"
               strokeWidth={2}
               stroke="currentColor"
-              className="h-5 w-5"
+              className="h-4 w-4"
             >
               <path
                 strokeLinecap="round"

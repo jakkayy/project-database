@@ -62,6 +62,13 @@ export function addFav(data: {
     });
 }
 
+export function deleteFav(favItem_id: number) {
+    return apiFetch("/api/favorite/delete-fav", {
+        method: "DELETE",
+        body: JSON.stringify({ favItem_id }),
+    });
+}
+
 export function getStock(data: {
     product_id: string,
     color: string,

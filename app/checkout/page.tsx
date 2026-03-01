@@ -107,23 +107,23 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-black">
       {/* Top bar */}
-      <header className="flex items-center justify-between border-b border-gray-200 px-10 py-4">
+      <header className="flex items-center justify-between border-b border-neutral-800 px-10 py-4">
         <Link href="/">
-          <Image src="/nike.svg" alt="Nike" width={60} height={24} />
+          <Image src="/nike.svg" alt="Nike" width={60} height={24} className="invert" />
         </Link>
-        <div className="flex items-center gap-4 text-xs text-gray-600">
+        <div className="flex items-center gap-4 text-xs text-neutral-400">
           <span>001-800-65-6453</span>
           {/* Chat icon */}
-          <button className="p-1">
+          <button className="p-1 transition-colors hover:text-[#C9A84C]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="h-5 w-5 text-black"
+              className="h-5 w-5"
             >
               <path
                 strokeLinecap="round"
@@ -133,14 +133,14 @@ export default function CheckoutPage() {
             </svg>
           </button>
           {/* Cart icon */}
-          <Link href="/cart" className="p-1">
+          <Link href="/cart" className="p-1 transition-colors hover:text-[#C9A84C]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="h-5 w-5 text-black"
+              className="h-5 w-5"
             >
               <path
                 strokeLinecap="round"
@@ -157,7 +157,8 @@ export default function CheckoutPage() {
         <div className="flex gap-16">
           {/* Left: Shipping form */}
           <div className="flex-1 max-w-lg">
-            <h1 className="text-2xl font-medium text-black">การส่งมอบ</h1>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-[#C9A84C]">CHECKOUT</p>
+            <h1 className="text-2xl font-black uppercase tracking-tight text-white">การส่งมอบ</h1>
 
             {/* Address selection */}
             {deliveryMethod === "ship" && (
@@ -173,17 +174,37 @@ export default function CheckoutPage() {
 
           {/* Right: Order summary */}
           <div className="w-85 shrink-0">
-            <CheckoutOrderSummary
-              subtotal="20,300.00"
-              total="20,300.00"
-              items={orderItems}
-            />
-          
-            
-            {/* Pay button */}
-            <button className="mt-6 w-full rounded-lg bg-black px-6 py-4 text-sm font-medium text-white transition-colors hover:bg-gray-800">
-              ชำระเงิน
-            </button>
+            <div className="bg-neutral-900 p-6">
+              <CheckoutOrderSummary
+                subtotal="20,300.00"
+                total="20,300.00"
+                items={orderItems}
+              />
+
+              {/* Pay button */}
+              <button className="mt-6 flex w-full items-center justify-center gap-2 bg-[#C9A84C] py-4 text-xs font-black uppercase tracking-widest text-black transition-opacity hover:opacity-90">
+                ชำระเงิน
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-4 w-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                </svg>
+              </button>
+
+              {/* Secure badge */}
+              <div className="mt-4 flex flex-col items-center gap-2">
+                <div className="flex items-center gap-3 text-neutral-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                  </svg>
+                </div>
+                <p className="text-[9px] uppercase tracking-widest text-neutral-600">SECURE SSL ENCRYPTED CHECKOUT SYSTEM</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

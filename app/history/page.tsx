@@ -3,26 +3,26 @@ import Link from "next/link";
 
 export default function CheckoutPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-black">
       <Navbar />
 
       {/* Profile Sub Navigation */}
-      <div className="flex items-center justify-between border-b border-gray-200 px-10 py-4">
-        <h1 className="text-2xl font-medium text-black">คำสั่งซื้อ</h1>
-        <div className="flex gap-8 text-sm text-gray-500">
-          <Link href="/profile" className="hover:text-black">
+      <div className="flex items-center justify-between border-b border-neutral-800 px-10 py-4">
+        <h1 className="text-2xl font-black uppercase tracking-tight text-white">คำสั่งซื้อ</h1>
+        <div className="flex gap-8 text-sm text-neutral-500">
+          <Link href="/profile" className="transition-colors hover:text-white">
             โปรไฟล์
           </Link>
           <Link
-            href="/checkout"
-            className="text-black font-medium border-b-2 border-black pb-3 -mb-4"
+            href="/history"
+            className="border-b-2 border-[#C9A84C] pb-3 -mb-4 font-semibold text-white"
           >
             คำสั่งซื้อ
           </Link>
-          <Link href="/favorites" className="hover:text-black">
+          <Link href="/favorites" className="transition-colors hover:text-white">
             รายการโปรด
           </Link>
-          <Link href="/setting" className="hover:text-black">
+          <Link href="/setting" className="transition-colors hover:text-white">
             การตั้งค่า
           </Link>
         </div>
@@ -30,40 +30,40 @@ export default function CheckoutPage() {
 
       {/* Empty Orders Content */}
       <div className="flex-1 px-10 py-6">
-        <p className="text-sm text-gray-500">คุณยังไม่มีคำสั่งซื้อ</p>
+        <p className="text-xs uppercase tracking-wider text-neutral-500">คุณยังไม่มีคำสั่งซื้อ</p>
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 bg-white px-10 py-10">
+      <footer className="border-t border-neutral-800 bg-neutral-900 px-10 py-10">
         <div className="mx-auto grid max-w-7xl grid-cols-4 gap-8">
           {/* Column 1 */}
           <div>
-            <h3 className="mb-4 text-xs font-bold uppercase text-black">
+            <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-white">
               แหล่งข้อมูล
             </h3>
-            <ul className="space-y-2 text-xs text-gray-500">
+            <ul className="space-y-2 text-xs text-neutral-500">
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   ค้นหาร้านค้า
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   สมัครสมาชิก Nike
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   ข้อเสนอสำหรับนักเรียน
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   ส่งข้อเสนอแนะ
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   โค้ดโปรโมชัน
                 </Link>
               </li>
@@ -72,37 +72,37 @@ export default function CheckoutPage() {
 
           {/* Column 2 */}
           <div>
-            <h3 className="mb-4 text-xs font-bold uppercase text-black">
+            <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-white">
               ความช่วยเหลือ
             </h3>
-            <ul className="space-y-2 text-xs text-gray-500">
+            <ul className="space-y-2 text-xs text-neutral-500">
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   รับความช่วยเหลือ
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   สถานะคำสั่งซื้อ
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   การจัดส่ง
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   การคืนสินค้า
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   ตัวเลือกการชำระเงิน
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   ติดต่อเรา
                 </Link>
               </li>
@@ -111,32 +111,32 @@ export default function CheckoutPage() {
 
           {/* Column 3 */}
           <div>
-            <h3 className="mb-4 text-xs font-bold uppercase text-black">
+            <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-white">
               บริษัท
             </h3>
-            <ul className="space-y-2 text-xs text-gray-500">
+            <ul className="space-y-2 text-xs text-neutral-500">
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   เกี่ยวกับ Nike
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   ข่าวสาร
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   อาชีพ
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   นักลงทุน
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-black">
+                <Link href="#" className="transition-colors hover:text-white">
                   ความยั่งยืน
                 </Link>
               </li>
@@ -145,7 +145,7 @@ export default function CheckoutPage() {
 
           {/* Column 4 - Location */}
           <div className="flex justify-end">
-            <div className="flex items-start gap-2 text-xs text-gray-500">
+            <div className="flex items-start gap-2 text-xs text-neutral-500">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

@@ -5,6 +5,7 @@ interface WishlistItemProps {
   name: string;
   category: string;
   price: string;
+  onDelete?: () => void;
 }
 
 export default function FavoritesItem({
@@ -12,9 +13,8 @@ export default function FavoritesItem({
   name,
   category,
   price,
+  onDelete,
 }: WishlistItemProps) {
-  
-  // สร้างตัวแปรมาเช็ค ถ้า image เป็นค่าว่าง ให้ใช้รูป placeholder แทน
   const imageSrc = image && image.trim() !== "" ? image : "/products/shoe1.svg";
 
   return (
@@ -22,21 +22,23 @@ export default function FavoritesItem({
       {/* Product image with heart icon */}
       <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
         <Image
-          src={imageSrc} // เปลี่ยนมาใช้ imageSrc ที่เราเช็คแล้ว
+          src={imageSrc}
           alt={name || "Product Image"}
           width={600}
           height={600}
           className="h-full w-full object-cover"
-          // แนะนำให้ใส่ตัวนี้ถ้าภาพไม่ขึ้น หรือเพื่อความปลอดภัย
-          unoptimized={imageSrc.startsWith("http") ? false : true} 
+          unoptimized={imageSrc.startsWith("http") ? false : true}
         />
-        {/* Heart icon */}
-        <button className="absolute right-3 top-3">
+        {/* Heart icon — black on white (favorited state) */}
+        <button
+          onClick={onDelete}
+          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white text-black transition-opacity hover:opacity-70"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            className="h-6 w-6 text-black"
+            className="h-5 w-5"
           >
             <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
           </svg>
@@ -49,7 +51,7 @@ export default function FavoritesItem({
           <h3 className="text-base font-medium text-white">{name}</h3>
           <p className="text-sm text-[#C9A84C]">{category}</p>
         </div>
-        <p className="text-base text-black">{price}</p>
+        <p className="text-base text-white">{price}</p>
       </div>
 
       {/* Add to cart button */}

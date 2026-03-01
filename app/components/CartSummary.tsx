@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 interface CartSummaryProps {
   subtotal: string;
   total: string;
@@ -55,12 +57,12 @@ export default function CartSummary({ subtotal, total }: CartSummaryProps) {
       </div>
 
       {/* Checkout button */}
-      <button className="mt-6 flex w-full items-center justify-center gap-2 bg-[#C9A84C] py-4 text-xs font-black uppercase tracking-widest text-black transition-opacity hover:opacity-90">
+      <Link href="/checkout" className="mt-6 flex w-full items-center justify-center gap-2 bg-[#C9A84C] py-4 text-xs font-black uppercase tracking-widest text-black transition-opacity hover:opacity-90">
         PROCEED TO CHECKOUT
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-4 w-4">
           <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
         </svg>
-      </button>
+      </Link>
 
       {/* Secure badge */}
       <div className="mt-4 flex flex-col items-center gap-2">
