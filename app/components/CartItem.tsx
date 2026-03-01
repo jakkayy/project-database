@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { deleteCart, updateCartItem } from "lib/apiServices/user.service";
 
 interface CartItemProps {
@@ -30,6 +30,10 @@ export default function CartItem({
   onQuantityChange
 }: CartItemProps) {
   const [qty, setQty] = useState(initialQty);
+
+  useEffect(() => {
+    setQty(initialQty);
+  }, [initialQty]);
 
   return (
     <div className="border-b border-neutral-800 py-6">
