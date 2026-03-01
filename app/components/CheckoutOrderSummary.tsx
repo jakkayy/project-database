@@ -30,12 +30,11 @@ export default function CheckoutOrderSummary({
   currentBalance,
 }: CheckoutOrderSummaryProps) {
   const afterBalance = currentBalance - total
-
+  
   return (
     <div className="space-y-4">
-      <h2 className="text-sm font-black uppercase tracking-widest text-white">ORDER SUMMARY</h2>
+      <h2 className="text-sm font-black uppercase tracking-widest text-white text-xl">PAYMENT SUMMARY</h2>
 
-      {/* สรุปที่อยู่ (Optional - ถ้าอยากแสดง) */}
       {selectedAddress && (
         <div className="p-3 border border-neutral-800 bg-neutral-950 rounded text-[11px] text-neutral-400">
           <p className="font-bold text-[#C9A84C] mb-1">จัดส่งไปที่:</p>
