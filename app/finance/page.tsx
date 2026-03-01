@@ -162,16 +162,16 @@ export default function FinancePage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Balance Section */}
           <div className="lg:col-span-1">
-            <div className="bg-gray-900 rounded-lg p-6 mb-6">
+            <div className="bg-neutral-900 rounded-lg p-6 mb-6">
               <h2 className="text-xl font-semibold mb-4">ยอดเงินคงเหลือ</h2>
               <div className="text-3xl font-bold text-[#C9A84C] mb-2">
                 {formatCurrency(balance)}
               </div>
-              <div className="text-gray-400">สวัสดีคุณ {name}</div>
+              <div className="text-gray-400 font-bold">บัญชีของ: {name}</div>
             </div>
 
             {/* Deposit Form */}
-            <div className="bg-gray-900 rounded-lg p-6">
+            <div className="bg-neutral-900 rounded-lg p-6">
               <h2 className="text-xl font-semibold mb-4">เติมเงิน</h2>
               <form onSubmit={handleDeposit} className="space-y-4">
                 <div>
@@ -182,7 +182,7 @@ export default function FinancePage() {
                     type="number"
                     value={depositAmount}
                     onChange={(e) => setDepositAmount(e.target.value)}
-                    className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-[#C9A84C] text-white"
+                    className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:outline-none focus:border-[#C9A84C] text-white"
                     placeholder="0.00"
                     step="0.01"
                     min="0"
@@ -212,7 +212,7 @@ export default function FinancePage() {
 
           {/* Transaction History */}
           <div className="lg:col-span-2">
-            <div className="bg-gray-900 rounded-lg p-6">
+            <div className="bg-neutral-900 rounded-lg p-6">
               <h2 className="text-xl font-semibold mb-4">ประวัติการทำรายการ</h2>
               
               {transactions.length === 0 ? (
@@ -224,13 +224,13 @@ export default function FinancePage() {
                   {transactions.map((transaction) => (
                     <div
                       key={transaction.id}
-                      className="flex items-center justify-between p-4 bg-gray-800 rounded-lg"
+                      className="flex items-center justify-between p-4 bg-neutral-800 rounded-lg"
                     >
                       <div className="flex-1">
                         <div className="font-medium">
                           {getTransactionTypeLabel(transaction.type)}
                         </div>
-                        <div className="text-sm text-gray-400">
+                        <div className="text-sm text-neutral-400">
                           {formatDate(transaction.createdAt)}
                         </div>
                       </div>
