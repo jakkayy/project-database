@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import Navbar from "@/app/components/Navbar";
 import CartClient from "./CartClient";
 import { cookies } from "next/headers";
