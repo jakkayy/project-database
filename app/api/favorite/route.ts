@@ -6,11 +6,8 @@ const prisma = new PrismaClient();
 export async function POST(req: Request) {
   try {
     const { product_id, user_id } = await req.json();
-<<<<<<< HEAD
-=======
 
     // 1. หา Fav (หัวตะกร้า) ของ User คนนี้ก่อน
->>>>>>> 9af85cdc6913c965724e868bcabe57c8a88502e4
     let userFav = await prisma.fav.findUnique({
       where: { user_id: Number(user_id) }
     });
