@@ -101,7 +101,7 @@ export default async function Navbar() {
             {account && (
               <Link href="/finance">
                 <div className="flex items-center gap-2 rounded-full bg-neutral-800 px-4 py-2">
-                  <span className="text-sm font-bold text-[#C9A84C]">
+                  <span className="text-sm font-bold text-[#C9A84C] hover:text-[#8F722E]">
                     {new Intl.NumberFormat("th-TH", {
                       style: "currency",
                       currency: "THB",
