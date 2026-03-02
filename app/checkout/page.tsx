@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import AddressSelector from "@/app/components/AddressSelector";
 import CheckoutOrderSummary from "@/app/components/CheckoutOrderSummary";
+import ClientNavbar from "@/app/components/ClientNavbar";
+
 
 type CheckoutItem = {
   product_id: {
@@ -86,43 +88,51 @@ export default function CheckoutPage() {
   const isReady = selectedId !== undefined && total !== 0 && afterBalance >= 0;
 
   return (
-    <div className="min-h-screen bg-black text-white p-10">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
-        <div className="lg:col-span-7">
-          <AddressSelector 
-            addresses={addresses} 
-            selectedAddressId={selectedId}
-            onAddressSelect={(id) => setSelectedId(id)}
-            refreshAddresses={fetchAddresses}
-          />
-        </div>
-        <div className="lg:col-span-5">
-          <CheckoutOrderSummary 
-            subtotal={total} 
-            total={total}
-            items={items} 
-            selectedAddress={selectedAddress}
-            currentBalance={currentBalance}
-          />
-          <button
-            onClick={handlePayment}
-            disabled={!isReady}
-            className={`w-full py-4 mt-6 font-black uppercase text-xs tracking-widest transition-all ${
-              isReady
-                ? "bg-[#C9A84C] text-black hover:opacity-90"
-                : "bg-neutral-800 text-neutral-500 cursor-not-allowed"
-            }`}
-          >
-            {total === 0
-              ? "ไม่มีสินค้าในตะกร้า"
-              : afterBalance < 0
-              ? "ยอดเงินไม่เพียงพอ"
-              : !selectedId
-              ? "กรุณาเลือกที่อยู่จัดส่ง"
-              : "ชำระเงิน"}
-          </button>
-        </div>
+    <div className="min-h-screen bg-black text-white">
+
+  <ClientNavbar />
+
+  <div className="p-10">
+    <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <div className="lg:col-span-7">
+        <AddressSelector 
+          addresses={addresses} 
+          selectedAddressId={selectedId}
+          onAddressSelect={(id) => setSelectedId(id)}
+          refreshAddresses={fetchAddresses}
+        />
+      </div>
+
+      <div className="lg:col-span-5">
+        <CheckoutOrderSummary 
+          subtotal={total} 
+          total={total}
+          items={items} 
+          selectedAddress={selectedAddress}
+          currentBalance={currentBalance}
+        />
+
+        <button
+          onClick={handlePayment}
+          disabled={!isReady}
+          className={`w-full py-4 mt-6 font-black uppercase text-xs tracking-widest transition-all ${
+            isReady
+              ? "bg-[#C9A84C] text-black hover:opacity-90"
+              : "bg-neutral-800 text-neutral-500 cursor-not-allowed"
+          }`}
+        >
+          {total === 0
+            ? "ไม่มีสินค้าในตะกร้า"
+            : afterBalance < 0
+            ? "ยอดเงินไม่เพียงพอ"
+            : !selectedId
+            ? "กรุณาเลือกที่อยู่จัดส่ง"
+            : "ชำระเงิน"}
+        </button>
       </div>
     </div>
+  </div>
+
+</div>
   );
 }
