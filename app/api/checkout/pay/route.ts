@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { cookies } from "next/headers";
 import { requireAuth } from "@/lib/auth";
+import { connectMongo } from "@/lib/mongodb";
+import Product from "@/app/models/Product";
 
 export async function POST(req: Request) {
   try {
@@ -14,8 +17,10 @@ export async function POST(req: Request) {
 
     const { address_id } = await req.json();
 
+    await connectMongo();
+
     // start transaction
-    await prisma.$transaction(async (tx) => {
+    const orderId = await prisma.$transaction(async (tx) => {
       // find buyer, cart, and admin
       const buyer = await tx.user.findUnique({
         where: { user_id: userAuth.user_id },
@@ -37,10 +42,10 @@ export async function POST(req: Request) {
       }
 
       // find total cost
-      const total = cart.items.reduce(
-        (sum, item) => sum + Number(item.price) * item.quantity,
-        0
-      );
+      let total = new Prisma.Decimal(0);
+      for (const item of cart.items) {
+        total = total.plus(item.price.mul(item.quantity));
+      }
 
       // decrement productStock
       for (const item of cart.items) {
@@ -56,13 +61,22 @@ export async function POST(req: Request) {
             },
       });
         if (result.count === 0) {
-            throw {
-                code: "INSUFFICIENT_STOCK",
-                product_id: item.product_id,
-                size: item.size,
-                color: item.color,
-                message: "One or more items are out of stock",
-            };
+          const product = await Product.findById(item.product_id);
+          const stockRow = await tx.productStock.findFirst({
+            where: {
+              product_id: item.product_id,
+              color: item.color,
+              size: item.size,
+            },
+          });
+          throw {
+              code: "INSUFFICIENT_STOCK",
+              product_name: product?.name ?? "Unknown Product",
+              size: item.size,
+              color: item.color,
+              in_stock: stockRow?.stock ?? 0,
+              message: "One or more items are out of stock",
+          };
         }
       }
 
@@ -107,12 +121,22 @@ export async function POST(req: Request) {
         },
       });
 
+      
       // insert new order
       const order = await tx.order.create({
         data: {
-            user_id: buyer.user_id,
-            address_id: address_id,
-            total: total,
+          user_id: buyer.user_id,
+          address_id: address_id,
+          total: total,
+          status: "PENDING",
+        },
+      });
+      
+      // insert new payment
+      await tx.payment.create({
+        data: {
+            order_id: order.order_id,
+            amount: total,
             status: "PENDING",
         },
       });
@@ -134,37 +158,50 @@ export async function POST(req: Request) {
         where: { cart_id: cart.cart_id },
       });
 
+      // update status to COMPLETED
+      await tx.order.update({
+        where: { order_id: order.order_id },
+        data: { status: "COMPLETED" },
+      });
+      await tx.payment.update({
+        where: { order_id: order.order_id },
+        data: { status: "COMPLETED" },
+      });
+
       return true;
     });
     return NextResponse.json({ success: true });
 
     } catch (error: any) {
-        if (error.code === "INSUFFICIENT_BALANCE") {
-            return NextResponse.json(
-            {
-                code: error.code,
-                message: error.message,
-            },
-            { status: 400 }
-            );
-        }
+      console.error("CHECKOUT ERROR:", error);
+      if (error.code === "INSUFFICIENT_BALANCE") {
+          return NextResponse.json(
+          {
+              code: error.code,
+              message: error.message,
+          },
+          { status: 400 }
+          );
+      }
 
-        if (error.code === "INSUFFICIENT_STOCK") {
-            return NextResponse.json(
-            {
-                code: error.code,
-                product_id: error.product_id,
-                size: error.size,
-                color: error.color,
-                message: error.message,
-            },
-            { status: 400 }
-            );
-        }
+      if (error.code === "INSUFFICIENT_STOCK") {
 
         return NextResponse.json(
-            { message: "Payment failed" },
-            { status: 400 }
+        {
+            code: error.code,
+            product_name: error.product_name,
+            size: error.size,
+            color: error.color,
+            in_stock: error.in_stock,
+            message: error.message,
+        },
+        { status: 400 }
         );
-        }
+      }
+
+      return NextResponse.json(
+          { message: "Payment failed" },
+          { status: 400 }
+      );
+      }
 }

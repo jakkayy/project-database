@@ -60,11 +60,6 @@ export default function CheckoutPage() {
 
       const data = await res.json();
 
-      const outOfStockProduct = items.find(
-        (item: any) =>
-          String(item.product_id?._id ?? item.product_id) === String(data.product_id)
-      );
-
       if (!res.ok) {
         if (data.code === "INSUFFICIENT_BALANCE") {
           alert("ยอดเงินไม่เพียงพอ");
@@ -72,7 +67,7 @@ export default function CheckoutPage() {
         }
 
         if (data.code === "INSUFFICIENT_STOCK") {
-          alert(`สินค้า ID ${outOfStockProduct?.product_id?.name ?? "ไม่ทราบชื่อ"} ขนาด ${data.size} สี ${data.color} สินค้าไม่เพียงพอ`);
+          alert(`OUT OF STOCK!!!\n${data.product_name}\nSIZE: ${data.size}\nCOLOR: ${data.color}\ncurrently available: ${data.in_stock}`);
           return;
         }
 
@@ -81,11 +76,14 @@ export default function CheckoutPage() {
       }
 
       alert("Payment successful!");
-      fetchCheckout();
+      window.location.href = "/history";
     } catch (error) {
       console.error("Payment error:", error);
     }
   };
+
+  const afterBalance = currentBalance - total;
+  const isReady = selectedId !== undefined && total !== 0 && afterBalance >= 0;
 
   return (
     <div className="min-h-screen bg-black text-white p-10">
@@ -106,12 +104,22 @@ export default function CheckoutPage() {
             selectedAddress={selectedAddress}
             currentBalance={currentBalance}
           />
-          <button 
+          <button
             onClick={handlePayment}
-            disabled={!selectedId}
-            className={`w-full py-4 mt-6 font-black uppercase text-xs tracking-widest transition-all ${selectedId ? "bg-[#C9A84C] text-black hover:opacity-90" : "bg-neutral-800 text-neutral-500 cursor-not-allowed"}`}
+            disabled={!isReady}
+            className={`w-full py-4 mt-6 font-black uppercase text-xs tracking-widest transition-all ${
+              isReady
+                ? "bg-[#C9A84C] text-black hover:opacity-90"
+                : "bg-neutral-800 text-neutral-500 cursor-not-allowed"
+            }`}
           >
-            {selectedId ? "ชำระเงิน" : "กรุณาเลือกที่อยู่จัดส่ง"}
+            {total === 0
+              ? "ไม่มีสินค้าในตะกร้า"
+              : afterBalance < 0
+              ? "ยอดเงินไม่เพียงพอ"
+              : !selectedId
+              ? "กรุณาเลือกที่อยู่จัดส่ง"
+              : "ชำระเงิน"}
           </button>
         </div>
       </div>

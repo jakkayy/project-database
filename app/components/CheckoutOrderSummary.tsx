@@ -79,7 +79,7 @@ export default function CheckoutOrderSummary({
         </span>
         <span
           className={`text-xl font-black ${
-            currentBalance >= 0 ? "text-[#C9A84C]" : "text-red-500"
+            afterBalance >= 0 ? "text-[#C9A84C]" : "text-red-400"
           }`}
         >
           {Number(afterBalance).toLocaleString("th-TH", {
