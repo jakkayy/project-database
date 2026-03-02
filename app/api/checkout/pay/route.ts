@@ -91,50 +91,50 @@ export async function POST(req: Request) {
         },
       });
   
-        // insert new transactions
-        await tx.transaction.create({
-          data: {
-              user_id: buyer.user_id,
-              amount: total,
-              type: "TRANSFER_OUT",
-          },
-        });
-        await tx.transaction.create({
-          data: {
-              user_id: admin.user_id,
-              amount: total,
-              type: "TRANSFER_IN",
-          },
-        });
-  
-        // insert new order
-        const order = await tx.order.create({
-          data: {
-              user_id: buyer.user_id,
-              address_id: address_id,
-              total: total,
-              status: "PENDING",
-          },
-        });
-  
-        // insert new orderItem
-        await tx.orderItem.createMany({
-          data: cart.items.map((item) => ({
-              order_id: order.order_id,
-              product_id: item.product_id,
-              quantity: item.quantity,
-              price: item.price,
-              color: item.color,
-              size: item.size,
-          })),
-        });
-  
-        // optional: clear cart
-        await tx.cartItem.deleteMany({
-          where: { cart_id: cart.cart_id },
-        });
+      // insert new transactions
+      await tx.transaction.create({
+        data: {
+            user_id: buyer.user_id,
+            amount: total,
+            type: "TRANSFER_OUT",
+        },
+      });
+      await tx.transaction.create({
+        data: {
+            user_id: admin.user_id,
+            amount: total,
+            type: "TRANSFER_IN",
+        },
+      });
 
-        return true;
+      // insert new order
+      const order = await tx.order.create({
+        data: {
+            user_id: buyer.user_id,
+            address_id: address_id,
+            total: total,
+            status: "PENDING",
+        },
+      });
+
+      // insert new orderItem
+      await tx.orderItem.createMany({
+        data: cart.items.map((item) => ({
+            order_id: order.order_id,
+            product_id: item.product_id,
+            quantity: item.quantity,
+            price: item.price,
+            color: item.color,
+            size: item.size,
+        })),
+      });
+
+      // clear products in cart
+      await tx.cartItem.deleteMany({
+        where: { cart_id: cart.cart_id },
+      });
+
+      return true;
     });
     return NextResponse.json({ success: true });
 
