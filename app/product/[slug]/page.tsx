@@ -159,14 +159,6 @@ export default function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Top banner */}
-      <div className="bg-neutral-900 py-2 text-center text-xs uppercase tracking-widest text-neutral-400">
-        จัดส่งฟรีมาตรฐาน &amp; คืนสินค้าฟรี 30 วัน{" "}
-        <span className="cursor-pointer text-[#C9A84C] underline">
-          ดูรายละเอียด
-        </span>
-      </div>
-
       {/* Main content */}
       <div className="mx-auto max-w-7xl px-6 py-8 lg:px-10">
         <div className="flex flex-col gap-10 lg:flex-row">
@@ -298,9 +290,6 @@ export default function ProductDetailPage() {
             <div className="mt-6">
               <div className="mb-3 flex items-center justify-between">
                 <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400">เลือกไซส์</p>
-                <button className="text-xs text-neutral-500 underline hover:text-[#C9A84C]">
-                  คำแนะนำในการเลือกไซส์
-                </button>
               </div>
               <div className="grid grid-cols-5 gap-2">
                 {["36", "37", "38", "39", "40", "41", "42", "43", "44", "45"].map((size) => (
