@@ -48,7 +48,7 @@ export default function AddressSelector({
     });
     if (res.ok) {
       setShowModal(false);
-      refreshAddresses(); // อัปเดตรายการจาก DB ทันที
+      refreshAddresses();
       setFormData({ 
         firstname: "", lastname: "", addressLine: "", apartment: "",
         city: "", province: "", postalCode: "", country: "Thailand", phone: "", isDefault: false 
@@ -57,10 +57,10 @@ export default function AddressSelector({
   };
 
   const handleDelete = async (e: React.MouseEvent, addressId: number) => {
-    e.stopPropagation(); // กันไม่ให้ไปคลิกเลือกกล่องที่อยู่ตอนกดลบ
+    e.stopPropagation(); 
     if (confirm("ยืนยันการลบที่อยู่นี้?")) {
       const res = await fetch(`/api/address?addressId=${addressId}`, { method: "DELETE" });
-      if (res.ok) refreshAddresses(); // อัปเดตรายการหลังลบสำเร็จ
+      if (res.ok) refreshAddresses(); 
     }
   };
 
