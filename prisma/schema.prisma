@@ -66,7 +66,7 @@ model OrderItem {
 
 model Payment {
   payment_id Int           @id @default(autoincrement())
-  order_id   Int
+  order_id   Int           @unique
   amount     Decimal       @db.Decimal(10, 2)
   status     PaymentStatus @default(PENDING)
   createdAt  DateTime      @default(now())
@@ -81,12 +81,11 @@ enum PaymentStatus {
 }
 
 model Transaction {
-  id               Int             @id @default(autoincrement())
-  user_id          Int
-  transfer_user_id Int? // for transfer partner
-  type             TransactionType
-  amount           Decimal         @db.Decimal(10, 2)
-  createdAt        DateTime        @default(now())
+  id        Int             @id @default(autoincrement())
+  user_id   Int
+  type      TransactionType
+  amount    Decimal         @db.Decimal(10, 2)
+  createdAt DateTime        @default(now())
 
   user User @relation(fields: [user_id], references: [user_id])
 }
@@ -99,10 +98,8 @@ enum TransactionType {
 
 enum OrderStatus {
   PENDING
-  PROCESSING
-  SHIPPED
-  DELIVERED
-  CANCELLED
+  COMPLETED
+  FAILED
 }
 
 model Address {
@@ -144,7 +141,7 @@ model CartItem {
   quantity    Int      @default(1)
   price       Decimal  @db.Decimal(10, 2)
   size        String
-  color       String  
+  color       String
   createdAt   DateTime @default(now())
 
   cart Cart @relation(fields: [cart_id], references: [cart_id], onDelete: Cascade)

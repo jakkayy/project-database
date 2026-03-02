@@ -15,10 +15,11 @@ interface Address {
 }
 
 interface CheckoutOrderSummaryProps {
-  subtotal: string;
-  total: string;
+  subtotal: number;
+  total: number;
   items: any[];
   selectedAddress?: Address; 
+  currentBalance: number;
 }
 
 export default function CheckoutOrderSummary({
@@ -26,12 +27,14 @@ export default function CheckoutOrderSummary({
   total,
   items,
   selectedAddress,
+  currentBalance,
 }: CheckoutOrderSummaryProps) {
+  const afterBalance = currentBalance - total
+  
   return (
     <div className="space-y-4">
-      <h2 className="text-sm font-black uppercase tracking-widest text-white">ORDER SUMMARY</h2>
+      <h2 className="text-sm font-black uppercase tracking-widest text-white text-xl">PAYMENT SUMMARY</h2>
 
-      {/* สรุปที่อยู่ (Optional - ถ้าอยากแสดง) */}
       {selectedAddress && (
         <div className="p-3 border border-neutral-800 bg-neutral-950 rounded text-[11px] text-neutral-400">
           <p className="font-bold text-[#C9A84C] mb-1">จัดส่งไปที่:</p>
@@ -42,12 +45,23 @@ export default function CheckoutOrderSummary({
 
       <div className="space-y-2">
         <div className="flex items-center justify-between text-xs">
-          <span className="uppercase tracking-wider text-neutral-400">SUBTOTAL</span>
-          <span className="text-white">{subtotal}</span>
+          <span className="uppercase tracking-wider text-neutral-400">
+            CURRENT BALANCE
+          </span>
+          <span className="text-white font-bold text-sm">{Number(currentBalance).toLocaleString("th-TH", {
+            style: "currency",
+            currency: "THB",
+          })}</span>
         </div>
+
         <div className="flex items-center justify-between text-xs">
-          <span className="uppercase tracking-wider text-neutral-400">SHIPPING</span>
-          <span className="font-semibold text-[#C9A84C]">FREE</span>
+          <span className="uppercase tracking-wider text-neutral-400">
+            TOTAL COST
+          </span>
+          <span className="text-red-400 font-bold text-sm">- {Number(total).toLocaleString("th-TH", {
+            style: "currency",
+            currency: "THB",
+          })}</span>
         </div>
       </div>
 
@@ -60,8 +74,19 @@ export default function CheckoutOrderSummary({
       <div className="my-4 border-t border-neutral-800" />
 
       <div className="flex items-center justify-between">
-        <span className="text-sm font-black uppercase tracking-widest text-white">TOTAL</span>
-        <span className="text-xl font-black text-[#C9A84C]">{total}</span>
+        <span className="text-sm font-black uppercase tracking-widest text-white">
+          NEW BALANCE
+        </span>
+        <span
+          className={`text-xl font-black ${
+            afterBalance >= 0 ? "text-[#C9A84C]" : "text-red-400"
+          }`}
+        >
+          {Number(afterBalance).toLocaleString("th-TH", {
+            style: "currency",
+            currency: "THB",
+          })}
+        </span>
       </div>
 
       <div className="mt-4 border-t border-neutral-800 pt-4"/>
@@ -69,7 +94,7 @@ export default function CheckoutOrderSummary({
       <div className="mt-4 space-y-5">
         {items.map((item, index) => (
           <div key={index} className="flex gap-4">
-            <div className="h-24 w-24 md:h-28 md:w-28 lg:h-32 lg:w-32 shrink-0 overflow-hidden bg-neutral-800">
+            <div className="h-24 w-24 md:h-28 md:w-28 lg:h-32 lg:w-32 shrink-0 overflow-hidden bg-neutral-800 rounded-lg">
               <Image src={item.product?.images?.[0]} alt={item.product?.name} width={100} height={100} className="h-full w-full object-cover" />
             </div>
             <div className="flex-1 text-sm">

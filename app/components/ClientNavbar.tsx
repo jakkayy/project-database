@@ -48,6 +48,8 @@ export default function ClientNavbar() {
             <span className="px-2">Loading...</span>
           ) : account ? (
             <>
+              <span className="text-neutral-600">|</span>
+
               <Link href="/profile" className="px-2 hover:text-[#C9A84C]">
                 สวัสดีคุณ {account.firstname}
               </Link>
