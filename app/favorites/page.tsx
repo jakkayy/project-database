@@ -50,7 +50,7 @@ export default async function FavoritesPage() {
   );
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-black">
       <Navbar />
       <div className="mx-auto max-w-7xl px-10 py-10">
         <h1 className="mb-8 text-2xl font-medium text-black">รายการโปรด</h1>

@@ -31,7 +31,11 @@ export default async function CartPage() {
 
   const itemsWithProduct = await Promise.all(
     cart.items.map(async (item) => {
+      // const product = await Product.findById(item.product_id);
+
+      console.log("MySQL product_id:", item.product_id);
       const product = await Product.findById(item.product_id);
+      console.log("Mongo product found:", product);
 
       return {
         cartItem_id: item.cartItem_id,
@@ -44,7 +48,7 @@ export default async function CartPage() {
         product: product
           ? {
               name: product.name,
-              images: product.images,
+              images: product.images?.[0],
               category: product.category,
               color: product.color,
               basePrice: product.basePrice,

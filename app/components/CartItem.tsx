@@ -35,18 +35,26 @@ export default function CartItem({
     setQty(initialQty);
   }, [initialQty]);
 
+  console.log("CartItem image:", image);
+
   return (
     <div className="border-b border-neutral-800 py-6">
       <div className="flex gap-5">
         {/* Product image */}
         <div className="h-44 w-44 shrink-0 overflow-hidden bg-neutral-900 rounded-lg">
-          <Image
-            src={image}
-            alt={name}
-            width={200}
-            height={200}
-            className="h-full w-full object-cover"
-          />
+          {typeof image === "string" && image.trim() !== "" ? (
+            <Image
+              src={image}
+              alt={name || "Product image"}
+              width={200}
+              height={200}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-neutral-500 text-xs">
+              NO IMAGE
+            </div>
+          )}
         </div>
 
         {/* Product details */}

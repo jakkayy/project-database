@@ -34,7 +34,7 @@ export default function CartClient({ items }: Props) {
             <CartItem
               key={item.cartItem_id}
               cartItem_id={item.cartItem_id}
-              image={item.product?.images?.[0]}
+              image={item.product?.images}
               name={item.product?.name}
               description={item.product?.category}
               color={item.product?.color}

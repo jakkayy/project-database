@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
+import { Prisma, OrderStatus, PaymentStatus } from "@prisma/client";
 import { cookies } from "next/headers";
 import { requireAuth } from "@/lib/auth";
 import { connectMongo } from "@/lib/mongodb";
@@ -128,7 +128,7 @@ export async function POST(req: Request) {
           user_id: buyer.user_id,
           address_id: address_id,
           total: total,
-          status: "PENDING",
+          status: OrderStatus.PENDING,
         },
       });
       
@@ -137,7 +137,7 @@ export async function POST(req: Request) {
         data: {
             order_id: order.order_id,
             amount: total,
-            status: "PENDING",
+            status: PaymentStatus.PENDING,
         },
       });
 
@@ -161,11 +161,11 @@ export async function POST(req: Request) {
       // update status to COMPLETED
       await tx.order.update({
         where: { order_id: order.order_id },
-        data: { status: "COMPLETED" },
+        data: { status: OrderStatus.COMPLETED },
       });
       await tx.payment.update({
         where: { order_id: order.order_id },
-        data: { status: "COMPLETED" },
+        data: { status: PaymentStatus.COMPLETED },
       });
 
       return true;
