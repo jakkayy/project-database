@@ -3,6 +3,7 @@ import InventoryAlerts from "../components/InventoryAlerts";
 import { prisma } from "lib/prisma";
 import { connectMongo } from "lib/mongodb";
 import Product from "@/app/models/Product";
+import { OrderStatus } from "@prisma/client";
 
 function formatSales(n: number): string {
   if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
@@ -24,9 +25,9 @@ export default async function AdminDashboardPage() {
   const totalSalesNum = Number(totalSalesResult[0]?.total ?? 0);
   const totalSalesFormatted = formatSales(totalSalesNum);
 
-  // Fetch pending orders count
-  const pendingOrderCount = await prisma.order.count({
-    where: { status: "PENDING" },
+  // Fetch completed orders count
+  const completedOrderCount = await prisma.order.count({
+    where: { status: OrderStatus.COMPLETED },
   });
 
   // Fetch top selling products (sum quantity by product_id, top 3)
@@ -87,8 +88,8 @@ export default async function AdminDashboardPage() {
       borderColor: "border-l-emerald-500",
     },
     {
-      title: "PENDING ORDERS",
-      value: pendingOrderCount.toLocaleString(),
+      title: "COMPLETED ORDERS",
+      value: completedOrderCount.toLocaleString(),
       subtitle: "Needs fulfillment",
       subtitleColor: "text-gray-500",
       borderColor: "border-l-amber-500",
