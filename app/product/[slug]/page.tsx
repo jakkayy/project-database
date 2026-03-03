@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { addCart, addFav, getStock } from "lib/apiServices/user.service";
+import { apiFetch } from "lib/apiServices/client";
 import { toast } from "sonner";
 
 interface Variant {
@@ -22,7 +23,14 @@ interface Product {
   images: string[];
   variants: Variant[];
   tags: string[];
-  rating: number;
+  reviews?: {
+    userId: string;
+    rating: number;
+    comment: string;
+    createdAt: string;
+    userFirstname?: string;
+  }[];
+  averageRating?: number;
 }
 
 interface ProductStock {
@@ -42,6 +50,11 @@ export default function ProductDetailPage() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState<string>("red");
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [rating, setRating] = useState<number>(0);
+  const [hoveredStar, setHoveredStar] = useState<number>(0);
+  const [comment, setComment] = useState<string>("");
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [showAllComments, setShowAllComments] = useState(false);
 
   useEffect(() => {
     async function fetchProduct() {
@@ -49,6 +62,12 @@ export default function ProductDetailPage() {
         const res = await fetch(`/api/product/get-by-slug?slug=${slug}`);
         if (res.ok) {
           const data = await res.json();
+          
+          // Calculate average rating if it doesn't exist
+          if (!data.averageRating && data.reviews && data.reviews.length > 0) {
+            data.averageRating = data.reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / data.reviews.length;
+          }
+          
           setProduct(data);
         }
       } catch (err) {
@@ -132,6 +151,53 @@ export default function ProductDetailPage() {
       toast.error("เกิดข้อผิดพลาด", {
         description: "ไม่สามารถเพิ่มสินค้าได้ กรุณาลองใหม่",
       });
+    }
+  };
+
+  const handleSubmitReview = async () => {
+    if (!product) return;
+    
+    if (rating === 0) {
+      toast.warning("กรุณาให้คะแนน", {
+        description: "เลือกคะแนน 1-5 ดาว",
+      });
+      return;
+    }
+
+    setSubmittingReview(true);
+    
+    try {
+      const response = await apiFetch('/api/product/add-review', {
+        method: 'POST',
+        body: JSON.stringify({
+          productId: product._id,
+          rating,
+          comment,
+        }),
+      });
+
+      console.log("API Response:", response);
+
+      toast.success("เพิ่มรีวิวแล้ว", {
+        description: "ขอบคุณสำหรับความคิดเห็นของคุณ",
+      });
+      
+      // Reset form
+      setRating(0);
+      setComment("");
+      
+      // Use the updated product data from API response
+      if (response.product) {
+        setProduct(response.product);
+        console.log("Updated product from API:", response.product);
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error("เกิดข้อผิดพลาด", {
+        description: error.message || "ไม่สามารถเพิ่มรีวิวได้ กรุณาลองใหม่",
+      });
+    } finally {
+      setSubmittingReview(false);
     }
   };
 
@@ -357,26 +423,95 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Rating */}
-            {product.rating && (
+            {(product.averageRating !== undefined || (product.reviews && product.reviews.length > 0)) && (
               <div className="mt-6 border-t border-neutral-800 pt-6">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
-                    รีวิว ({product.rating})
+                    รีวิว ({product.reviews?.length || 0})
                   </span>
                   <div className="flex items-center gap-1 text-[#C9A84C]">
-                    {[1, 2, 3, 4, 5].map((star) => (
+                    {[1, 2, 3, 4, 5].map((star) => {
+                      const averageRating = product.averageRating || 0;
+                      const isFilled = star <= Math.floor(averageRating);
+                      const isHalfFilled = star === Math.ceil(averageRating) && averageRating % 1 !== 0;
+                      const fillPercentage = isHalfFilled ? (averageRating % 1) * 100 : isFilled ? 100 : 0;
+                      
+                      return (
+                        <div key={star} className="relative h-4 w-4">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={1.5}
+                            className="h-4 w-4"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
+                            />
+                          </svg>
+                          {(isFilled || isHalfFilled) && (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="#C9A84C"
+                              stroke="none"
+                              strokeWidth={0}
+                              className="absolute top-0 left-0 h-4 w-4 overflow-hidden"
+                              style={{ clipPath: fillPercentage < 100 ? `inset(0 ${100 - fillPercentage}% 0 0)` : 'none' }}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
+                              />
+                            </svg>
+                          )}
+                        </div>
+                      );
+                    })}
+                    <span className="ml-2 text-xs text-neutral-400">
+                      {(product.averageRating || 0).toFixed(1)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Review Form */}
+            <div className="mt-6 border-t border-neutral-800 pt-6">
+              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
+                ให้คะแนนและรีวิว
+              </h3>
+              
+              {/* Star Rating */}
+              <div className="mb-4">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400">
+                  คะแนน
+                </p>
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setRating(star)}
+                      onMouseEnter={() => setHoveredStar(star)}
+                      onMouseLeave={() => setHoveredStar(0)}
+                      className="transition-colors"
+                    >
                       <svg
-                        key={star}
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         fill={
-                          star <= Math.round(product.rating)
-                            ? "currentColor"
+                          star <= (hoveredStar || rating)
+                            ? "#C9A84C"
                             : "none"
                         }
-                        stroke="currentColor"
+                        stroke="#C9A84C"
                         strokeWidth={1.5}
-                        className="h-4 w-4"
+                        className="h-6 w-6"
                       >
                         <path
                           strokeLinecap="round"
@@ -384,11 +519,97 @@ export default function ProductDetailPage() {
                           d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
                         />
                       </svg>
-                    ))}
-                  </div>
+                    </button>
+                  ))}
                 </div>
               </div>
+
+              {/* Comment Form */}
+              <div className="mb-4">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400">
+                  ความคิดเห็น
+                </p>
+                <textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="แชร์ความคิดเห็นของคุณเกี่ยวกับสินค้านี้..."
+                  className="w-full rounded-lg border border-neutral-700 bg-neutral-900 px-4 py-3 text-sm text-white placeholder-neutral-500 focus:border-[#C9A84C] focus:outline-none focus:ring-1 focus:ring-[#C9A84C] resize-none"
+                  rows={4}
+                />
+              </div>
+
+              {/* Submit Button */}
+              <button
+                onClick={handleSubmitReview}
+                disabled={submittingReview || rating === 0}
+                className="w-full rounded-lg bg-[#C9A84C] px-4 py-3 text-xs font-black uppercase tracking-widest text-black transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {submittingReview ? "กำลังส่ง..." : "ส่งรีวิว"}
+              </button>
+            </div>
+
+            {/* Comments Section */}
+            {product.reviews && product.reviews.length > 0 && (
+              <div className="mt-6 border-t border-neutral-800 pt-6">
+                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
+                  ความคิดเห็น ({product.reviews.length})
+                </h3>
+                
+                <div className="space-y-4">
+                  {(showAllComments ? product.reviews : product.reviews.slice(0, 3)).map((review, index) => (
+                    <div key={index} className="rounded-lg border border-neutral-800 bg-neutral-900 p-4">
+                      <div className="mb-2 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-medium text-white">
+                            {review.userFirstname || 'Anonymous'}
+                          </span>
+                          <div className="flex items-center gap-1">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <svg
+                                key={star}
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill={
+                                  star <= review.rating
+                                    ? "#C9A84C"
+                                    : "none"
+                                }
+                                stroke="#C9A84C"
+                                strokeWidth={1.5}
+                                className="h-3 w-3"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
+                                />
+                              </svg>
+                            ))}
+                          </div>
+                        </div>
+                        <span className="text-xs text-neutral-500">
+                          {new Date(review.createdAt).toLocaleDateString('th-TH')}
+                        </span>
+                      </div>
+                      {review.comment && (
+                        <p className="text-sm text-neutral-300">{review.comment}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {product.reviews.length > 3 && (
+                  <button
+                    onClick={() => setShowAllComments(!showAllComments)}
+                    className="mt-4 w-full rounded-lg border border-neutral-700 bg-neutral-900 px-4 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-300 transition-colors hover:border-[#C9A84C] hover:text-[#C9A84C]"
+                  >
+                    {showAllComments ? "แสดงน้อยลง" : "แสดงเพิ่มเติม"}
+                  </button>
+                )}
+              </div>
             )}
+
+            
           </div>
         </div>
       </div>
