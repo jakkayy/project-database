@@ -22,8 +22,14 @@ async function seed() {
     console.log("MySQL connected ✅");
 
     // ลบข้อมูลเก่า
-    await Product.deleteMany();
+    console.log("Clearing old data...");
+
+    await prisma.cartItem.deleteMany();
+    await prisma.cart.deleteMany();
     await prisma.productStock.deleteMany();
+    await Product.deleteMany();
+
+    console.log("Old data cleared ✅");
 
     // =========================
     // 1️⃣ สร้าง Product ใน Mongo
@@ -39,7 +45,7 @@ async function seed() {
           "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto,u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/477abbf8-b37a-4fe6-b516-08e294a8487a/AIR+ZOOM+ALPHAFLY+NEXT%25+3.png",
         ],
         tags: ["running", "nike"],
-        rating: 4.5,
+        rating: [4.5],
       },
       {
         name: "Street Flex Pro",
@@ -50,7 +56,7 @@ async function seed() {
           "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto,u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/45b9bc22-9b41-472a-b742-cdd097f293c8/TIEMPO+STREETGATO+PRM.png",
         ],
         tags: ["casual", "nike"],
-        rating: 4.2,
+        rating: [4.2],
       },
       {
         name: "Ultraboost Light",
@@ -61,7 +67,7 @@ async function seed() {
           "https://media.arirunningstore.com/media/catalog/product/cache/6e478a31517304dced53ac4d3f3d5560/_/h/_hq6353_-_hq6351__01.jpg"
         ],
         tags: ["running", "adidas"],
-        rating: 4.8,
+        rating: [4.8],
       },
       {
         name: "574 Core",
@@ -72,7 +78,7 @@ async function seed() {
           "https://www.footlocker.co.th/media/catalog/product/9/9/9991-NEWWL574EVWBDVY08H-1.jpg",
         ],
         tags: ["casual", "newbalance"],
-        rating: 4.4,
+        rating: [4.4],
       },
       {
         name: "Chuck Taylor All Star",
@@ -83,7 +89,7 @@ async function seed() {
           "https://www.converse.co.th/media/catalog/product/cache/8fcecb462959d400cda3532b9c3dc9f0/5/7/570256c_a_08x1-1.png",
         ],
         tags: ["casual", "converse"],
-        rating: 4.6,
+        rating: [4.6],
       },
       {
         name: "Gel-Kayano 30",
@@ -94,7 +100,7 @@ async function seed() {
           "https://run2paradise.com/wp-content/uploads/2024/01/KAYANO-30-ช-ด.jpg",
         ],
         tags: ["running", "asics"],
-        rating: 4.7,
+        rating: [4.7],
       },
       {
         name: "Clyde All-Pro",
@@ -105,7 +111,7 @@ async function seed() {
           "https://www.nicekicks.com/files/2020/11/puma-clyde-all-pro-release-information-2.jpg",
         ],
         tags: ["basketball", "puma"],
-        rating: 4.3,
+        rating: [4.3],
       },
       {
         name: "Metcon 9",
@@ -116,7 +122,7 @@ async function seed() {
           "https://vsathletics.com/store/images/P/AURORA_DZ2617-005_PHSRH000-2000.jpg",
         ],
         tags: ["training", "gym"],
-        rating: 4.5,
+        rating: [4.5],
       },
       {
         name: "FuelCell Rebel v3",
@@ -127,7 +133,7 @@ async function seed() {
           "https://run2paradise.com/wp-content/uploads/2024/01/5-2.jpg",
         ],
         tags: ["running", "newbalance"],
-        rating: 4.4,
+        rating: [4.4],
       },
       {
         name: "Old Skool Classic",
@@ -138,7 +144,7 @@ async function seed() {
           "https://www.footlocker.co.th/media/catalog/product/9/9/9991-VAS000D3HY2800509H-2.jpg",
         ],
         tags: ["casual", "vans"],
-        rating: 4.5,
+        rating: [4.5],
       },
       {
         name: "HOVR Phantom 3",
@@ -149,7 +155,7 @@ async function seed() {
           "https://underarmour.scene7.com/is/image/Underarmour/3025517-001_DEFAULT?rp=standard-30pad|pdpZoomDesktop&scl=0.50&fmt=jpg&qlt=85&resMode=sharp2&cache=on,on&bgc=f0f0f0&wid=1836&hei=1950&size=850,850",
         ],
         tags: ["running", "underarmour"],
-        rating: 4.2,
+        rating: [4.2],
       },
       {
         name: "Zoom Freak 5",
@@ -160,7 +166,7 @@ async function seed() {
           "https://image.goxip.com/_ZmyqjEnfiCwDeXHkskCS6KgjDg=/fit-in/500x500/filters:format(jpg):quality(80):fill(white)/https:%2F%2Fimages.stockx.com%2Fimages%2FNike-Zoom-Freak-5-Emerging-Powers-GS.jpg",
         ],
         tags: ["basketball", "nike"],
-        rating: 4.6,
+        rating: [4.6],
       },
     ]);
 

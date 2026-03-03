@@ -20,7 +20,7 @@ CREATE TABLE `Order` (
     `user_id` INTEGER NOT NULL,
     `address_id` INTEGER NOT NULL,
     `total` DECIMAL(10, 2) NOT NULL,
-    `status` ENUM('PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED') NOT NULL DEFAULT 'PENDING',
+    `status` ENUM('PENDING', 'COMPLETED', 'FAILED') NOT NULL DEFAULT 'PENDING',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -49,6 +49,7 @@ CREATE TABLE `Payment` (
     `status` ENUM('PENDING', 'COMPLETED', 'FAILED') NOT NULL DEFAULT 'PENDING',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
+    UNIQUE INDEX `Payment_order_id_key`(`order_id`),
     PRIMARY KEY (`payment_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -56,10 +57,6 @@ CREATE TABLE `Payment` (
 CREATE TABLE `Transaction` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER NOT NULL,
-<<<<<<<< HEAD:prisma/migrations/20260301191102_init/migration.sql
-========
-    `transfer_user_id` INTEGER NULL,
->>>>>>>> 006f36d (WIP: local changes before pull):prisma/migrations/20260227143000_init/migration.sql
     `type` ENUM('DEPOSIT', 'TRANSFER_OUT', 'TRANSFER_IN') NOT NULL,
     `amount` DECIMAL(10, 2) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
