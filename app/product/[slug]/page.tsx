@@ -24,6 +24,7 @@ interface Product {
   variants: Variant[];
   tags: string[];
   reviews?: {
+    _id: string; 
     userId: string;
     rating: number;
     comment: string;
@@ -55,6 +56,26 @@ export default function ProductDetailPage() {
   const [comment, setComment] = useState<string>("");
   const [submittingReview, setSubmittingReview] = useState(false);
   const [showAllComments, setShowAllComments] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchCurrentUser() {
+      try {
+        const res = await fetch('/api/user/me');
+        if (res.ok) {
+          const data = await res.json();
+          setCurrentUserId(data._id);
+        } else {
+          // User is not authenticated, that's okay
+          setCurrentUserId(null);
+        }
+      } catch (err) {
+        console.error("Failed to fetch current user", err);
+        setCurrentUserId(null);
+      }
+    }
+    fetchCurrentUser();
+  }, []);
 
   useEffect(() => {
     async function fetchProduct() {
@@ -96,6 +117,19 @@ export default function ProductDetailPage() {
     }
     fetchProductStock();
   }, [product, selectedColor, selectedSize]);
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const user = await apiFetch("/api/user/me");
+        setCurrentUserId(user._id);
+      } catch {
+        setCurrentUserId(null);
+      }
+    }
+
+    fetchUser();
+  }, []);
 
   const handleAddToFav = async () => {
     if (!product) return;
@@ -154,6 +188,40 @@ export default function ProductDetailPage() {
     }
   };
 
+  const handleDeleteReview = async (reviewId: string) => {
+    if (!product) return;
+
+    try {
+      const response = await apiFetch('/api/product/delete-review', {
+        method: 'DELETE',
+        body: JSON.stringify({
+          productId: product._id,
+          reviewId: reviewId,
+        }),
+      });
+
+      toast.success("ลบรีวิวแล้ว", {
+        description: "รีวิวของคุณถูกลบเรียบร้อย",
+      });
+      
+      // Update product with the response data
+      if (response.product) {
+        setProduct(response.product);
+      }
+    } catch (error: any) {
+      console.error(error);
+      if (error.status === 401) {
+        toast.error("กรุณาเข้าสู่ระบบ", {
+          description: "คุณต้องเข้าสู่ระบบก่อนจึงจะลบรีวิวได้",
+        });
+      } else {
+        toast.error("เกิดข้อผิดพลาด", {
+          description: error.message || "ไม่สามารถลบรีวิวได้ กรุณาลองใหม่",
+        });
+      }
+    }
+  };
+
   const handleSubmitReview = async () => {
     if (!product) return;
     
@@ -201,6 +269,28 @@ export default function ProductDetailPage() {
     }
   };
 
+  const handleDeleteComment = async (reviewId: string) => {
+    if (!product) return;
+
+    try {
+      const response = await apiFetch("/api/product/delete-review", {
+        method: "DELETE",
+        body: JSON.stringify({
+          productId: product._id,
+          reviewId,
+        }),
+      });
+
+      toast.success("ลบความคิดเห็นแล้ว");
+
+      if (response.product) {
+        setProduct(response.product);
+      }
+    } catch (error: any) {
+      toast.error("ไม่สามารถลบความคิดเห็นได้");
+    }
+  };
+  
 
   if (loading) {
     return (
@@ -222,7 +312,12 @@ export default function ProductDetailPage() {
   }
 
   const currentVariant = product.variants?.find((v) => v.color.toLowerCase() === selectedColor.toLowerCase());
-
+  const userReview = product?.reviews?.find(
+    (review) =>
+      review.userId?.toString() === currentUserId?.toString()
+  );
+      console.log("Current User ID:", currentUserId);
+      console.log("Reviews:", product?.reviews);
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Main content */}
@@ -551,9 +646,22 @@ export default function ProductDetailPage() {
             {/* Comments Section */}
             {product.reviews && product.reviews.length > 0 && (
               <div className="mt-6 border-t border-neutral-800 pt-6">
-                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
-                  ความคิดเห็น ({product.reviews.length})
-                </h3>
+                <div className="mb-4 flex items-center justify-between">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
+                    ความคิดเห็น ({product.reviews.length})
+                  </h3>
+                  {product.reviews.some(review => review.userId === currentUserId) && (
+                    <button
+                      onClick={() => {
+                        const userReviews = product.reviews?.filter(review => review.userId === currentUserId) || [];
+                        userReviews.forEach(review => handleDeleteReview(review._id || 'delete-by-user-id'));
+                      }}
+                      className="text-xs text-red-500 hover:text-red-400 transition-colors"
+                    >
+                      ลบความคิดเห็นของฉัน
+                    </button>
+                  )}
+                </div>
                 
                 <div className="space-y-4">
                   {(showAllComments ? product.reviews : product.reviews.slice(0, 3)).map((review, index) => (
@@ -569,11 +677,7 @@ export default function ProductDetailPage() {
                                 key={star}
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
-                                fill={
-                                  star <= review.rating
-                                    ? "#C9A84C"
-                                    : "none"
-                                }
+                                fill={star <= review.rating ? "#C9A84C" : "none"}
                                 stroke="#C9A84C"
                                 strokeWidth={1.5}
                                 className="h-3 w-3"
@@ -587,9 +691,33 @@ export default function ProductDetailPage() {
                             ))}
                           </div>
                         </div>
-                        <span className="text-xs text-neutral-500">
-                          {new Date(review.createdAt).toLocaleDateString('th-TH')}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-neutral-500">
+                            {new Date(review.createdAt).toLocaleDateString('th-TH')}
+                          </span>
+                          {review.userId === currentUserId && (
+                            <button
+                              onClick={() => handleDeleteReview(review._id || 'delete-by-user-id')}
+                              className="text-xs text-red-500 hover:text-red-400 transition-colors"
+                              title="ลบความคิดเห็น"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={2}
+                                stroke="currentColor"
+                                className="h-4 w-4"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                                />
+                              </svg>
+                            </button>
+                          )}
+                        </div>
                       </div>
                       {review.comment && (
                         <p className="text-sm text-neutral-300">{review.comment}</p>
@@ -597,7 +725,6 @@ export default function ProductDetailPage() {
                     </div>
                   ))}
                 </div>
-
                 {product.reviews.length > 3 && (
                   <button
                     onClick={() => setShowAllComments(!showAllComments)}
