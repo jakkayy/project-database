@@ -20,6 +20,11 @@ export async function POST(request: NextRequest) {
     const user = requireAuth(token);
     const { productId, rating, comment } = await request.json();
 
+    console.log("Received productId:", productId);
+    console.log("Type of productId:", typeof productId);
+    console.log("Rating:", rating);
+    console.log("Comment:", comment);
+
     if (!productId || !rating || rating < 1 || rating > 5) {
       return NextResponse.json(
         { message: "Invalid data." },
@@ -39,7 +44,19 @@ export async function POST(request: NextRequest) {
     console.log("Using raw MongoDB operations...");
     
     // First, check if product exists
-    const product = await productsCollection.findOne({ _id: new mongoose.Types.ObjectId(productId) });
+    let objectId;
+    try {
+      objectId = new mongoose.Types.ObjectId(productId);
+      console.log("Converted to ObjectId:", objectId);
+    } catch (error) {
+      console.error("Invalid productId format:", productId, error);
+      return NextResponse.json(
+        { message: "Invalid product ID format." },
+        { status: 400 }
+      );
+    }
+    
+    const product = await productsCollection.findOne({ _id: objectId });
     
     if (!product) {
       return NextResponse.json(
