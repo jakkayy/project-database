@@ -53,6 +53,10 @@ export function updateCartItem(
     });
 }
 
+export function getFav() {
+    return apiFetch("/api/favorite");
+}
+
 export function addFav(data: {
     product_id: string,
 }) {

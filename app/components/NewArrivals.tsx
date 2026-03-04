@@ -2,24 +2,31 @@
 
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
-import { getAllProduct } from "lib/apiServices/user.service";
+import { getAllProduct, getFav } from "lib/apiServices/user.service";
 
 const PAGE_SIZE = 3;
 
 export default function NewArrivals() {
   const [products, setProducts] = useState<any[]>([]);
+  const [favMap, setFavMap] = useState<Record<string, number>>({});
   const [page, setPage] = useState(0);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const data = await getAllProduct();
+    const fetchData = async () => {
+      const [data, favItems] = await Promise.all([getAllProduct(), getFav()]);
       const mapped = data.map((p: any) => ({
         ...p,
         image: p.images?.[0] || "",
       }));
       setProducts(mapped);
+      // favMap: { [product_id]: favItem_id }
+      const map: Record<string, number> = {};
+      for (const item of favItems ?? []) {
+        map[item.product_id] = item.favItem_id;
+      }
+      setFavMap(map);
     };
-    fetchProducts();
+    fetchData();
   }, []);
 
   const totalPages = Math.ceil(products.length / PAGE_SIZE) || 1;
@@ -87,7 +94,12 @@ export default function NewArrivals() {
       {/* Product grid — 3 per page */}
       <div className="grid grid-cols-3 gap-5">
         {visibleProducts.map((product, index) => (
-          <ProductCard key={page * PAGE_SIZE + index} {...product} />
+          <ProductCard
+            key={page * PAGE_SIZE + index}
+            {...product}
+            initialIsFav={product._id in favMap}
+            initialFavItemId={favMap[product._id] ?? null}
+          />
         ))}
       </div>
     </section>

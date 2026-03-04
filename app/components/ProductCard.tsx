@@ -14,6 +14,8 @@ interface ProductCardProps {
   basePrice: string;
   slug?: string;
   badge?: string;
+  initialIsFav?: boolean;
+  initialFavItemId?: number | null;
 }
 
 export default function ProductCard({
@@ -24,9 +26,11 @@ export default function ProductCard({
   basePrice,
   slug,
   badge,
+  initialIsFav = false,
+  initialFavItemId = null,
 }: ProductCardProps) {
-  const [isFav, setIsFav] = useState(false);
-  const [favItemId, setFavItemId] = useState<number | null>(null);
+  const [isFav, setIsFav] = useState(initialIsFav);
+  const [favItemId, setFavItemId] = useState<number | null>(initialFavItemId);
 
   const handleFav = async (e: React.MouseEvent) => {
     e.preventDefault();

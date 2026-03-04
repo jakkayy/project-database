@@ -1,7 +1,28 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { requireAuth } from "lib/auth";
+import { cookies } from "next/headers";
 
 const prisma = new PrismaClient();
+
+export async function GET() {
+  try {
+    const token = (await cookies()).get("access_token")?.value;
+    const user = requireAuth(token, "USER");
+
+    const fav = await prisma.fav.findUnique({
+      where: { user_id: Number(user.user_id) },
+      include: {
+        items: { select: { favItem_id: true, product_id: true } },
+      },
+    });
+
+    return NextResponse.json(fav?.items ?? []);
+  } catch {
+    // ไม่ได้ login → คืน array ว่าง ไม่ throw error
+    return NextResponse.json([]);
+  }
+}
 
 export async function POST(req: Request) {
   try {
