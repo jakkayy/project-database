@@ -42,7 +42,7 @@ export default async function FavoritesPage() {
               name: product.name,
               images: product.images,
               category: product.category,
-              price: product.price,
+              basePrice: product.basePrice,
             }
           : null,
       };

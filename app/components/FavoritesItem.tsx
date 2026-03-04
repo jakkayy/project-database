@@ -6,6 +6,7 @@ interface WishlistItemProps {
   category: string;
   price: string;
   onDelete?: () => void;
+  onAddToCart?: () => void;
 }
 
 export default function FavoritesItem({
@@ -14,6 +15,7 @@ export default function FavoritesItem({
   category,
   price,
   onDelete,
+  onAddToCart,
 }: WishlistItemProps) {
   const imageSrc = image && image.trim() !== "" ? image : "/products/shoe1.svg";
 
@@ -55,7 +57,10 @@ export default function FavoritesItem({
       </div>
 
       {/* Add to cart button */}
-      <button className="mt-3 rounded-full border border-[#C9A84C] px-5 py-2 text-sm font-medium text-[#C9A84C] transition-colors hover:border-black">
+      <button
+        onClick={onAddToCart}
+        className="mt-3 rounded-full border border-[#C9A84C] px-5 py-2 text-sm font-medium text-[#C9A84C] transition-colors hover:border-black"
+      >
         เพิ่มในตะกร้า
       </button>
     </div>

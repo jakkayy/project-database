@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "underarmour.scene7.com", pathname: "/**" },
       { protocol: "https", hostname: "image.goxip.com", pathname: "/**" },
       { protocol: "https", hostname: "images.stockx.com", pathname: "/**" },
+      { protocol: "https", hostname: "www.jdsports.co.th", pathname: "/**" },
     ],
   },
 };
