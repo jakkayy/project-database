@@ -1,10 +1,65 @@
-import Navbar from "@/app/components/Navbar";
-import Link from "next/link";
+"use client";
 
-export default function CheckoutPage() {
+import ClientNavbar from "@/app/components/ClientNavbar";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
+interface OrderItem {
+  product_name: string;
+  color: string;
+  size: string;
+  quantity: number;
+  unit_price: number;
+  date_bought: string;
+  order_id: number;
+  product_id: string;
+  order_status: string;
+}
+
+export default function HistoryPage() {
+  const [orderHistory, setOrderHistory] = useState<OrderItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchOrderHistory();
+  }, []);
+
+  const fetchOrderHistory = async () => {
+    try {
+      const response = await fetch('/api/history');
+      if (!response.ok) {
+        throw new Error('Failed to fetch order history');
+      }
+      const data = await response.json();
+      setOrderHistory(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('th-TH', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('th-TH', {
+      style: 'currency',
+      currency: 'THB'
+    }).format(price);
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-black">
-      <Navbar />
+      <ClientNavbar />
 
       {/* Profile Sub Navigation */}
       <div className="flex items-center justify-between border-b border-neutral-800 px-10 py-4">
@@ -28,9 +83,76 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      {/* Empty Orders Content */}
+      {/* Orders Content */}
       <div className="flex-1 px-10 py-6">
-        <p className="text-xs uppercase tracking-wider text-neutral-500">คุณยังไม่มีคำสั่งซื้อ</p>
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="text-white">กำลังโหลด...</div>
+          </div>
+        ) : error ? (
+          <div className="flex items-center justify-center py-20">
+            <div className="text-red-500">เกิดข้อผิดพลาด: {error}</div>
+          </div>
+        ) : orderHistory.length === 0 ? (
+          <div className="flex items-center justify-center py-20">
+            <p className="text-xs uppercase tracking-wider text-neutral-500">คุณยังไม่มีคำสั่งซื้อ</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left text-white">
+              <thead className="text-xs uppercase bg-neutral-900 border-b border-neutral-800">
+                <tr>
+                  <th scope="col" className="px-6 py-3">ชื่อสินค้า</th>
+                  <th scope="col" className="px-6 py-3">สี</th>
+                  <th scope="col" className="px-6 py-3">ไซส์</th>
+                  <th scope="col" className="px-6 py-3">จำนวน</th>
+                  <th scope="col" className="px-6 py-3">ราคาต่อหน่วย</th>
+                  <th scope="col" className="px-6 py-3">วันที่ซื้อ</th>
+                  <th scope="col" className="px-6 py-3">สถานะ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orderHistory.map((item, index) => (
+                  <tr 
+                    key={`${item.order_id}-${item.product_id}-${item.color}-${item.size}`}
+                    className="bg-black border-b border-neutral-800 hover:bg-neutral-900 transition-colors"
+                  >
+                    <td className="px-6 py-4 font-medium text-white">
+                      {item.product_name}
+                    </td>
+                    <td className="px-6 py-4 text-neutral-300">
+                      {item.color}
+                    </td>
+                    <td className="px-6 py-4 text-neutral-300">
+                      {item.size}
+                    </td>
+                    <td className="px-6 py-4 text-neutral-300">
+                      {item.quantity}
+                    </td>
+                    <td className="px-6 py-4 text-neutral-300">
+                      {formatPrice(item.unit_price)}
+                    </td>
+                    <td className="px-6 py-4 text-neutral-300">
+                      {formatDate(item.date_bought)}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        item.order_status === 'COMPLETED' 
+                          ? 'bg-green-900 text-green-300' 
+                          : item.order_status === 'PENDING'
+                          ? 'bg-yellow-900 text-yellow-300'
+                          : 'bg-red-900 text-red-300'
+                      }`}>
+                        {item.order_status === 'COMPLETED' ? 'สำเร็จ' : 
+                         item.order_status === 'PENDING' ? 'รอดำเนินการ' : 'ล้มเหลว'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* Footer */}
