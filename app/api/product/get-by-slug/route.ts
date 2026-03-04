@@ -27,6 +27,7 @@ export async function GET(req: NextRequest) {
 
     // Convert to plain object and calculate average rating
     const productObj = product.toObject();
+    console.log("Raw reviews from DB:", JSON.stringify(productObj.reviews, null, 2));
     
     // Fetch user information for reviews
     if (productObj.reviews && productObj.reviews.length > 0) {
