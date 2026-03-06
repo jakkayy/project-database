@@ -81,7 +81,7 @@ export default function SearchBox() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="ค้นหาสินค้า..."
+          placeholder="Search products..."
           className="flex-1 bg-transparent text-sm text-neutral-200 placeholder-neutral-600 outline-none"
         />
         {query && (
@@ -99,7 +99,7 @@ export default function SearchBox() {
           {/* Header */}
           <div className="border-b border-neutral-800 px-4 py-2.5">
             <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-600">
-              {loading ? "กำลังค้นหา..." : `ผลลัพธ์สำหรับ "${query}"`}
+              {loading ? "Searching..." : `Results for "${query}"`}
             </p>
           </div>
 
@@ -112,7 +112,7 @@ export default function SearchBox() {
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-8 w-8 text-neutral-700">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
               </svg>
-              <p className="text-sm text-neutral-600">ไม่พบสินค้าที่ตรงกัน</p>
+              <p className="text-sm text-neutral-600">No products found</p>
             </div>
           ) : (
             <div className="py-1">

@@ -21,7 +21,7 @@ export default async function FavoritesPage() {
     return (
       <div className="min-h-screen bg-white">
         <Navbar />
-        <div className="p-10 text-center text-gray-500">ยังไม่มีรายการโปรด</div>
+        <div className="p-10 text-center text-gray-500">Your wishlist is empty</div>
       </div>
     );
   }
@@ -54,7 +54,7 @@ export default async function FavoritesPage() {
     <div className="min-h-screen bg-black">
       <Navbar />
       <div className="mx-auto max-w-7xl px-10 py-10">
-        <h1 className="mb-8 text-2xl font-medium text-black">รายการโปรด</h1>
+        <h1 className="mb-8 text-2xl font-medium text-black">Wishlist</h1>
         <FavClient initialItems={itemsWithProduct} />
       </div>
     </div>

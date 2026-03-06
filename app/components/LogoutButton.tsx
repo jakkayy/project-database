@@ -27,7 +27,7 @@ export default function LogoutButton({ onLogout }: LogoutButtonProps) {
       onClick={handleLogout}
       className="px-2 text-red-400 hover:text-red-500"
     >
-      ออกจากระบบ
+      Sign Out
     </button>
   );
 }

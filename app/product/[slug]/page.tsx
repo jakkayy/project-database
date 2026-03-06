@@ -96,20 +96,20 @@ export default function ProductDetailPage() {
         product_id: product._id,
       });
 
-      toast.success("เพิ่มในรายการโปรดแล้ว", {
+      toast.success("Added to wishlist", {
         description: product.name,
         icon: "♡",
       });
     } catch (error: any) {
       console.error(error);
       if (error?.status === 401) {
-        toast.error("กรุณา Login ก่อน", {
-          description: "เข้าสู่ระบบเพื่อบันทึกรายการโปรด",
+        toast.error("Please sign in first", {
+          description: "Sign in to save your wishlist",
         });
         return;
       }
-      toast.error("เกิดข้อผิดพลาด", {
-        description: "ไม่สามารถเพิ่มรายการโปรดได้ กรุณาลองใหม่",
+      toast.error("An error occurred", {
+        description: "Could not add to wishlist. Please try again",
       });
     }
   };
@@ -118,8 +118,8 @@ export default function ProductDetailPage() {
     if (!product) return;
 
     if (!selectedSize) {
-      toast.warning("กรุณาเลือกไซส์ก่อน", {
-        description: "เลือกไซส์ที่ต้องการด้านบน",
+      toast.warning("Please select a size", {
+        description: "Choose your size above",
       });
       return;
     }
@@ -133,14 +133,14 @@ export default function ProductDetailPage() {
         color: selectedColor,
       });
 
-      toast.success("เพิ่มลงตะกร้าแล้ว", {
+      toast.success("Added to cart", {
         description: `${product.name} — EU ${selectedSize}`,
         icon: "🛒",
       });
     } catch (error) {
       console.error(error);
-      toast.error("เกิดข้อผิดพลาด", {
-        description: "ไม่สามารถเพิ่มสินค้าได้ กรุณาลองใหม่",
+      toast.error("An error occurred", {
+        description: "Could not add item. Please try again",
       });
     }
   };
@@ -150,14 +150,14 @@ export default function ProductDetailPage() {
 
     try {
       const response = await deleteReview({ productId: product._id, reviewId });
-      toast.success("ลบรีวิวแล้ว", { description: "รีวิวของคุณถูกลบเรียบร้อย" });
+      toast.success("Review deleted", { description: "Your review has been removed" });
       if (response.product) setProduct(response.product);
     } catch (error: any) {
       console.error(error);
       if (error.status === 401) {
-        toast.error("กรุณาเข้าสู่ระบบ", { description: "คุณต้องเข้าสู่ระบบก่อนจึงจะลบรีวิวได้" });
+        toast.error("Please sign in", { description: "You must be signed in to delete a review" });
       } else {
-        toast.error("เกิดข้อผิดพลาด", { description: error.message || "ไม่สามารถลบรีวิวได้ กรุณาลองใหม่" });
+        toast.error("An error occurred", { description: error.message || "Could not delete review. Please try again" });
       }
     }
   };
@@ -166,8 +166,8 @@ export default function ProductDetailPage() {
     if (!product) return;
     
     if (rating === 0) {
-      toast.warning("กรุณาให้คะแนน", {
-        description: "เลือกคะแนน 1-5 ดาว",
+      toast.warning("Please rate the product", {
+        description: "Select a rating from 1 to 5 stars",
       });
       return;
     }
@@ -176,14 +176,14 @@ export default function ProductDetailPage() {
     
     try {
       const response = await addReview({ productId: product._id, rating, comment });
-      toast.success("เพิ่มรีวิวแล้ว", { description: "ขอบคุณสำหรับความคิดเห็นของคุณ" });
+      toast.success("Review submitted", { description: "Thank you for your feedback" });
       setRating(0);
       setComment("");
       if (response.product) setProduct(response.product);
     } catch (error: any) {
       console.error(error);
-      toast.error("เกิดข้อผิดพลาด", {
-        description: error.message || "ไม่สามารถเพิ่มรีวิวได้ กรุณาลองใหม่",
+      toast.error("An error occurred", {
+        description: error.message || "Could not submit review. Please try again",
       });
     } finally {
       setSubmittingReview(false);
@@ -204,9 +204,9 @@ export default function ProductDetailPage() {
   if (!product) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-black text-white">
-        <h1 className="text-2xl font-black uppercase">ไม่พบสินค้า</h1>
+        <h1 className="text-2xl font-black uppercase">Product Not Found</h1>
         <Link href="/" className="mt-4 text-sm text-neutral-400 underline hover:text-[#C9A84C]">
-          กลับหน้าหลัก
+          Back to Home
         </Link>
       </div>
     );
@@ -322,7 +322,7 @@ export default function ProductDetailPage() {
 
             {/* Color selector */}
             <div className="mt-6">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400">เลือกสี</p>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400">Color</p>
               <div className="flex gap-2">
                 {(["red", "black", "white"] as const).map((color) => (
                   <button
@@ -337,7 +337,7 @@ export default function ProductDetailPage() {
                         : "border-neutral-700 text-neutral-300 hover:border-neutral-400"
                     }`}
                   >
-                    {color === "red" ? "แดง" : color === "black" ? "ดำ" : "ขาว"}
+                    {color}
                   </button>
                 ))}
               </div>
@@ -346,7 +346,7 @@ export default function ProductDetailPage() {
             {/* Size selector */}
             <div className="mt-6">
               <div className="mb-3 flex items-center justify-between">
-                <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400">เลือกไซส์</p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400">Size</p>
               </div>
               <div className="grid grid-cols-5 gap-2">
                 {["36", "37", "38", "39", "40", "41", "42", "43", "44", "45"].map((size) => (
@@ -369,7 +369,7 @@ export default function ProductDetailPage() {
             <button 
               onClick={handleAddToCart}
               className="mt-8 flex w-full items-center justify-center gap-2 bg-[#C9A84C] py-4 text-xs font-black uppercase tracking-widest text-black transition-opacity hover:opacity-90">
-              เพิ่มลงตะกร้า
+              Add to Cart
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-4 w-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
               </svg>
@@ -379,7 +379,7 @@ export default function ProductDetailPage() {
             <button 
               onClick={handleAddToFav}
               className="mt-3 flex w-full items-center justify-center gap-2 border border-neutral-700 py-4 text-xs font-black uppercase tracking-widest text-neutral-300 transition-colors hover:border-[#C9A84C] hover:text-[#C9A84C]">
-              รายการโปรด
+              Add to Wishlist
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -401,14 +401,14 @@ export default function ProductDetailPage() {
               <p className="text-xs leading-relaxed text-neutral-500">
                 {product.tags && product.tags.length > 0 && (
                   <span className="mb-2 block uppercase tracking-wider">
-                    แท็ก: {product.tags.join(", ")}
+                    Tags: {product.tags.join(", ")}
                   </span>
                 )}
               </p>
 
               {currentVariant && (
                 <ul className="mt-4 space-y-1 text-xs uppercase tracking-wider text-neutral-500">
-                  <li>• สีที่แสดง: {currentVariant.color}</li>
+                  <li>• Color: {currentVariant.color}</li>
                 </ul>
               )}
             </div>
@@ -418,7 +418,7 @@ export default function ProductDetailPage() {
               <div className="mt-6 border-t border-neutral-800 pt-6">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
-                    รีวิว ({product.reviews?.length || 0})
+                    Reviews ({product.reviews?.length || 0})
                   </span>
                   <div className="flex items-center gap-1 text-[#C9A84C]">
                     {[1, 2, 3, 4, 5].map((star) => {
@@ -474,13 +474,13 @@ export default function ProductDetailPage() {
             {/* Review Form */}
             <div className="mt-6 border-t border-neutral-800 pt-6">
               <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
-                ให้คะแนนและรีวิว
+                Rate &amp; Review
               </h3>
               
               {/* Star Rating */}
               <div className="mb-4">
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400">
-                  คะแนน
+                  Rating
                 </p>
                 <div className="flex gap-1">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -518,12 +518,12 @@ export default function ProductDetailPage() {
               {/* Comment Form */}
               <div className="mb-4">
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400">
-                  ความคิดเห็น
+                  Comment
                 </p>
                 <textarea
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
-                  placeholder="แชร์ความคิดเห็นของคุณเกี่ยวกับสินค้านี้..."
+                  placeholder="Share your thoughts about this product..."
                   className="w-full rounded-lg border border-neutral-700 bg-neutral-900 px-4 py-3 text-sm text-white placeholder-neutral-500 focus:border-[#C9A84C] focus:outline-none focus:ring-1 focus:ring-[#C9A84C] resize-none"
                   rows={4}
                 />
@@ -535,7 +535,7 @@ export default function ProductDetailPage() {
                 disabled={submittingReview || rating === 0}
                 className="w-full rounded-lg bg-[#C9A84C] px-4 py-3 text-xs font-black uppercase tracking-widest text-black transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {submittingReview ? "กำลังส่ง..." : "ส่งรีวิว"}
+                {submittingReview ? "Submitting..." : "Submit Review"}
               </button>
             </div>
 
@@ -544,7 +544,7 @@ export default function ProductDetailPage() {
               <div className="mt-6 border-t border-neutral-800 pt-6">
                 <div className="mb-4 flex items-center justify-between">
                   <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
-                    ความคิดเห็น ({product.reviews.length})
+                    Comments ({product.reviews.length})
                   </h3>
                   {product.reviews.some(review => review.userId === currentUserId) && (
                     <button
@@ -554,7 +554,7 @@ export default function ProductDetailPage() {
                       }}
                       className="text-xs text-red-500 hover:text-red-400 transition-colors"
                     >
-                      ลบความคิดเห็นของฉัน
+                      Delete my review
                     </button>
                   )}
                 </div>
@@ -589,13 +589,13 @@ export default function ProductDetailPage() {
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-xs text-neutral-500">
-                            {new Date(review.createdAt).toLocaleDateString('th-TH')}
+                            {new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                           </span>
                           {review.userId === currentUserId && (
                             <button
                               onClick={() => handleDeleteReview(review._id || 'delete-by-user-id')}
                               className="text-xs text-red-500 hover:text-red-400 transition-colors"
-                              title="ลบความคิดเห็น"
+                              title="Delete review"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -626,7 +626,7 @@ export default function ProductDetailPage() {
                     onClick={() => setShowAllComments(!showAllComments)}
                     className="mt-4 w-full rounded-lg border border-neutral-700 bg-neutral-900 px-4 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-300 transition-colors hover:border-[#C9A84C] hover:text-[#C9A84C]"
                   >
-                    {showAllComments ? "แสดงน้อยลง" : "แสดงเพิ่มเติม"}
+                    {showAllComments ? "Show less" : "Show more"}
                   </button>
                 )}
               </div>

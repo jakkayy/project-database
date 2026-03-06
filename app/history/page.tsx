@@ -41,7 +41,7 @@ export default function HistoryPage() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('th-TH', {
+    return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -63,22 +63,22 @@ export default function HistoryPage() {
 
       {/* Profile Sub Navigation */}
       <div className="flex items-center justify-between border-b border-neutral-800 px-10 py-4">
-        <h1 className="text-2xl font-black uppercase tracking-tight text-white">คำสั่งซื้อ</h1>
+        <h1 className="text-2xl font-black uppercase tracking-tight text-white">Orders</h1>
         <div className="flex gap-8 text-sm text-neutral-500">
           <Link href="/profile" className="transition-colors hover:text-white">
-            โปรไฟล์
+            Profile
           </Link>
           <Link
             href="/history"
             className="border-b-2 border-[#C9A84C] pb-3 -mb-4 font-semibold text-white"
           >
-            คำสั่งซื้อ
+            Orders
           </Link>
           <Link href="/favorites" className="transition-colors hover:text-white">
-            รายการโปรด
+            Wishlist
           </Link>
           <Link href="/setting" className="transition-colors hover:text-white">
-            การตั้งค่า
+            Settings
           </Link>
         </div>
       </div>
@@ -87,28 +87,28 @@ export default function HistoryPage() {
       <div className="flex-1 px-10 py-6">
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="text-white">กำลังโหลด...</div>
+            <div className="text-white">Loading...</div>
           </div>
         ) : error ? (
           <div className="flex items-center justify-center py-20">
-            <div className="text-red-500">เกิดข้อผิดพลาด: {error}</div>
+            <div className="text-red-500">Error: {error}</div>
           </div>
         ) : orderHistory.length === 0 ? (
           <div className="flex items-center justify-center py-20">
-            <p className="text-xs uppercase tracking-wider text-neutral-500">คุณยังไม่มีคำสั่งซื้อ</p>
+            <p className="text-xs uppercase tracking-wider text-neutral-500">You have no orders yet</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left text-white">
               <thead className="text-xs uppercase bg-neutral-900 border-b border-neutral-800">
                 <tr>
-                  <th scope="col" className="px-6 py-3">ชื่อสินค้า</th>
-                  <th scope="col" className="px-6 py-3">สี</th>
-                  <th scope="col" className="px-6 py-3">ไซส์</th>
-                  <th scope="col" className="px-6 py-3">จำนวน</th>
-                  <th scope="col" className="px-6 py-3">ราคาต่อหน่วย</th>
-                  <th scope="col" className="px-6 py-3">วันที่ซื้อ</th>
-                  <th scope="col" className="px-6 py-3">สถานะ</th>
+                  <th scope="col" className="px-6 py-3">Product</th>
+                  <th scope="col" className="px-6 py-3">Color</th>
+                  <th scope="col" className="px-6 py-3">Size</th>
+                  <th scope="col" className="px-6 py-3">Qty</th>
+                  <th scope="col" className="px-6 py-3">Unit Price</th>
+                  <th scope="col" className="px-6 py-3">Date</th>
+                  <th scope="col" className="px-6 py-3">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -143,8 +143,8 @@ export default function HistoryPage() {
                           ? 'bg-yellow-900 text-yellow-300'
                           : 'bg-red-900 text-red-300'
                       }`}>
-                        {item.order_status === 'COMPLETED' ? 'สำเร็จ' : 
-                         item.order_status === 'PENDING' ? 'รอดำเนินการ' : 'ล้มเหลว'}
+                        {item.order_status === 'COMPLETED' ? 'Completed' :
+                         item.order_status === 'PENDING' ? 'Pending' : 'Failed'}
                       </span>
                     </td>
                   </tr>
@@ -161,32 +161,32 @@ export default function HistoryPage() {
           {/* Column 1 */}
           <div>
             <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-white">
-              แหล่งข้อมูล
+              Resources
             </h3>
             <ul className="space-y-2 text-xs text-neutral-500">
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  ค้นหาร้านค้า
+                  Find a Store
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  สมัครสมาชิก Nike
+                  Become a Member
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  ข้อเสนอสำหรับนักเรียน
+                  Student Discounts
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  ส่งข้อเสนอแนะ
+                  Send Feedback
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  โค้ดโปรโมชัน
+                  Promo Codes
                 </Link>
               </li>
             </ul>
@@ -195,37 +195,37 @@ export default function HistoryPage() {
           {/* Column 2 */}
           <div>
             <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-white">
-              ความช่วยเหลือ
+              Help
             </h3>
             <ul className="space-y-2 text-xs text-neutral-500">
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  รับความช่วยเหลือ
+                  Get Help
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  สถานะคำสั่งซื้อ
+                  Order Status
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  การจัดส่ง
+                  Shipping
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  การคืนสินค้า
+                  Returns
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  ตัวเลือกการชำระเงิน
+                  Payment Options
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  ติดต่อเรา
+                  Contact Us
                 </Link>
               </li>
             </ul>
@@ -234,32 +234,32 @@ export default function HistoryPage() {
           {/* Column 3 */}
           <div>
             <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-white">
-              บริษัท
+              Company
             </h3>
             <ul className="space-y-2 text-xs text-neutral-500">
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  เกี่ยวกับ Nike
+                  About Niko
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  ข่าวสาร
+                  News
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  อาชีพ
+                  Careers
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  นักลงทุน
+                  Investors
                 </Link>
               </li>
               <li>
                 <Link href="#" className="transition-colors hover:text-white">
-                  ความยั่งยืน
+                  Sustainability
                 </Link>
               </li>
             </ul>
@@ -282,7 +282,7 @@ export default function HistoryPage() {
                   d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418"
                 />
               </svg>
-              <span>ไทย</span>
+              <span>Thailand</span>
             </div>
           </div>
         </div>

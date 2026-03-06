@@ -42,7 +42,7 @@ export default async function ProfilePage() {
     redirect("/login");
   }
 
-  const memberSince = new Date(user.createdAt).toLocaleDateString("th-TH", {
+  const memberSince = new Date(user.createdAt).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
   });
@@ -57,16 +57,16 @@ export default async function ProfilePage() {
           href="/profile"
           className="border-b-2 border-[#C9A84C] pb-3 -mb-4 font-semibold text-white"
         >
-          โปรไฟล์
+          Profile
         </Link>
         <Link href="/history" className="pb-3 -mb-4 transition-colors hover:text-white">
-          คำสั่งซื้อ
+          Orders
         </Link>
         <Link href="/favorites" className="pb-3 -mb-4 transition-colors hover:text-white">
-          รายการโปรด
+          Wishlist
         </Link>
         <Link href="/finance" className="hover:text-white pb-3 -mb-4">
-          การเงิน
+          Finance
         </Link>
       </div>
 
@@ -97,7 +97,7 @@ export default async function ProfilePage() {
               {user.firstname} {user.lastname}
             </h1>
             <p className="mt-1 text-xs uppercase tracking-wider text-neutral-500">
-              เป็นสมาชิกตั้งแต่ {memberSince}
+              Member since {memberSince}
             </p>
           </div>
         </div>

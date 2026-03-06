@@ -33,7 +33,7 @@ export default function FavClient({ initialItems }: { initialItems: any[] }) {
 
       {filtered.length === 0 ? (
         <div className="flex items-center justify-center py-20">
-          <p className="text-xs uppercase tracking-wider text-neutral-500">ไม่มีสินค้าในหมวดหมู่นี้</p>
+          <p className="text-xs uppercase tracking-wider text-neutral-500">No items in this category</p>
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-5">

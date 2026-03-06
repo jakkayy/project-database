@@ -40,27 +40,25 @@ export default function ProductCard({
 
     try {
       if (isFav && favItemId !== null) {
-        // กดซ้ำ → ลบออกจากรายการโปรด
         await deleteFav(favItemId);
         setIsFav(false);
         setFavItemId(null);
-        toast("ลบออกจากรายการโปรดแล้ว", { description: name });
+        toast("Removed from wishlist", { description: name });
       } else {
-        // กดครั้งแรก → เพิ่มในรายการโปรด
         const res = await addFav({ product_id: _id });
         setIsFav(true);
         setFavItemId(res?.data?.favItem_id ?? null);
-        toast.success("เพิ่มในรายการโปรดแล้ว", { description: name, icon: "♡" });
+        toast.success("Added to wishlist", { description: name, icon: "♡" });
       }
     } catch (error: any) {
       if (error?.status === 401) {
-        toast.error("กรุณา Login ก่อน", {
-          description: "เข้าสู่ระบบเพื่อบันทึกรายการโปรด",
+        toast.error("Please sign in first", {
+          description: "Sign in to save your wishlist",
         });
         return;
       }
-      toast.error("เกิดข้อผิดพลาด", {
-        description: "กรุณาลองใหม่อีกครั้ง",
+      toast.error("An error occurred", {
+        description: "Please try again",
       });
     }
   };

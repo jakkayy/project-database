@@ -27,7 +27,7 @@ export default function InventoryAlerts({ alerts }: { alerts: AlertItem[] }) {
 
       <div className="mt-4 space-y-3">
         {alerts.length === 0 ? (
-          <p className="text-xs text-neutral-500">ไม่มีสินค้าที่ต้องแจ้งเตือน</p>
+          <p className="text-xs text-neutral-500">No inventory alerts</p>
         ) : (
           displayed.map((alert, i) => (
             <div
@@ -62,14 +62,14 @@ export default function InventoryAlerts({ alerts }: { alerts: AlertItem[] }) {
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-3.5 w-3.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
               </svg>
-              ซ่อนรายการทั้งหมด
+              Hide All
             </>
           ) : (
             <>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-3.5 w-3.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
               </svg>
-              ดูทั้งหมด ({alerts.length} รายการ)
+              View All ({alerts.length} items)
             </>
           )}
         </button>

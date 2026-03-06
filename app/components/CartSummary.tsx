@@ -62,7 +62,7 @@ export default function CartSummary({ total, items, selectedCount = 0, onCheckou
             : "bg-neutral-800 text-neutral-500 cursor-not-allowed"
         }`}
       >
-        {selectedCount === 0 ? "เลือกสินค้าก่อน" : `CHECKOUT (${selectedCount})`}
+        {selectedCount === 0 ? "Select items first" : `CHECKOUT (${selectedCount})`}
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-4 w-4">
           <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
         </svg>

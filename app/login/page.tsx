@@ -48,17 +48,17 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-[480px] rounded-2xl bg-black/60 px-10 py-12 backdrop-blur-md border border-white/10">
         {/* Heading */}
         <h1 className="mb-2 text-center text-3xl font-black uppercase tracking-tight text-white">
-          เข้าสู่ระบบ
+          Sign In
         </h1>
         <p className="mb-8 text-center text-sm text-neutral-400">
-          ยินดีต้อนรับกลับมา
+          Welcome back
         </p>
 
         {/* Form */}
         <form onSubmit={handleLogin}>
           <div className="mb-5">
             <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest text-[#C9A84C]">
-              อีเมล
+              Email
             </label>
             <input
               type="email"
@@ -71,7 +71,7 @@ export default function LoginPage() {
           </div>
           <div className="mb-6">
             <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest text-[#C9A84C]">
-              รหัสผ่าน
+              Password
             </label>
             <div className="relative">
               <input
@@ -110,13 +110,13 @@ export default function LoginPage() {
             type="submit"
             className="w-full bg-[#C9A84C] py-4 text-xs font-black uppercase tracking-widest text-black transition-opacity hover:opacity-90"
           >
-            เข้าสู่ระบบ
+            Sign In
           </button>
 
           <p className="mt-6 text-center text-sm text-neutral-400">
-            ยังไม่มีบัญชี?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/register" className="font-semibold text-[#C9A84C] hover:underline">
-              สมัครสมาชิก
+              Register
             </Link>
           </p>
         </form>

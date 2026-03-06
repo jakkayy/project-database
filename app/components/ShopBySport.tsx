@@ -6,19 +6,19 @@ import SportCard from "./SportCard";
 const sports = [
   {
     image: "/sports/running.svg",
-    label: "การวิ่ง",
+    label: "Running",
   },
   {
     image: "/sports/football.svg",
-    label: "ฟุตบอล",
+    label: "Football",
   },
   {
     image: "/sports/basketball.svg",
-    label: "บาสเก็ตบอล",
+    label: "Basketball",
   },
   {
     image: "/sports/training.svg",
-    label: "เทรนนิ่ง",
+    label: "Training",
   },
 ];
 
@@ -40,7 +40,7 @@ export default function ShopBySport() {
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-2xl font-black uppercase tracking-tight text-white">
-          เลือกซื้อตามประเภทกีฬา
+          Shop By Sport
         </h2>
         <div className="flex items-center gap-3">
           {/* Left arrow */}

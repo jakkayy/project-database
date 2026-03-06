@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const sidebarItems = [
   {
-    label: "รายละเอียดบัญชี",
+    label: "Account Details",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5">
         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
@@ -12,7 +12,7 @@ const sidebarItems = [
     ),
   },
   {
-    label: "วิธีชำระเงิน",
+    label: "Payment Methods",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5">
         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
@@ -20,7 +20,7 @@ const sidebarItems = [
     ),
   },
   {
-    label: "ที่อยู่ส่งมอบ",
+    label: "Delivery Addresses",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5">
         <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
@@ -37,7 +37,7 @@ export default function SettingContent() {
     <>
       {/* Header */}
       <div className="border-b border-gray-200 px-10 py-6">
-        <h1 className="text-2xl font-medium text-black">การตั้งค่า</h1>
+        <h1 className="text-2xl font-medium text-black">Settings</h1>
       </div>
 
       <div className="flex">
@@ -64,19 +64,18 @@ export default function SettingContent() {
         {/* Main Content */}
         <main className="flex-1 px-16 py-10">
           <h2 className="text-xl font-medium text-black">
-            ที่อยู่ส่งมอบที่บันทึกไว้
+            Saved Delivery Addresses
           </h2>
           <p className="mt-4 max-w-lg text-sm leading-relaxed text-gray-500">
-            คุณไม่มีที่อยู่ส่งมอบที่บันทึกไว้ในบัญชีนี้ แนะนำให้เพิ่มที่อยู่ที่นี่
-            แล้วระบบจะป้อนข้อมูลให้ช่วงหน้าใน ขั้นตอนเช็คเอาท์
-            เพื่อให้การดำเนินการรวดเร็วยิ่งขึ้น
+            You have no saved delivery addresses on this account. We recommend adding an address here
+            so it will be pre-filled during checkout to speed up the process.
           </p>
 
           <button
             onClick={() => setShowModal(true)}
             className="mt-8 rounded-full bg-black px-6 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
           >
-            เพิ่มที่อยู่
+            Add Address
           </button>
         </main>
       </div>
@@ -106,79 +105,79 @@ export default function SettingContent() {
               </svg>
             </button>
 
-            <h2 className="mb-6 text-xl font-medium text-black">เพิ่มที่อยู่</h2>
+            <h2 className="mb-6 text-xl font-medium text-black">Add Address</h2>
 
             <form className="space-y-4">
-              {/* Row 1: ชื่อ + นามสกุล */}
+              {/* Row 1: First Name + Last Name */}
               <div className="grid grid-cols-2 gap-4">
                 <input
                   type="text"
-                  placeholder="ชื่อ*"
+                  placeholder="First Name*"
                   className="rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
                 />
                 <input
                   type="text"
-                  placeholder="นามสกุล*"
+                  placeholder="Last Name*"
                   className="rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
                 />
               </div>
 
-              {/* Row 2: ที่อยู่ */}
+              {/* Row 2: Address */}
               <input
                 type="text"
-                placeholder="ที่อยู่*"
+                placeholder="Address*"
                 className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
               />
 
-              {/* Row 3: อพาร์ทเมนต์ */}
+              {/* Row 3: Apartment */}
               <input
                 type="text"
-                placeholder="อพาร์ทเมนต์, ห้องชุด, อาคาร"
+                placeholder="Apartment, suite, building"
                 className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
               />
 
-              {/* Row 4: เมือง + รหัสไปรษณีย์ */}
+              {/* Row 4: City + Postal Code */}
               <div className="grid grid-cols-2 gap-4">
                 <input
                   type="text"
-                  placeholder="เมือง*"
+                  placeholder="City*"
                   className="rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
                 />
                 <input
                   type="text"
-                  placeholder="รหัสไปรษณีย์*"
+                  placeholder="Postal Code*"
                   className="rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
                 />
               </div>
 
-              {/* Row 5: จังหวัด + ประเทศ/ภูมิภาค */}
+              {/* Row 5: Province + Country */}
               <div className="grid grid-cols-2 gap-4">
                 <select className="rounded-md border border-gray-300 px-4 py-3 text-sm text-gray-500 outline-none focus:border-black">
-                  <option value="">จังหวัด*</option>
-                  <option value="กรุงเทพมหานคร">กรุงเทพมหานคร</option>
-                  <option value="เชียงใหม่">เชียงใหม่</option>
-                  <option value="ชลบุรี">ชลบุรี</option>
-                  <option value="นนทบุรี">นนทบุรี</option>
-                  <option value="ปทุมธานี">ปทุมธานี</option>
-                  <option value="สมุทรปราการ">สมุทรปราการ</option>
-                  <option value="ภูเก็ต">ภูเก็ต</option>
-                  <option value="เชียงราย">เชียงราย</option>
-                  <option value="ขอนแก่น">ขอนแก่น</option>
-                  <option value="นครราชสีมา">นครราชสีมา</option>
+                  <option value="">Province*</option>
+                  <option value="Bangkok">Bangkok</option>
+                  <option value="Chiang Mai">Chiang Mai</option>
+                  <option value="Chonburi">Chonburi</option>
+                  <option value="Nonthaburi">Nonthaburi</option>
+                  <option value="Pathum Thani">Pathum Thani</option>
+                  <option value="Samut Prakan">Samut Prakan</option>
+                  <option value="Phuket">Phuket</option>
+                  <option value="Chiang Rai">Chiang Rai</option>
+                  <option value="Khon Kaen">Khon Kaen</option>
+                  <option value="Nakhon Ratchasima">Nakhon Ratchasima</option>
                 </select>
                 <select
-                  defaultValue="ไทย"
+                  defaultValue="Thailand"
                   className="rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
                 >
-                  <option value="">ประเทศ/ภูมิภาค*</option>
-                  <option value="ไทย">ไทย</option>
+                  <option value="">Country/Region*</option>
+                  <option value="Thailand">Thailand</option>
                 </select>
               </div>
 
-              {/* Row 6: หมายเลขโทรศัพท์ */}
+              {/* Row 6: Phone */}
               <input
                 type="tel"
-                placeholder="หมายเลขโทรศัพท์*"
+                placeholder="Phone Number*"
                 className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm text-black outline-none focus:border-black"
               />
 
@@ -190,7 +189,7 @@ export default function SettingContent() {
                   onClick={() => setShowModal(false)}
                   className="rounded-full bg-black px-8 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
                 >
-                  บันทึก
+                  Save
                 </button>
               </div>
             </form>

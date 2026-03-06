@@ -21,7 +21,7 @@ export default async function CartPage() {
       <div className="min-h-screen bg-black">
         <Navbar />
         <div className="px-10 py-20 text-center">
-          <p className="text-neutral-500">ยังไม่มีสินค้าในตะกร้า</p>
+          <p className="text-neutral-500">Your cart is empty</p>
         </div>
       </div>
     );

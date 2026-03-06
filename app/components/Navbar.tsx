@@ -37,7 +37,7 @@ export default async function Navbar() {
           {account ? (
             <>
               <Link href="/profile" className="px-2 hover:text-[#C9A84C]">
-                สวัสดีคุณ {account.firstname}
+                Hello, {account.firstname}
               </Link>
 
               <span className="text-neutral-600">|</span>
@@ -47,7 +47,7 @@ export default async function Navbar() {
 
           ) : (
             <Link href="/login" className="px-2 hover:text-[#C9A84C]">
-              ลงชื่อเข้าใช้
+              Sign In
             </Link>
           )}
         </div>

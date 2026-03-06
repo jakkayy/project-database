@@ -68,7 +68,7 @@ export default function CheckoutPage() {
 
       if (!res.ok) {
         if (data.code === "INSUFFICIENT_BALANCE") {
-          alert("ยอดเงินไม่เพียงพอ");
+          alert("Insufficient balance");
           return;
         }
 
@@ -126,12 +126,12 @@ export default function CheckoutPage() {
           }`}
         >
           {total === 0
-            ? "ไม่มีสินค้าในตะกร้า"
+            ? "No items in cart"
             : afterBalance < 0
-            ? "ยอดเงินไม่เพียงพอ"
+            ? "Insufficient balance"
             : !selectedId
-            ? "กรุณาเลือกที่อยู่จัดส่ง"
-            : "ชำระเงิน"}
+            ? "Select a delivery address"
+            : "Confirm Payment"}
         </button>
       </div>
     </div>

@@ -37,7 +37,7 @@ export default function CheckoutOrderSummary({
 
       {selectedAddress && (
         <div className="p-3 border border-neutral-800 bg-neutral-950 rounded text-[11px] text-neutral-400">
-          <p className="font-bold text-[#C9A84C] mb-1">จัดส่งไปที่:</p>
+          <p className="font-bold text-[#C9A84C] mb-1">Ship to:</p>
           <p>{selectedAddress.firstname} {selectedAddress.lastname}</p>
           <p className="line-clamp-1">{selectedAddress.addressLine}</p>
         </div>
@@ -105,7 +105,7 @@ export default function CheckoutOrderSummary({
                 <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-widest text-neutral-500">
                   {item.product?.category}{item.color ? ` · ${item.color}` : ""}{item.size ? ` · SIZE ${item.size}` : ""}
                 </p>
-                <p className="mt-1 text-[11px] text-neutral-600">จำนวน {item.quantity}</p>
+                <p className="mt-1 text-[11px] text-neutral-600">Qty: {item.quantity}</p>
               </div>
               <p className="mt-2 text-sm font-black text-[#C9A84C]">
                 {Number(item.price * item.quantity).toLocaleString("th-TH", { style: "currency", currency: "THB" })}

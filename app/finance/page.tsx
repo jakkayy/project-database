@@ -108,7 +108,7 @@ export default function FinancePage() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString('th-TH', {
+    return new Date(dateString).toLocaleString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -120,11 +120,11 @@ export default function FinancePage() {
   const getTransactionTypeLabel = (type: string) => {
     switch (type) {
       case 'DEPOSIT':
-        return 'เติมเงิน';
+        return 'Deposit';
       case 'TRANSFER_OUT':
-        return 'โอนออก';
+        return 'Transfer Out';
       case 'TRANSFER_IN':
-        return 'รับโอน';
+        return 'Transfer In';
       default:
         return type;
     }
@@ -158,26 +158,26 @@ export default function FinancePage() {
       <ClientNavbar />
       
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">การเงิน</h1>
+        <h1 className="text-3xl font-bold mb-8">Finance</h1>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Balance Section */}
           <div className="lg:col-span-1">
             <div className="bg-neutral-900 rounded-lg p-6 mb-6">
-              <h2 className="text-xl font-semibold mb-4">ยอดเงินคงเหลือ</h2>
+              <h2 className="text-xl font-semibold mb-4">Current Balance</h2>
               <div className="text-3xl font-bold text-[#C9A84C] mb-2">
                 {formatCurrency(balance)}
               </div>
-              <div className="text-gray-400 font-bold">บัญชีของ: {name}</div>
+              <div className="text-gray-400 font-bold">Account: {name}</div>
             </div>
 
             {/* Deposit Form */}
             <div className="bg-neutral-900 rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">เติมเงิน</h2>
+              <h2 className="text-xl font-semibold mb-4">Top Up</h2>
               <form onSubmit={handleDeposit} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    จำนวนเงิน (บาท)
+                    Amount (THB)
                   </label>
                   <input
                     type="number"
@@ -195,7 +195,7 @@ export default function FinancePage() {
                   disabled={depositLoading}
                   className="w-full bg-[#C9A84C] text-black font-semibold py-2 px-4 rounded-lg hover:bg-[#B09042] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {depositLoading ? 'กำลังดำเนินการ...' : 'เติมเงิน'}
+                  {depositLoading ? 'Processing...' : 'Top Up'}
                 </button>
               </form>
               
@@ -214,11 +214,11 @@ export default function FinancePage() {
           {/* Transaction History */}
           <div className="lg:col-span-2">
             <div className="bg-neutral-900 rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">ประวัติการทำรายการ</h2>
+              <h2 className="text-xl font-semibold mb-4">Transaction History</h2>
               
               {transactions.length === 0 ? (
                 <div className="text-center py-8 text-gray-400">
-                  ไม่มีประวัติการทำรายการ
+                  No transaction history
                 </div>
               ) : (
                 <div className="space-y-3 max-h-96 overflow-y-auto">

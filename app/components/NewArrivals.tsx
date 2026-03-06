@@ -53,7 +53,7 @@ export default function NewArrivals() {
           <span className="text-white">THE </span>
           <span className="text-[#C9A84C]">COLLECTION</span>
         </h2>
-        <p className="mt-2 text-sm text-neutral-400">สินค้าใหม่ — New Arrivals</p>
+        <p className="mt-2 text-sm text-neutral-400">New Arrivals</p>
       </div>
 
       {/* Filter pills + pagination */}

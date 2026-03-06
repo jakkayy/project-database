@@ -140,7 +140,7 @@ export default async function AdminDashboardPage() {
             </h2>
             <div className="mt-4 space-y-3">
               {topSelling.length === 0 ? (
-                <p className="text-xs text-neutral-500">ยังไม่มีข้อมูลการขาย</p>
+                <p className="text-xs text-neutral-500">No sales data yet</p>
               ) : (
                 topSelling.map((item, i) => (
                   <div key={i} className="flex items-center gap-4">

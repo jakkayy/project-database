@@ -47,21 +47,21 @@ export default function RegisterPage() {
       <div className="relative z-10 w-full max-w-[480px] rounded-2xl bg-black/60 px-10 py-12 backdrop-blur-md border border-white/10">
         {/* Heading */}
         <h1 className="mb-2 text-center text-3xl font-black uppercase tracking-tight text-white">
-          สมัครสมาชิก
+          Create Account
         </h1>
         <p className="mb-8 text-center text-sm text-neutral-400">
-          สร้างบัญชีเพื่อประสบการณ์สูงสุด
+          Create your account for the ultimate experience
         </p>
 
         {/* Form */}
         <form onSubmit={handleRegister}>
           <div className="mb-5">
             <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest text-[#C9A84C]">
-              ชื่อ
+              First Name
             </label>
             <input
               type="text"
-              placeholder="ชื่อจริง"
+              placeholder="First name"
               value={firstname}
               onChange={(e) => setFirstname(e.target.value)}
               className="w-full border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-[#C9A84C]"
@@ -71,11 +71,11 @@ export default function RegisterPage() {
 
           <div className="mb-5">
             <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest text-[#C9A84C]">
-              นามสกุล
+              Last Name
             </label>
             <input
               type="text"
-              placeholder="นามสกุล"
+              placeholder="Last name"
               value={lastname}
               onChange={(e) => setLastname(e.target.value)}
               className="w-full border border-neutral-700 bg-neutral-800 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none transition-colors focus:border-[#C9A84C]"
@@ -85,7 +85,7 @@ export default function RegisterPage() {
 
           <div className="mb-5">
             <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest text-[#C9A84C]">
-              อีเมล
+              Email
             </label>
             <input
               type="email"
@@ -99,7 +99,7 @@ export default function RegisterPage() {
 
           <div className="mb-6">
             <label className="mb-1 block text-[10px] font-semibold uppercase tracking-widest text-[#C9A84C]">
-              รหัสผ่าน
+              Password
             </label>
             <div className="relative">
               <input
@@ -142,9 +142,9 @@ export default function RegisterPage() {
           </button>
 
           <p className="mt-6 text-center text-sm text-neutral-400">
-            มีบัญชีอยู่แล้ว?{" "}
+            Already have an account?{" "}
             <Link href="/login" className="font-semibold text-[#C9A84C] hover:underline">
-              เข้าสู่ระบบ
+              Sign In
             </Link>
           </p>
         </form>

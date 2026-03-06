@@ -44,7 +44,7 @@ export default function AdminProductPage() {
     setLoading(true);
     try {
       await addProduct(formData);
-      alert("เพิ่มสินค้าสำเร็จ!");
+      alert("Product added successfully!");
       setIsModalOpen(false);
       await fetchInventory();
       setFormData({ name: "", category: "Footwear", basePrice: "", image: "", tags: "", color: "", size: "", stock: "" });
