@@ -1,17 +1,17 @@
-# 🛒 Project Database (Docker Dev Version)
+# 🛒 Project Database
 
-โปรเจค E-commerce Fullstack  
+โปรเจค E-commerce Fullstack (กีฬา)
 พัฒนาด้วยเทคโนโลยี:
 
-- ⚡ Next.js 16  
-- 🥟 Bun  
-- 🗄 Prisma (MySQL)  
-- 🍃 Mongoose (MongoDB)  
-- 🐳 Docker + Docker Compose  
+- ⚡ Next.js 16
+- 🥟 Bun
+- 🗄 Prisma (MySQL)
+- 🍃 Mongoose (MongoDB)
+- 🐳 Docker (สำหรับ Database เท่านั้น)
 
 ---
 
-# 🚀 วิธีเริ่มต้นใช้งาน (Development ด้วย Docker)
+# 🚀 วิธีเริ่มต้นใช้งาน
 
 ## 1️⃣ Clone โปรเจค
 
@@ -27,40 +27,55 @@ cd project-database
 สร้างไฟล์ `.env.local` ที่ root ของโปรเจค
 
 ```env
-DATABASE_URL="mysql://root:root@mysql:3306/database_project"
-MONGODB_URI="mongodb://root:root@mongodb:27017/database_project?authSource=admin"
+DATABASE_URL="mysql://root:root@localhost:3307/database_project"
+MONGODB_URI="mongodb://root:root@localhost:27017/database_project?authSource=admin"
 JWT_SECRET="supersecretkey123"
 ```
 
-⚠ หมายเหตุสำคัญ:
-
-- ต้องใช้ `mysql` และ `mongodb` เป็น hostname (ชื่อ service ใน Docker)
-- ห้ามใช้ `localhost` เมื่อรันผ่าน Docker
+> หมายเหตุ: ใช้ `localhost` เพราะ Next.js รันบนเครื่อง ไม่ได้อยู่ใน Docker
 
 ---
 
-## 3️⃣ รันโปรเจคด้วย Docker
+## 3️⃣ รัน Database ด้วย Docker
 
 ```bash
-docker compose -f docker-compose.dev.yml up --build
+docker compose up -d
 ```
 
-การรันครั้งแรกจะทำสิ่งต่อไปนี้อัตโนมัติ:
+จะเปิด MySQL และ MongoDB ใน background
 
-- ติดตั้ง dependencies
-- Sync Prisma schema ด้วย `db push`
-- Seed ข้อมูลสินค้าใน MongoDB
-- เปิด Next.js
-- เปิด Prisma Studio
+---
+
+## 4️⃣ ติดตั้ง Dependencies และ Sync Schema
+
+```bash
+bun install
+bunx prisma db push
+```
+
+---
+
+## 5️⃣ Seed ข้อมูลสินค้า (MongoDB)
+
+```bash
+bun run app/scripts/seedProducts.ts
+```
+
+---
+
+## 6️⃣ รัน Next.js
+
+```bash
+bun dev
+```
 
 ---
 
 # 🌐 URL สำหรับเข้าใช้งาน
 
 | Service | URL |
-|----------|------|
+|---|---|
 | 🖥 Next.js | http://localhost:3000 |
-| 🗄 Prisma Studio | http://localhost:5555 |
 | 🐬 MySQL (จากเครื่อง Host) | localhost:3307 |
 | 🍃 MongoDB (จากเครื่อง Host) | localhost:27017 |
 
@@ -70,14 +85,18 @@ docker compose -f docker-compose.dev.yml up --build
 
 ## 🟢 MySQL (ผ่าน Prisma)
 
-ใช้สำหรับ:
+| Model | รายละเอียด |
+|---|---|
+| User | ผู้ใช้งาน (USER / ADMIN), มี balance |
+| Address | ที่อยู่จัดส่งของผู้ใช้ |
+| Order, OrderItem | คำสั่งซื้อและรายการสินค้า |
+| Payment | การชำระเงินต่อ Order |
+| Transaction | ประวัติการเงิน (DEPOSIT / TRANSFER) |
+| Cart, CartItem | ตะกร้าสินค้า |
+| Fav, FavItem | รายการสินค้าโปรด |
+| ProductStock | สต็อกสินค้าแยก color/size (อ้างอิง MongoDB _id) |
 
-- Users  
-- Orders  
-- Cart  
-- Transactions  
-
-ในโหมดพัฒนา จะ sync schema ด้วย:
+Sync schema ด้วย:
 
 ```bash
 bunx prisma db push
@@ -89,9 +108,15 @@ bunx prisma db push
 
 ใช้สำหรับ:
 
-- Products  
-- Variants  
-- Catalog แบบ dynamic  
+- Products
+- Variants
+- Catalog แบบ dynamic
+
+ไฟล์ Mongoose model อยู่ที่:
+
+```
+app/models/Product.ts
+```
 
 ไฟล์ seed อยู่ที่:
 
@@ -101,56 +126,73 @@ app/scripts/seedProducts.ts
 
 ---
 
-# 🔄 คำสั่งที่ใช้บ่อยในการพัฒนา
-
-## 🔁 ล้างและสร้างใหม่ทั้งหมด (Reset Database)
-
-```bash
-docker compose -f docker-compose.dev.yml down -v
-docker compose -f docker-compose.dev.yml up --build
-```
-
----
-
-## 🌱 รัน Seed เองแบบ manual (จริงๆ docker รันให้แล้ว)
-
-```bash
-docker compose exec app bun run app/scripts/seedProducts.ts
-```
-
----
-
-## 🐚 เข้า shell ของ container
-
-```bash
-docker compose exec app sh
-```
-
----
-
-# 🛠 คำสั่ง Prisma (รันใน container)
-
-```bash
-bunx prisma db push
-bunx prisma generate
-bunx prisma studio
-```
-
----
-
 # 📦 Services ใน Docker
 
 | Service | รายละเอียด |
-|----------|------------|
-| app | Next.js + Bun |
-| mysql | MySQL 8 |
-| mongodb | MongoDB 7 |
+|---|---|
+| mysql | MySQL 8.0 (port 3307) |
+| mongodb | MongoDB 7 (port 27017) |
+
+> Next.js **ไม่ได้**รันใน Docker — ใช้ `bun dev` บนเครื่องโดยตรง
 
 ---
 
-# พร้อมเริ่มพัฒนา
+# 🔄 คำสั่งที่ใช้บ่อยในการพัฒนา
 
-เข้าใช้งาเว็บที่ : http://localhost:3000
-เข้าใช้งาน prisma studio : http://localhost:5555
+## ล้างและสร้าง Database ใหม่
+
+```bash
+docker compose down -v
+docker compose up -d
+bunx prisma db push
+bun run app/scripts/seedProducts.ts
+```
+
+---
+
+## Prisma Studio (รันบนเครื่อง)
+
+```bash
+bunx prisma studio
+```
+
+เข้าใช้งานที่: http://localhost:5555
+
+---
+
+# 🗂 โครงสร้างโปรเจค
+
+```
+app/
+├── api/              # API Routes
+│   ├── auth/         # login, register, logout, profile
+│   ├── product/      # สินค้า, search, review, stock
+│   ├── cart/         # ตะกร้าสินค้า
+│   ├── favorite/     # รายการโปรด
+│   ├── checkout/     # ชำระเงิน
+│   ├── finance/      # balance, deposit, transactions
+│   ├── history/      # ประวัติคำสั่งซื้อ
+│   ├── address/      # ที่อยู่จัดส่ง
+│   ├── admin/        # admin panel APIs
+│   └── user/         # ข้อมูลผู้ใช้
+├── components/       # UI Components
+├── models/           # Mongoose Models
+├── scripts/          # seed scripts
+├── admin/            # Admin pages (dashboard, products, orders, inventory)
+├── cart/             # หน้าตะกร้า
+├── checkout/         # หน้าชำระเงิน
+├── favorites/        # หน้าสินค้าโปรด
+├── finance/          # หน้าการเงิน
+├── history/          # หน้าประวัติคำสั่งซื้อ
+├── product/          # หน้าสินค้า (dynamic slug)
+├── profile/          # หน้าโปรไฟล์
+├── setting/          # หน้าตั้งค่า
+├── login/            # หน้าเข้าสู่ระบบ
+└── register/         # หน้าสมัครสมาชิก
+prisma/
+└── schema.prisma     # MySQL schema
+```
+
+---
 
 Happy Coding 🚀
