@@ -4,7 +4,11 @@ export function register(data: {
     firstname: string,
     lastname: string,
     email: string,
-    password: string
+    password: string,
+    role?: string,
+    shopName?: string,
+    description?: string,
+    shopImage?: string,
 }) {
     return apiFetch("/api/auth/register", {
         method: "POST",

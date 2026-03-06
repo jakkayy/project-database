@@ -73,6 +73,31 @@ export async function GET(req: NextRequest) {
       productObj.averageRating = 0;
     }
 
+    // Fetch variants (color/size/stock) from MySQL ProductStock
+    const stocks = await prisma.productStock.findMany({
+      where: { product_id: productObj._id.toString() },
+    });
+
+    // Group into { color, sizes: [{ size, stock }] }[]
+    const variantMap: Record<string, { size: string; stock: number }[]> = {};
+    for (const s of stocks) {
+      if (!variantMap[s.color]) variantMap[s.color] = [];
+      variantMap[s.color].push({ size: s.size, stock: s.stock });
+    }
+    productObj.variants = Object.entries(variantMap).map(([color, sizes]) => ({
+      color,
+      sizes,
+    }));
+
+    // Include shop info
+    if (productObj.shop_id) {
+      const shop = await prisma.shop.findUnique({
+        where: { shop_id: productObj.shop_id },
+        select: { shop_id: true, name: true, image: true },
+      });
+      productObj.shop = shop ?? null;
+    }
+
     return NextResponse.json(productObj);
   } catch (error) {
     return NextResponse.json(

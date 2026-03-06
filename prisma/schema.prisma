@@ -29,11 +29,25 @@ model User {
   cart         Cart?
   fav          Fav?
   transactions Transaction[]
+  shop         Shop?
 }
 
 enum Role {
   USER
   ADMIN
+}
+
+model Shop {
+  shop_id     Int      @id @default(autoincrement())
+  user_id     Int      @unique
+  name        String
+  description String?  @db.Text
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user     User           @relation(fields: [user_id], references: [user_id])
+  products ProductStock[]
 }
 
 model Order {
@@ -172,12 +186,16 @@ model FavItem {
 model ProductStock {
   id         Int      @id @default(autoincrement())
   product_id String   @db.VarChar(24) // from MongoDB _id
+  shop_id    Int?
   color      String
   size       String
   stock      Int      @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  shop Shop? @relation(fields: [shop_id], references: [shop_id])
+
   @@unique([product_id, color, size])
   @@index([product_id])
+  @@index([shop_id])
 }

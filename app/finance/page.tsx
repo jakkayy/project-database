@@ -144,46 +144,46 @@ export default function FinancePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white">
+      <div className="min-h-screen bg-gray-50">
         <ClientNavbar />
         <div className="flex items-center justify-center h-96">
-          <div className="text-xl">Loading...</div>
+          <div className="text-gray-400">Loading...</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gray-50">
       <ClientNavbar />
-      
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Finance</h1>
-        
+
+      <div className="max-w-6xl mx-auto px-10 py-10">
+        <h1 className="text-3xl font-extrabold text-gray-900 mb-8">Balance</h1>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Balance Section */}
-          <div className="lg:col-span-1">
-            <div className="bg-neutral-900 rounded-lg p-6 mb-6">
-              <h2 className="text-xl font-semibold mb-4">Current Balance</h2>
-              <div className="text-3xl font-bold text-[#C9A84C] mb-2">
+          <div className="lg:col-span-1 space-y-5">
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+              <p className="text-sm font-medium text-gray-500 mb-3">Current Balance</p>
+              <div className="text-3xl font-bold text-green-600 mb-1">
                 {formatCurrency(balance)}
               </div>
-              <div className="text-gray-400 font-bold">Account: {name}</div>
+              <div className="text-sm text-gray-400">Account: {name}</div>
             </div>
 
             {/* Deposit Form */}
-            <div className="bg-neutral-900 rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">Top Up</h2>
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+              <h2 className="text-base font-semibold text-gray-900 mb-4">Top Up</h2>
               <form onSubmit={handleDeposit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     Amount (THB)
                   </label>
                   <input
                     type="number"
                     value={depositAmount}
                     onChange={(e) => setDepositAmount(e.target.value)}
-                    className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:outline-none focus:border-[#C9A84C] text-white"
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 outline-none transition-colors focus:border-green-500 focus:bg-white focus:ring-1 focus:ring-green-500"
                     placeholder="0.00"
                     step="0.01"
                     min="0"
@@ -193,17 +193,17 @@ export default function FinancePage() {
                 <button
                   type="submit"
                   disabled={depositLoading}
-                  className="w-full bg-[#C9A84C] text-black font-semibold py-2 px-4 rounded-lg hover:bg-[#B09042] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-green-500 text-white font-semibold py-2.5 px-4 rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {depositLoading ? 'Processing...' : 'Top Up'}
                 </button>
               </form>
-              
+
               {message && (
                 <div className={`mt-4 p-3 rounded-lg text-sm ${
-                  messageType === 'success' 
-                    ? 'bg-green-900 text-green-200' 
-                    : 'bg-red-900 text-red-200'
+                  messageType === 'success'
+                    ? 'bg-green-50 text-green-700 border border-green-200'
+                    : 'bg-red-50 text-red-600 border border-red-200'
                 }`}>
                   {message}
                 </div>
@@ -213,29 +213,46 @@ export default function FinancePage() {
 
           {/* Transaction History */}
           <div className="lg:col-span-2">
-            <div className="bg-neutral-900 rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">Transaction History</h2>
-              
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+              <h2 className="text-base font-semibold text-gray-900 mb-5">Transaction History</h2>
+
               {transactions.length === 0 ? (
-                <div className="text-center py-8 text-gray-400">
+                <div className="text-center py-12 text-gray-400 text-sm">
                   No transaction history
                 </div>
               ) : (
-                <div className="space-y-3 max-h-96 overflow-y-auto">
+                <div className="space-y-2 max-h-[480px] overflow-y-auto pr-1">
                   {transactions.map((transaction) => (
                     <div
                       key={transaction.id}
-                      className="flex items-center justify-between p-4 bg-neutral-800 rounded-lg"
+                      className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100"
                     >
-                      <div className="flex-1">
-                        <div className="font-medium">
-                          {getTransactionTypeLabel(transaction.type)}
+                      <div className="flex items-center gap-3">
+                        <div className={`flex h-9 w-9 items-center justify-center rounded-full ${
+                          transaction.type === 'TRANSFER_OUT'
+                            ? 'bg-red-100 text-red-500'
+                            : 'bg-green-100 text-green-600'
+                        }`}>
+                          {transaction.type === 'TRANSFER_OUT' ? (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
+                            </svg>
+                          ) : (
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
+                            </svg>
+                          )}
                         </div>
-                        <div className="text-sm text-neutral-400">
-                          {formatDate(transaction.createdAt)}
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {getTransactionTypeLabel(transaction.type)}
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            {formatDate(transaction.createdAt)}
+                          </div>
                         </div>
                       </div>
-                      <div className={`text-lg font-semibold ${getTransactionColor(transaction.type)}`}>
+                      <div className={`text-sm font-bold ${getTransactionColor(transaction.type)}`}>
                         {transaction.type === 'TRANSFER_OUT' ? '-' : '+'}
                         {formatCurrency(transaction.amount)}
                       </div>

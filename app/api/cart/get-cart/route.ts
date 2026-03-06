@@ -26,14 +26,27 @@ export async function GET() {
       });
     }
 
+    // Filter out items where stock = 0 for the specific color+size
+    const stockRows = await prisma.productStock.findMany({
+      where: {
+        product_id: { in: cart.items.map((i) => i.product_id) },
+        stock: { gt: 0 },
+      },
+      select: { product_id: true, color: true, size: true },
+    });
+    const inStockSet = new Set(stockRows.map((s) => `${s.product_id}|${s.color}|${s.size}`));
+    const inStockItems = cart.items.filter((item) =>
+      inStockSet.has(`${item.product_id}|${item.color}|${item.size}`)
+    );
+
     await connectMongo();
 
     const itemsWithProduct = await Promise.all(
-      cart.items.map(async (item) => {
+      inStockItems.map(async (item) => {
         const product = await Product.findById(item.product_id);
 
         return {
-          cartItem_id: item.cartItem_id, 
+          cartItem_id: item.cartItem_id,
           test_size: item.size,
           price: item.price,
           quantity: item.quantity,

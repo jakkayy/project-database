@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -20,21 +21,14 @@ export default function AdminNav() {
   };
 
   return (
-    <header className="border-b border-neutral-800 bg-black">
+    <header className="border-b border-gray-200 bg-white shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-4">
         {/* Logo + Nav */}
         <div className="flex items-center gap-10">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded bg-[#C9A84C]">
-              <svg width="16" height="16" viewBox="0 0 30 30" fill="none">
-                <path
-                  d="M5 25C8 18 14 8 25 5C20 10 12 16 5 25Z"
-                  fill="#0d0f14"
-                />
-              </svg>
-            </div>
-            <span className="text-lg font-black tracking-widest text-white">
-              NIKO
+            <Image src="/unnamed.png" alt="Logo" width={36} height={36} className="h-9 w-auto" />
+            <span className="text-lg font-bold text-gray-900" style={{ fontFamily: "var(--font-space-grotesk)" }}>
+              KU 2Hand
             </span>
           </div>
 
@@ -47,13 +41,13 @@ export default function AdminNav() {
                   href={item.href}
                   className={`relative text-sm font-medium transition-colors ${
                     isActive
-                      ? "text-[#C9A84C]"
-                      : "text-neutral-400 hover:text-white"
+                      ? "text-green-600"
+                      : "text-gray-500 hover:text-gray-900"
                   }`}
                 >
                   {item.label}
                   {isActive && (
-                    <span className="absolute -bottom-[18px] left-0 right-0 h-0.5 bg-amber-400" />
+                    <span className="absolute -bottom-[18px] left-0 right-0 h-0.5 bg-green-500" />
                   )}
                 </Link>
               );
@@ -64,14 +58,14 @@ export default function AdminNav() {
         {/* Right actions */}
         <div className="flex items-center gap-3">
           {/* User avatar */}
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-700">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="h-5 w-5 text-neutral-300"
+              className="h-5 w-5 text-gray-500"
             >
               <path
                 strokeLinecap="round"
@@ -84,7 +78,7 @@ export default function AdminNav() {
           {/* Logout */}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-1.5 text-xs font-medium text-neutral-400 transition-colors hover:text-red-400"
+            className="flex items-center gap-1.5 text-xs font-medium text-gray-400 transition-colors hover:text-red-500"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />

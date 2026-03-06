@@ -29,18 +29,18 @@ const statCardConfigs = [
 ];
 
 const avatarColors = [
-  "bg-purple-900/60 text-purple-400",
-  "bg-emerald-900/60 text-emerald-400",
-  "bg-blue-900/60 text-blue-400",
-  "bg-amber-900/60 text-[#C9A84C]",
-  "bg-rose-900/60 text-rose-400",
-  "bg-cyan-900/60 text-cyan-400",
+  "bg-purple-100 text-purple-600",
+  "bg-green-100 text-green-600",
+  "bg-blue-100 text-blue-600",
+  "bg-yellow-100 text-yellow-700",
+  "bg-rose-100 text-rose-600",
+  "bg-cyan-100 text-cyan-600",
 ];
 
 const statusStyleMap: Record<string, string> = {
-  PENDING: "text-[#C9A84C] border-[#C9A84C]/30 bg-[#C9A84C]/10",
-  COMPLETED: "text-neutral-400 border-neutral-700 bg-neutral-800/60",
-  FAILED: "text-red-400 border-red-800/50 bg-red-900/30",
+  PENDING: "text-yellow-700 border-yellow-200 bg-yellow-50",
+  COMPLETED: "text-green-700 border-green-200 bg-green-50",
+  FAILED: "text-red-600 border-red-200 bg-red-50",
 };
 
 const statusLabelMap: Record<string, string> = {
@@ -85,14 +85,14 @@ export default function AdminOrderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-gray-50">
       <AdminNav />
 
       <main className="mx-auto max-w-7xl px-8 py-8">
         {/* Title */}
         <div className="mb-8 flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-black uppercase tracking-wider text-white">
+            <h1 className="text-3xl font-black uppercase tracking-wider text-gray-900">
               Orders Management
             </h1>
           </div>
@@ -103,12 +103,12 @@ export default function AdminOrderPage() {
           {statCardConfigs.map((card, i) => (
             <div
               key={i}
-              className={`rounded-xl border border-neutral-800 border-l-4 ${card.borderColor} bg-neutral-950 p-5`}
+              className={`rounded-xl border border-gray-200 border-l-4 ${card.borderColor} bg-white shadow-sm p-5`}
             >
-              <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
                 {card.title}
               </p>
-              <p className="mt-3 text-3xl font-black text-white">
+              <p className="mt-3 text-3xl font-black text-gray-900">
                 {statCounts[card.key]}
               </p>
               <p className={`mt-1.5 text-xs font-medium ${card.subtitleColor}`}>
@@ -119,23 +119,23 @@ export default function AdminOrderPage() {
         </div>
 
         {/* Orders table */}
-        <div className="mt-4 overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950">
+        <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-neutral-800">
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-neutral-500">
+              <tr className="border-b border-gray-200 bg-gray-50">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Order ID
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Customer
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Items
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Total
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Status
                 </th>
               </tr>
@@ -143,13 +143,13 @@ export default function AdminOrderPage() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-10 text-center text-sm text-neutral-500">
+                  <td colSpan={5} className="px-6 py-10 text-center text-sm text-gray-400">
                     Loading...
                   </td>
                 </tr>
               ) : filteredOrders.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-10 text-center text-sm text-neutral-500">
+                  <td colSpan={5} className="px-6 py-10 text-center text-sm text-gray-400">
                     No orders found.
                   </td>
                 </tr>
@@ -172,14 +172,14 @@ export default function AdminOrderPage() {
                   return (
                     <tr
                       key={order.order_id}
-                      className="border-b border-neutral-800/60 transition-colors hover:bg-white/[0.02]"
+                      className="border-b border-gray-100 transition-colors hover:bg-gray-50"
                     >
                       {/* Order ID & Date */}
                       <td className="px-6 py-4">
-                        <p className="font-mono text-sm font-semibold text-white">
+                        <p className="font-mono text-sm font-semibold text-gray-900">
                           #{String(order.order_id).padStart(6, "0")}
                         </p>
-                        <p className="text-xs text-neutral-500">{date}</p>
+                        <p className="text-xs text-gray-400">{date}</p>
                       </td>
 
                       {/* Customer */}
@@ -191,10 +191,10 @@ export default function AdminOrderPage() {
                             {initials}
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-white">
+                            <p className="text-sm font-medium text-gray-900">
                               {order.customerName}
                             </p>
-                            <p className="text-xs text-neutral-500">
+                            <p className="text-xs text-gray-400">
                               {order.customerEmail}
                             </p>
                           </div>
@@ -203,20 +203,20 @@ export default function AdminOrderPage() {
 
                       {/* Items */}
                       <td className="px-6 py-4">
-                        <span className="text-sm text-neutral-300">
+                        <span className="text-sm text-gray-600">
                           {order.itemCount} {order.itemCount === 1 ? "item" : "items"}
                         </span>
                       </td>
 
                       {/* Total */}
-                      <td className="px-6 py-4 text-sm font-semibold text-[#C9A84C]">
+                      <td className="px-6 py-4 text-sm font-semibold text-green-600">
                         ฿{order.total.toFixed(2)}
                       </td>
 
                       {/* Status */}
                       <td className="px-6 py-4">
                         <span
-                          className={`inline-flex items-center rounded-full border px-3 py-0.5 text-xs font-semibold ${statusStyleMap[order.status] ?? "text-neutral-400 border-neutral-700 bg-neutral-800/60"}`}
+                          className={`inline-flex items-center rounded-full border px-3 py-0.5 text-xs font-semibold ${statusStyleMap[order.status] ?? "text-gray-500 border-gray-200 bg-gray-50"}`}
                         >
                           {statusLabelMap[order.status] ?? order.status}
                         </span>
@@ -229,15 +229,15 @@ export default function AdminOrderPage() {
           </table>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between border-t border-neutral-800 px-6 py-4">
-            <p className="text-xs text-neutral-500">
+          <div className="flex items-center justify-between border-t border-gray-200 px-6 py-4">
+            <p className="text-xs text-gray-500">
               Showing{" "}
-              <span className="font-medium text-white">{filteredOrders.length}</span>{" "}
+              <span className="font-medium text-gray-900">{filteredOrders.length}</span>{" "}
               of{" "}
-              <span className="font-medium text-white">{orders.length}</span> results
+              <span className="font-medium text-gray-900">{orders.length}</span> results
             </p>
             <div className="flex items-center gap-1">
-              <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-neutral-700 text-neutral-500 transition-colors hover:border-gray-600 hover:text-white">
+              <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-gray-400 transition-colors hover:border-gray-300 hover:text-gray-700">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -253,10 +253,10 @@ export default function AdminOrderPage() {
                   />
                 </svg>
               </button>
-              <button className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#C9A84C] text-xs font-bold text-black">
+              <button className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500 text-xs font-bold text-white">
                 1
               </button>
-              <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-neutral-700 text-neutral-500 transition-colors hover:border-gray-600 hover:text-white">
+              <button className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-gray-400 transition-colors hover:border-gray-300 hover:text-gray-700">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

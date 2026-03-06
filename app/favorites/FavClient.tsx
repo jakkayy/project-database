@@ -20,10 +20,10 @@ export default function FavClient({ initialItems }: { initialItems: any[] }) {
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-200 ${
+            className={`px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-widest transition-all duration-200 ${
               activeCategory === cat
-                ? "bg-[#C9A84C] text-black"
-                : "bg-neutral-900 text-neutral-400 border border-neutral-800 hover:border-neutral-600 hover:text-white"
+                ? "bg-green-500 text-white"
+                : "bg-white text-gray-500 border border-gray-200 hover:border-green-400 hover:text-green-600"
             }`}
           >
             {cat}
@@ -33,7 +33,7 @@ export default function FavClient({ initialItems }: { initialItems: any[] }) {
 
       {filtered.length === 0 ? (
         <div className="flex items-center justify-center py-20">
-          <p className="text-xs uppercase tracking-wider text-neutral-500">No items in this category</p>
+          <p className="text-xs uppercase tracking-wider text-gray-400">No items in this category</p>
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-5">

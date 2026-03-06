@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -11,6 +11,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  weight: ["700"],
 });
 
 export const metadata: Metadata = {
@@ -26,25 +32,26 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} antialiased`}
       >
         {children}
         <Toaster
           position="bottom-right"
           toastOptions={{
             style: {
-              background: "#171717",
-              border: "1px solid #2a2a2a",
-              color: "#ffffff",
+              background: "#ffffff",
+              border: "1px solid #e5e7eb",
+              color: "#111827",
               fontFamily: "var(--font-geist-sans)",
               fontSize: "13px",
-              letterSpacing: "0.05em",
-              borderRadius: "2px",
+              letterSpacing: "0.02em",
+              borderRadius: "12px",
+              boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
             },
             classNames: {
-              success: "!border-l-2 !border-l-[#C9A84C]",
-              error: "!border-l-2 !border-l-red-500",
-              warning: "!border-l-2 !border-l-yellow-500",
+              success: "!border-l-4 !border-l-green-500",
+              error: "!border-l-4 !border-l-red-500",
+              warning: "!border-l-4 !border-l-yellow-400",
             },
           }}
         />

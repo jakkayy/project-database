@@ -8,6 +8,7 @@ const productSchema = new mongoose.Schema(
     basePrice: Number,
     images: [String],
     tags: [String],
+    shop_id: { type: Number, default: null },
 
     reviews: [
       {

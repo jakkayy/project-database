@@ -66,18 +66,18 @@ export default function AddressSelector({
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xs font-semibold uppercase tracking-widest text-neutral-400">Delivery Address</h2>
+      <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-500">Delivery Address</h2>
       <div className="grid gap-3">
         {addresses.map((addr) => (
           <div
             key={addr.address_id}
             onClick={() => onAddressSelect(addr.address_id)}
-            className={`relative cursor-pointer rounded-lg border p-4 transition-all ${selectedAddressId === addr.address_id ? "border-[#C9A84C] bg-neutral-950" : "border-neutral-800 bg-neutral-950 hover:border-neutral-600"}`}
+            className={`relative cursor-pointer rounded-xl border p-4 transition-all ${selectedAddressId === addr.address_id ? "border-green-500 bg-white shadow-sm" : "border-gray-200 bg-white hover:border-gray-400"}`}
           >
             {/* ปุ่มลบ */}
             <button
               onClick={(e) => handleDelete(e, addr.address_id)}
-              className="absolute top-4 right-4 flex items-center gap-1 text-xs uppercase tracking-wider text-neutral-500 transition-colors hover:text-red-400"
+              className="absolute top-4 right-4 flex items-center gap-1 text-xs uppercase tracking-wider text-gray-400 transition-colors hover:text-red-400"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -95,35 +95,35 @@ export default function AddressSelector({
               </svg>
               REMOVE
             </button>
-            <p className="text-sm font-bold text-white pr-8">{addr.firstname} {addr.lastname}</p>
-            <p className="text-xs text-neutral-400 mt-1">{addr.addressLine}, {addr.city}, {addr.province} {addr.postalCode}</p>
+            <p className="text-sm font-bold text-gray-900 pr-8">{addr.firstname} {addr.lastname}</p>
+            <p className="text-xs text-gray-500 mt-1">{addr.addressLine}, {addr.city}, {addr.province} {addr.postalCode}</p>
           </div>
         ))}
-        <button onClick={() => setShowModal(true)} className="w-full border border-dashed border-neutral-700 p-4 text-xs text-neutral-500 hover:text-[#C9A84C] hover:border-[#C9A84C] transition-colors">+ Add new address</button>
+        <button onClick={() => setShowModal(true)} className="w-full border border-dashed border-gray-300 rounded-xl p-4 text-xs text-gray-400 hover:text-green-600 hover:border-green-500 transition-colors">+ Add new address</button>
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-          <div className="w-full max-w-xl bg-neutral-900 p-8 border border-neutral-800">
-            <h2 className="text-white font-black uppercase mb-6 tracking-widest">Add New Address</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-xl bg-white rounded-2xl p-8 border border-gray-200 shadow-xl">
+            <h2 className="text-gray-900 font-black uppercase mb-6 tracking-widest">Add New Address</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <input name="firstname" value={formData.firstname} onChange={handleChange} placeholder="First Name*" required className="bg-neutral-800 border border-neutral-700 p-3 text-sm text-white focus:border-[#C9A84C] outline-none" />
-                <input name="lastname" value={formData.lastname} onChange={handleChange} placeholder="Last Name*" required className="bg-neutral-800 border border-neutral-700 p-3 text-sm text-white focus:border-[#C9A84C] outline-none" />
+                <input name="firstname" value={formData.firstname} onChange={handleChange} placeholder="First Name*" required className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-900 focus:border-green-500 outline-none" />
+                <input name="lastname" value={formData.lastname} onChange={handleChange} placeholder="Last Name*" required className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-900 focus:border-green-500 outline-none" />
               </div>
-              <input name="addressLine" value={formData.addressLine} onChange={handleChange} placeholder="Address*" required className="w-full bg-neutral-800 border border-neutral-700 p-3 text-sm text-white focus:border-[#C9A84C] outline-none" />
+              <input name="addressLine" value={formData.addressLine} onChange={handleChange} placeholder="Address*" required className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-900 focus:border-green-500 outline-none" />
               <div className="grid grid-cols-2 gap-4">
-                <input name="city" value={formData.city} onChange={handleChange} placeholder="City*" required className="bg-neutral-800 border border-neutral-700 p-3 text-sm text-white focus:border-[#C9A84C] outline-none" />
-                <input name="province" value={formData.province} onChange={handleChange} placeholder="Province*" required className="bg-neutral-800 border border-neutral-700 p-3 text-sm text-white focus:border-[#C9A84C] outline-none" />
+                <input name="city" value={formData.city} onChange={handleChange} placeholder="City*" required className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-900 focus:border-green-500 outline-none" />
+                <input name="province" value={formData.province} onChange={handleChange} placeholder="Province*" required className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-900 focus:border-green-500 outline-none" />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <input name="postalCode" value={formData.postalCode} onChange={handleChange} placeholder="Postal Code*" required className="bg-neutral-800 border border-neutral-700 p-3 text-sm text-white focus:border-[#C9A84C] outline-none" />
-                <input name="country" value={formData.country} onChange={handleChange} placeholder="Country*" required className="bg-neutral-800 border border-neutral-700 p-3 text-sm text-white focus:border-[#C9A84C] outline-none" />
+                <input name="postalCode" value={formData.postalCode} onChange={handleChange} placeholder="Postal Code*" required className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-900 focus:border-green-500 outline-none" />
+                <input name="country" value={formData.country} onChange={handleChange} placeholder="Country*" required className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-900 focus:border-green-500 outline-none" />
               </div>
-              <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Phone*" required className="w-full bg-neutral-800 border border-neutral-700 p-3 text-sm text-white focus:border-[#C9A84C] outline-none" />
+              <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Phone*" required className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-900 focus:border-green-500 outline-none" />
               <div className="flex justify-end gap-4 mt-6">
-                <button type="button" onClick={() => setShowModal(false)} className="text-neutral-500 text-xs uppercase hover:text-white">Cancel</button>
-                <button type="submit" className="bg-[#C9A84C] px-8 py-2.5 text-xs font-black text-black uppercase hover:opacity-90">Save</button>
+                <button type="button" onClick={() => setShowModal(false)} className="text-gray-500 text-xs uppercase hover:text-gray-900">Cancel</button>
+                <button type="submit" className="bg-green-500 rounded-lg px-8 py-2.5 text-xs font-black text-white uppercase hover:opacity-90">Save</button>
               </div>
             </form>
           </div>

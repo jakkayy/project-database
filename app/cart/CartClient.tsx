@@ -36,8 +36,8 @@ export default function CartClient({ items }: Props) {
   return (
     <div className="mx-auto max-w-7xl px-10 py-10">
       <div className="mb-10">
-        <h1 className="text-4xl font-black uppercase text-white">Shopping Cart</h1>
-        <p className="mt-1 text-sm text-neutral-400">Select items to order</p>
+        <h1 className="text-3xl font-extrabold text-gray-900">Shopping Cart</h1>
+        <p className="mt-1 text-sm text-gray-500">Select items to order</p>
       </div>
 
       <div className="flex gap-10">

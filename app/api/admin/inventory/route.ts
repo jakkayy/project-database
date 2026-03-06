@@ -2,15 +2,24 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { connectMongo } from "@/lib/mongodb";
 import Product from "@/app/models/Product";
+import { cookies } from "next/headers";
+import { requireAuth } from "lib/auth";
 
 const prisma = new PrismaClient();
 
-// ฟังก์ชันสำหรับดึงข้อมูล (ที่คุณมีอยู่แล้ว)
 export async function GET() {
   try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token")?.value;
+    const payload = requireAuth(token, "ADMIN");
+
+    const shop = await prisma.shop.findUnique({ where: { user_id: payload.user_id } });
+    if (!shop) return NextResponse.json({ error: "Shop not found" }, { status: 404 });
+
     await connectMongo();
-    const stocks = await prisma.productStock.findMany();
-    const mongoProducts = await Product.find({}).lean();
+    const stocks = await prisma.productStock.findMany({ where: { shop_id: shop.shop_id } });
+    const productIds = [...new Set(stocks.map((s) => s.product_id))];
+    const mongoProducts = await Product.find({ _id: { $in: productIds } }).lean();
 
     const groupedInventory = mongoProducts.map((details: any) => {
       const productIdStr = details._id.toString();

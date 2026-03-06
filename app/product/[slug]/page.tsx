@@ -19,6 +19,7 @@ interface Variant {
   sizes: { size: string; stock: number }[];
 }
 
+
 interface Product {
   _id: string;
   name: string;
@@ -29,8 +30,10 @@ interface Product {
   images: string[];
   variants: Variant[];
   tags: string[];
+  shop_id?: number;
+  shop?: { shop_id: number; name: string; image: string | null } | null;
   reviews?: {
-    _id: string; 
+    _id: string;
     userId: string;
     rating: number;
     comment: string;
@@ -43,13 +46,13 @@ interface Product {
 
 export default function ProductDetailPage() {
   const params = useParams();
-  const slug = params.slug as string;
+  const slug = decodeURIComponent(params.slug as string);
 
   const [product, setProduct] = useState<Product | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedColor, setSelectedColor] = useState<string>("red");
+  const [selectedColor, setSelectedColor] = useState<string>("");
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [rating, setRating] = useState<number>(0);
   const [hoveredStar, setHoveredStar] = useState<number>(0);
@@ -66,6 +69,9 @@ export default function ProductDetailPage() {
           data.averageRating = data.reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / data.reviews.length;
         }
         setProduct(data);
+        if (data.variants && data.variants.length > 0) {
+          setSelectedColor(data.variants[0].color);
+        }
       } catch (err) {
         console.error("Failed to fetch product", err);
       } finally {
@@ -195,17 +201,17 @@ export default function ProductDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-neutral-700 border-t-[#C9A84C]" />
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-green-500" />
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-black text-white">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 text-gray-900">
         <h1 className="text-2xl font-black uppercase">Product Not Found</h1>
-        <Link href="/" className="mt-4 text-sm text-neutral-400 underline hover:text-[#C9A84C]">
+        <Link href="/" className="mt-4 text-sm text-gray-400 underline hover:text-green-600">
           Back to Home
         </Link>
       </div>
@@ -215,7 +221,7 @@ export default function ProductDetailPage() {
   const currentVariant = product.variants?.find((v) => v.color.toLowerCase() === selectedColor.toLowerCase());
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Main content */}
       <div className="mx-auto max-w-7xl px-6 py-8 lg:px-10">
         <div className="flex flex-col gap-10 lg:flex-row">
@@ -228,10 +234,10 @@ export default function ProductDetailPage() {
                   <button
                     key={i}
                     onClick={() => setSelectedImage(i)}
-                    className={`h-16 w-16 overflow-hidden border-2 bg-neutral-900 ${
+                    className={`h-16 w-16 overflow-hidden border-2 bg-gray-100 rounded-lg ${
                       selectedImage === i
-                        ? "border-[#C9A84C]"
-                        : "border-transparent hover:border-neutral-600"
+                        ? "border-green-500"
+                        : "border-transparent hover:border-gray-400"
                     }`}
                   >
                     <Image
@@ -248,7 +254,7 @@ export default function ProductDetailPage() {
 
             {/* Main image */}
             <div className="relative flex-1">
-              <div className="aspect-square w-full overflow-hidden bg-neutral-900">
+              <div className="aspect-square w-full overflow-hidden bg-gray-100 rounded-2xl">
                 <Image
                   src={product.images[selectedImage] || "/products/shoe1.svg"}
                   alt={product.name}
@@ -266,7 +272,7 @@ export default function ProductDetailPage() {
                         prev === 0 ? product.images.length - 1 : prev - 1
                       )
                     }
-                    className="flex h-10 w-10 items-center justify-center border border-neutral-700 bg-neutral-900 text-neutral-300 transition-colors hover:border-[#C9A84C] hover:text-[#C9A84C]"
+                    className="flex h-10 w-10 items-center justify-center border border-gray-200 bg-white text-gray-500 rounded-lg transition-colors hover:border-green-500 hover:text-green-500"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -289,7 +295,7 @@ export default function ProductDetailPage() {
                         prev === product.images.length - 1 ? 0 : prev + 1
                       )
                     }
-                    className="flex h-10 w-10 items-center justify-center border border-neutral-700 bg-neutral-900 text-neutral-300 transition-colors hover:border-[#C9A84C] hover:text-[#C9A84C]"
+                    className="flex h-10 w-10 items-center justify-center border border-gray-200 bg-white text-gray-500 rounded-lg transition-colors hover:border-green-500 hover:text-green-500"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -313,62 +319,88 @@ export default function ProductDetailPage() {
 
           {/* Right: Product info */}
           <div className="lg:w-100 lg:shrink-0">
+            {/* Shop info */}
+            {product.shop && (
+              <Link href={`/shop/${product.shop.shop_id}`} className="flex items-center gap-3 mb-5 group w-fit">
+                <div className="h-9 w-9 shrink-0 overflow-hidden rounded-full border border-gray-200 bg-gray-100">
+                  {product.shop.image ? (
+                    <Image src={product.shop.image} alt={product.shop.name} width={36} height={36} className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-green-100 text-sm font-black text-green-600">
+                      {product.shop.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-widest text-gray-400">Sold by</p>
+                  <p className="text-sm font-bold text-gray-900 group-hover:text-green-600 transition-colors">{product.shop.name}</p>
+                </div>
+              </Link>
+            )}
+
             {/* Name & Category */}
-            <h1 className="text-2xl font-black uppercase tracking-tight text-white">{product.name}</h1>
-            <p className="mt-1 text-xs uppercase tracking-widest text-neutral-500">{product.category}</p>
-            <p className="mt-4 text-2xl font-black text-[#C9A84C]">
+            <h1 className="text-2xl font-black uppercase tracking-tight text-gray-900">{product.name}</h1>
+            <p className="mt-1 text-xs uppercase tracking-widest text-gray-400">{product.category}</p>
+            <p className="mt-4 text-2xl font-black text-green-600">
               ฿{product.basePrice.toLocaleString()}
             </p>
 
             {/* Color selector */}
-            <div className="mt-6">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400">Color</p>
-              <div className="flex gap-2">
-                {(["red", "black", "white"] as const).map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => {
-                      setSelectedColor(color);
-                      setSelectedSize(null);
-                    }}
-                    className={`border px-4 py-2 text-xs uppercase tracking-wider transition-colors ${
-                      selectedColor === color
-                        ? "border-[#C9A84C] bg-[#C9A84C] text-black"
-                        : "border-neutral-700 text-neutral-300 hover:border-neutral-400"
-                    }`}
-                  >
-                    {color}
-                  </button>
-                ))}
+            {product.variants && product.variants.length > 0 && (
+              <div className="mt-6">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Color</p>
+                <div className="flex flex-wrap gap-2">
+                  {product.variants.map((v) => (
+                    <button
+                      key={v.color}
+                      onClick={() => {
+                        setSelectedColor(v.color);
+                        setSelectedSize(null);
+                      }}
+                      className={`border rounded-lg px-4 py-2 text-xs uppercase tracking-wider transition-colors ${
+                        selectedColor === v.color
+                          ? "border-green-500 bg-green-500 text-white"
+                          : "border-gray-200 text-gray-700 hover:border-gray-400"
+                      }`}
+                    >
+                      {v.color}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Size selector */}
-            <div className="mt-6">
-              <div className="mb-3 flex items-center justify-between">
-                <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400">Size</p>
+            {currentVariant && currentVariant.sizes && currentVariant.sizes.length > 0 && (
+              <div className="mt-6">
+                <div className="mb-3 flex items-center justify-between">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Size</p>
+                </div>
+                <div className="grid grid-cols-5 gap-2">
+                  {currentVariant.sizes.map(({ size, stock }) => (
+                    <button
+                      key={size}
+                      disabled={stock === 0}
+                      onClick={() => setSelectedSize(size)}
+                      className={`border rounded-lg py-3 text-center text-xs uppercase tracking-wider transition-colors ${
+                        selectedSize === size
+                          ? "border-green-500 bg-green-500 text-white font-bold"
+                          : stock === 0
+                          ? "border-gray-100 text-gray-300 cursor-not-allowed line-through"
+                          : "border-gray-200 text-gray-700 hover:border-gray-400"
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="grid grid-cols-5 gap-2">
-                {["36", "37", "38", "39", "40", "41", "42", "43", "44", "45"].map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    className={`border py-3 text-center text-xs uppercase tracking-wider transition-colors ${
-                      selectedSize === size
-                        ? "border-[#C9A84C] bg-[#C9A84C] text-black font-bold"
-                        : "border-neutral-700 text-neutral-300 hover:border-neutral-400"
-                    }`}
-                  >
-                    EU {size}
-                  </button>
-                ))}
-              </div>
-            </div>
+            )}
 
             {/* Add to cart button */}
             <button 
               onClick={handleAddToCart}
-              className="mt-8 flex w-full items-center justify-center gap-2 bg-[#C9A84C] py-4 text-xs font-black uppercase tracking-widest text-black transition-opacity hover:opacity-90">
+              className="mt-8 flex w-full items-center justify-center gap-2 bg-green-500 py-4 text-xs font-black uppercase tracking-widest text-white rounded-xl transition-opacity hover:opacity-90">
               Add to Cart
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-4 w-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
@@ -378,7 +410,7 @@ export default function ProductDetailPage() {
             {/* Wishlist button */}
             <button 
               onClick={handleAddToFav}
-              className="mt-3 flex w-full items-center justify-center gap-2 border border-neutral-700 py-4 text-xs font-black uppercase tracking-widest text-neutral-300 transition-colors hover:border-[#C9A84C] hover:text-[#C9A84C]">
+              className="mt-3 flex w-full items-center justify-center gap-2 border border-gray-200 py-4 text-xs font-black uppercase tracking-widest text-gray-600 rounded-xl transition-colors hover:border-green-500 hover:text-green-500">
               Add to Wishlist
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -397,30 +429,31 @@ export default function ProductDetailPage() {
             </button>
 
             {/* Product details section */}
-            <div className="mt-8 border-t border-neutral-800 pt-6">
-              <p className="text-xs leading-relaxed text-neutral-500">
-                {product.tags && product.tags.length > 0 && (
-                  <span className="mb-2 block uppercase tracking-wider">
-                    Tags: {product.tags.join(", ")}
-                  </span>
-                )}
-              </p>
-
-              {currentVariant && (
-                <ul className="mt-4 space-y-1 text-xs uppercase tracking-wider text-neutral-500">
-                  <li>• Color: {currentVariant.color}</li>
-                </ul>
+            <div className="mt-8 border-t border-gray-200 pt-6 space-y-2 text-xs uppercase tracking-wider text-gray-400">
+              {product.tags && product.tags.length > 0 && (
+                <p>Tags: {product.tags.join(", ")}</p>
               )}
+              {currentVariant && (
+                <p>Color: {currentVariant.color}</p>
+              )}
+              {selectedSize && currentVariant && (() => {
+                const sizeData = currentVariant.sizes.find(s => s.size === selectedSize);
+                return sizeData ? (
+                  <p className={sizeData.stock === 0 ? "text-red-400" : "text-green-600"}>
+                    Stock: {sizeData.stock === 0 ? "Out of stock" : `${sizeData.stock} units`}
+                  </p>
+                ) : null;
+              })()}
             </div>
 
             {/* Rating */}
             {(product.averageRating !== undefined || (product.reviews && product.reviews.length > 0)) && (
-              <div className="mt-6 border-t border-neutral-800 pt-6">
+              <div className="mt-6 border-t border-gray-200 pt-6">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
                     Reviews ({product.reviews?.length || 0})
                   </span>
-                  <div className="flex items-center gap-1 text-[#C9A84C]">
+                  <div className="flex items-center gap-1 text-green-500">
                     {[1, 2, 3, 4, 5].map((star) => {
                       const averageRating = product.averageRating || 0;
                       const isFilled = star <= Math.floor(averageRating);
@@ -447,7 +480,7 @@ export default function ProductDetailPage() {
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 24 24"
-                              fill="#C9A84C"
+                              fill="#22c55e"
                               stroke="none"
                               strokeWidth={0}
                               className="absolute top-0 left-0 h-4 w-4 overflow-hidden"
@@ -463,7 +496,7 @@ export default function ProductDetailPage() {
                         </div>
                       );
                     })}
-                    <span className="ml-2 text-xs text-neutral-400">
+                    <span className="ml-2 text-xs text-gray-400">
                       {(product.averageRating || 0).toFixed(1)}
                     </span>
                   </div>
@@ -472,14 +505,14 @@ export default function ProductDetailPage() {
             )}
 
             {/* Review Form */}
-            <div className="mt-6 border-t border-neutral-800 pt-6">
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
+            <div className="mt-6 border-t border-gray-200 pt-6">
+              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-900">
                 Rate &amp; Review
               </h3>
-              
+
               {/* Star Rating */}
               <div className="mb-4">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Rating
                 </p>
                 <div className="flex gap-1">
@@ -497,10 +530,10 @@ export default function ProductDetailPage() {
                         viewBox="0 0 24 24"
                         fill={
                           star <= (hoveredStar || rating)
-                            ? "#C9A84C"
+                            ? "#22c55e"
                             : "none"
                         }
-                        stroke="#C9A84C"
+                        stroke="#22c55e"
                         strokeWidth={1.5}
                         className="h-6 w-6"
                       >
@@ -517,14 +550,14 @@ export default function ProductDetailPage() {
 
               {/* Comment Form */}
               <div className="mb-4">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-400">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
                   Comment
                 </p>
                 <textarea
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   placeholder="Share your thoughts about this product..."
-                  className="w-full rounded-lg border border-neutral-700 bg-neutral-900 px-4 py-3 text-sm text-white placeholder-neutral-500 focus:border-[#C9A84C] focus:outline-none focus:ring-1 focus:ring-[#C9A84C] resize-none"
+                  className="w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 placeholder-gray-400 focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 resize-none"
                   rows={4}
                 />
               </div>
@@ -533,7 +566,7 @@ export default function ProductDetailPage() {
               <button
                 onClick={handleSubmitReview}
                 disabled={submittingReview || rating === 0}
-                className="w-full rounded-lg bg-[#C9A84C] px-4 py-3 text-xs font-black uppercase tracking-widest text-black transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full rounded-lg bg-green-500 px-4 py-3 text-xs font-black uppercase tracking-widest text-white transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submittingReview ? "Submitting..." : "Submit Review"}
               </button>
@@ -541,9 +574,9 @@ export default function ProductDetailPage() {
 
             {/* Comments Section */}
             {product.reviews && product.reviews.length > 0 && (
-              <div className="mt-6 border-t border-neutral-800 pt-6">
+              <div className="mt-6 border-t border-gray-200 pt-6">
                 <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-900">
                     Comments ({product.reviews.length})
                   </h3>
                   {product.reviews.some(review => review.userId === currentUserId) && (
@@ -561,10 +594,10 @@ export default function ProductDetailPage() {
                 
                 <div className="space-y-4">
                   {(showAllComments ? product.reviews : product.reviews.slice(0, 3)).map((review, index) => (
-                    <div key={index} className="rounded-lg border border-neutral-800 bg-neutral-900 p-4">
+                    <div key={index} className="rounded-lg border border-gray-200 bg-white p-4">
                       <div className="mb-2 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <span className="text-sm font-medium text-white">
+                          <span className="text-sm font-medium text-gray-900">
                             {review.userFirstname || 'Anonymous'}
                           </span>
                           <div className="flex items-center gap-1">
@@ -573,8 +606,8 @@ export default function ProductDetailPage() {
                                 key={star}
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
-                                fill={star <= review.rating ? "#C9A84C" : "none"}
-                                stroke="#C9A84C"
+                                fill={star <= review.rating ? "#22c55e" : "none"}
+                                stroke="#22c55e"
                                 strokeWidth={1.5}
                                 className="h-3 w-3"
                               >
@@ -588,7 +621,7 @@ export default function ProductDetailPage() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-xs text-neutral-500">
+                          <span className="text-xs text-gray-400">
                             {new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                           </span>
                           {review.userId === currentUserId && (
@@ -616,7 +649,7 @@ export default function ProductDetailPage() {
                         </div>
                       </div>
                       {review.comment && (
-                        <p className="text-sm text-neutral-300">{review.comment}</p>
+                        <p className="text-sm text-gray-600">{review.comment}</p>
                       )}
                     </div>
                   ))}
@@ -624,7 +657,7 @@ export default function ProductDetailPage() {
                 {product.reviews.length > 3 && (
                   <button
                     onClick={() => setShowAllComments(!showAllComments)}
-                    className="mt-4 w-full rounded-lg border border-neutral-700 bg-neutral-900 px-4 py-3 text-xs font-semibold uppercase tracking-wider text-neutral-300 transition-colors hover:border-[#C9A84C] hover:text-[#C9A84C]"
+                    className="mt-4 w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-xs font-semibold uppercase tracking-wider text-gray-600 transition-colors hover:border-green-500 hover:text-green-500"
                   >
                     {showAllComments ? "Show less" : "Show more"}
                   </button>

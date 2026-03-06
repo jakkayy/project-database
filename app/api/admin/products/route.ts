@@ -2,15 +2,25 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { connectMongo } from "@/lib/mongodb";
 import Product from "@/app/models/Product";
+import { cookies } from "next/headers";
+import { requireAuth } from "lib/auth";
 
 const prisma = new PrismaClient();
 
-// 1. ดึงข้อมูลทั้งหมด
+// 1. ดึงข้อมูลทั้งหมด (กรองตาม shop_id ของ admin)
 export async function GET() {
   try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token")?.value;
+    const payload = requireAuth(token, "ADMIN");
+
+    const shop = await prisma.shop.findUnique({ where: { user_id: payload.user_id } });
+    if (!shop) return NextResponse.json({ error: "Shop not found" }, { status: 404 });
+
     await connectMongo();
-    const stocks = await prisma.productStock.findMany();
-    const mongoProducts = await Product.find({}).lean();
+    const stocks = await prisma.productStock.findMany({ where: { shop_id: shop.shop_id } });
+    const productIds = [...new Set(stocks.map((s) => s.product_id))];
+    const mongoProducts = await Product.find({ _id: { $in: productIds } }).lean();
 
     const groupedInventory = mongoProducts.map((details: any) => {
       const productIdStr = details._id.toString();
@@ -32,19 +42,28 @@ export async function GET() {
   }
 }
 
-// 2. เพิ่มสินค้าใหม่ลง 2 DB
+// 2. เพิ่มสินค้าใหม่ลง 2 DB พร้อม shop_id
 export async function POST(request: Request) {
   try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token")?.value;
+    const payload = requireAuth(token, "ADMIN");
+
+    const shop = await prisma.shop.findUnique({ where: { user_id: payload.user_id } });
+    if (!shop) return NextResponse.json({ error: "Shop not found" }, { status: 404 });
+
     const body = await request.json();
     const { name, category, basePrice, image, color, size, stock } = body;
     await connectMongo();
     const mongoProduct = await Product.create({
       name, category, basePrice: parseFloat(basePrice),
       images: [image], slug: name.toLowerCase().replace(/ /g, "-"),
+      shop_id: shop.shop_id,
     });
     await prisma.productStock.create({
       data: {
         product_id: mongoProduct._id.toString(),
+        shop_id: shop.shop_id,
         color, size, stock: parseInt(stock),
       },
     });

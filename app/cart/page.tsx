@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 import Navbar from "@/app/components/Navbar";
+import ChatbotWidget from "@/app/components/ChatbotWidget";
 import CartClient from "./CartClient";
 import { cookies } from "next/headers";
 import { requireAuth } from "lib/auth";
@@ -18,10 +19,10 @@ export default async function CartPage() {
 
   if (!cart || cart.items.length === 0) {
     return (
-      <div className="min-h-screen bg-black">
+      <div className="min-h-screen bg-gray-50">
         <Navbar />
         <div className="px-10 py-20 text-center">
-          <p className="text-neutral-500">Your cart is empty</p>
+          <p className="text-gray-400">Your cart is empty</p>
         </div>
       </div>
     );
@@ -64,9 +65,10 @@ export default async function CartPage() {
   );
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
       <CartClient items={itemsWithProduct} total={total} />
+      <ChatbotWidget />
     </div>
   );
 }

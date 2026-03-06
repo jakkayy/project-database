@@ -20,25 +20,25 @@ export default function InventoryAlerts({ alerts }: { alerts: AlertItem[] }) {
   const hasMore = alerts.length > PREVIEW_COUNT;
 
   return (
-    <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-6">
-      <h2 className="text-sm font-bold uppercase tracking-wider text-white">
+    <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-6">
+      <h2 className="text-sm font-bold uppercase tracking-wider text-gray-900">
         Inventory Alerts
       </h2>
 
       <div className="mt-4 space-y-3">
         {alerts.length === 0 ? (
-          <p className="text-xs text-neutral-500">No inventory alerts</p>
+          <p className="text-xs text-gray-400">No inventory alerts</p>
         ) : (
           displayed.map((alert, i) => (
             <div
               key={i}
-              className="flex items-center justify-between rounded-lg border border-neutral-800 bg-neutral-900/40 p-3"
+              className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3"
             >
               <div className="min-w-0 flex-1">
-                <p className="truncate text-xs font-medium text-white">
+                <p className="truncate text-xs font-medium text-gray-900">
                   {alert.name}
                 </p>
-                <p className="mt-0.5 text-xs text-neutral-500">
+                <p className="mt-0.5 text-xs text-gray-400">
                   {alert.color} / {alert.size} — Stock: {alert.stock}
                 </p>
               </div>
@@ -55,7 +55,7 @@ export default function InventoryAlerts({ alerts }: { alerts: AlertItem[] }) {
       {hasMore && (
         <button
           onClick={() => setShowAll((prev) => !prev)}
-          className="mt-4 flex w-full items-center justify-center gap-1.5 border border-neutral-700 py-2 text-xs font-semibold uppercase tracking-wider text-gray-400 transition-colors hover:border-[#C9A84C] hover:text-[#C9A84C]"
+          className="mt-4 flex w-full items-center justify-center gap-1.5 border border-gray-200 py-2 text-xs font-semibold uppercase tracking-wider text-gray-400 transition-colors hover:border-green-500 hover:text-green-600"
         >
           {showAll ? (
             <>

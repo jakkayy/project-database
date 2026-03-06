@@ -48,60 +48,43 @@ export default async function ProfilePage() {
   });
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
-
-      {/* Profile Sub Navigation */}
-      <div className="flex justify-center gap-8 border-b border-neutral-800 py-4 text-sm text-neutral-500">
-        <Link
-          href="/profile"
-          className="border-b-2 border-[#C9A84C] pb-3 -mb-4 font-semibold text-white"
-        >
-          Profile
-        </Link>
-        <Link href="/history" className="pb-3 -mb-4 transition-colors hover:text-white">
-          Orders
-        </Link>
-        <Link href="/favorites" className="pb-3 -mb-4 transition-colors hover:text-white">
-          Wishlist
-        </Link>
-        <Link href="/finance" className="hover:text-white pb-3 -mb-4">
-          Finance
-        </Link>
-      </div>
 
       {/* Profile Info */}
       <div className="mx-auto max-w-5xl px-10 py-10">
-        <div className="flex items-center gap-6">
-          {/* Avatar */}
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-neutral-800">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1}
-              stroke="currentColor"
-              className="h-12 w-12 text-neutral-500"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-              />
-            </svg>
-          </div>
+        <div className="rounded-2xl bg-white border border-gray-200 p-8 shadow-sm">
+          <div className="flex items-center gap-6">
+            {/* Avatar */}
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1}
+                stroke="currentColor"
+                className="h-12 w-12 text-green-500"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                />
+              </svg>
+            </div>
 
-          {/* Name & Member Since */}
-          <div>
-            <h1 className="text-2xl font-black uppercase tracking-tight text-white">
-              {user.firstname} {user.lastname}
-            </h1>
-            <p className="mt-1 text-xs uppercase tracking-wider text-neutral-500">
-              Member since {memberSince}
-            </p>
+            {/* Name & Member Since */}
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">
+                {user.firstname} {user.lastname}
+              </h1>
+              <p className="mt-1 text-xs uppercase tracking-wider text-gray-400">
+                Member since {memberSince}
+              </p>
+              <p className="mt-0.5 text-sm text-gray-500">{user.email}</p>
+            </div>
           </div>
         </div>
-
       </div>
     </div>
   );

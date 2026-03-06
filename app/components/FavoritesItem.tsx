@@ -54,10 +54,10 @@ export default function FavoritesItem({
       <Link href={`/product/${slug}`}>
         <div className="mt-3 flex items-start justify-between">
           <div>
-            <h3 className="text-base font-medium text-white">{name}</h3>
-            <p className="text-sm text-[#C9A84C]">{category}</p>
+            <h3 className="text-base font-medium text-gray-900">{name}</h3>
+            <p className="text-sm text-green-600">{category}</p>
           </div>
-          <p className="text-base text-white">{price}</p>
+          <p className="text-base font-semibold text-gray-900">{price}</p>
         </div>
       </Link>
     </div>

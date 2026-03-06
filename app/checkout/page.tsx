@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import AddressSelector from "@/app/components/AddressSelector";
 import CheckoutOrderSummary from "@/app/components/CheckoutOrderSummary";
 import ClientNavbar from "@/app/components/ClientNavbar";
+import { toast } from "sonner";
 
 
 type CheckoutItem = {
@@ -68,20 +69,28 @@ export default function CheckoutPage() {
 
       if (!res.ok) {
         if (data.code === "INSUFFICIENT_BALANCE") {
-          alert("Insufficient balance");
+          toast.error("Insufficient balance", {
+            description: "Please top up your balance before checking out",
+          });
           return;
         }
 
         if (data.code === "INSUFFICIENT_STOCK") {
-          alert(`OUT OF STOCK!!!\n${data.product_name}\nSIZE: ${data.size}\nCOLOR: ${data.color}\ncurrently available: ${data.in_stock}`);
+          toast.error("Out of stock", {
+            description: `${data.product_name} · Size ${data.size} · ${data.color} — only ${data.in_stock} left`,
+          });
           return;
         }
 
-        alert(data.message || "Payment failed");
+        toast.error("Payment failed", {
+          description: data.message || "Please try again",
+        });
         return;
       }
 
-      alert("Payment successful!");
+      toast.success("Payment successful!", {
+        description: "Your order has been placed",
+      });
       window.location.href = "/history";
     } catch (error) {
       console.error("Payment error:", error);
@@ -92,7 +101,7 @@ export default function CheckoutPage() {
   const isReady = selectedId !== undefined && total !== 0 && afterBalance >= 0;
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gray-50">
 
   <ClientNavbar />
 
@@ -119,10 +128,10 @@ export default function CheckoutPage() {
         <button
           onClick={handlePayment}
           disabled={!isReady}
-          className={`w-full py-4 mt-6 font-black uppercase text-xs tracking-widest transition-all ${
+          className={`w-full py-4 mt-6 font-black uppercase text-xs tracking-widest rounded-xl transition-all ${
             isReady
-              ? "bg-[#C9A84C] text-black hover:opacity-90"
-              : "bg-neutral-800 text-neutral-500 cursor-not-allowed"
+              ? "bg-green-500 text-white hover:opacity-90"
+              : "bg-gray-100 text-gray-400 cursor-not-allowed"
           }`}
         >
           {total === 0
