@@ -11,7 +11,7 @@ export default function AdminProductPage() {
   const [selections, setSelections] = useState<any>({});
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: "", category: "Footwear", basePrice: "", image: "", tags: "", color: "", size: "", stock: "",
+    name: "", category: "Clothes", basePrice: "", image: "", tags: "", color: "", size: "", stock: "",
   });
 
   const fetchInventory = async () => {
@@ -48,7 +48,7 @@ export default function AdminProductPage() {
       toast.success("Product added successfully!", { description: formData.name });
       setIsModalOpen(false);
       await fetchInventory();
-      setFormData({ name: "", category: "Footwear", basePrice: "", image: "", tags: "", color: "", size: "", stock: "" });
+      setFormData({ name: "", category: "Clothes", basePrice: "", image: "", tags: "", color: "", size: "", stock: "" });
     } catch (err) {
       console.error(err);
       toast.error("Failed to add product", { description: "Please check the form and try again" });
@@ -148,9 +148,10 @@ export default function AdminProductPage() {
               <input name="image" placeholder="Image URL" onChange={(e)=>setFormData({...formData, image: e.target.value})} required className="col-span-2 bg-gray-50 border border-gray-200 p-3 rounded-lg text-gray-900 outline-none focus:border-green-500 placeholder-gray-400" />
               <input name="basePrice" type="number" placeholder="Price" onChange={(e)=>setFormData({...formData, basePrice: e.target.value})} required className="bg-gray-50 border border-gray-200 p-3 rounded-lg text-gray-900 outline-none focus:border-green-500 placeholder-gray-400" />
               <select name="category" onChange={(e)=>setFormData({...formData, category: e.target.value})} value={formData.category} className="bg-gray-50 border border-gray-200 p-3 rounded-lg text-gray-700 outline-none focus:border-green-500">
-                <option value="Footwear">Footwear</option>
-                <option value="Apparel">Apparel</option>
+                <option value="Clothes">Clothes</option>
+                <option value="Shoes">Shoes</option>
                 <option value="Accessories">Accessories</option>
+                <option value="Other">Other</option>
               </select>
               <div className="col-span-2 border-t border-gray-200 mt-4 pt-4 text-[10px] text-blue-600 uppercase font-bold tracking-widest">Initial Variant Specification</div>
               <input name="color" placeholder="Color" onChange={(e)=>setFormData({...formData, color: e.target.value})} required className="bg-gray-50 border border-gray-200 p-3 rounded-lg text-gray-900 outline-none focus:border-green-500 placeholder-gray-400" />
