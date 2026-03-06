@@ -91,21 +91,25 @@ export default function CheckoutOrderSummary({
 
       <div className="mt-4 border-t border-neutral-800 pt-4"/>
 
-      <div className="mt-4 space-y-5">
+      <div className="mt-4 space-y-3">
         {items.map((item, index) => (
-          <div key={index} className="flex gap-4">
-            <div className="h-24 w-24 md:h-28 md:w-28 lg:h-32 lg:w-32 shrink-0 overflow-hidden bg-neutral-800 rounded-lg">
-              <Image src={item.product?.images?.[0]} alt={item.product?.name} width={100} height={100} className="h-full w-full object-cover" />
+          <div key={index} className="flex overflow-hidden rounded-lg border border-neutral-800 bg-neutral-950 hover:border-neutral-600 transition-colors">
+            {/* Image — white bg like ProductCard */}
+            <div className="h-28 w-28 shrink-0 overflow-hidden bg-white">
+              <Image src={item.product?.images?.[0]} alt={item.product?.name} width={112} height={112} className="h-full w-full object-cover" />
             </div>
-            <div className="flex-1 text-sm">
-              <p className="font-bold uppercase tracking-wide text-white leading-tight">{item.product?.name}</p>
-              <p className="mt-0.5 uppercase tracking-wider text-neutral-500">{item.product?.description}</p>
-              <p className="text-neutral-500 uppercase">{item.product?.category}{item.color ? ` / ${item.color}` : ""}{item.size ? ` / SIZE ${item.size}` : ""}</p>
-              <p className="text-neutral-500">จำนวน: {item.quantity}</p>
-              <p className="mt-3 font-bold text-[#C9A84C]">{Number(item.price * item.quantity).toLocaleString("th-TH", {
-                style: "currency",
-                currency: "THB",
-              })}</p>
+            {/* Info */}
+            <div className="flex flex-1 flex-col justify-between p-4">
+              <div>
+                <p className="text-sm font-black uppercase tracking-wide text-white leading-tight">{item.product?.name}</p>
+                <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-widest text-neutral-500">
+                  {item.product?.category}{item.color ? ` · ${item.color}` : ""}{item.size ? ` · SIZE ${item.size}` : ""}
+                </p>
+                <p className="mt-1 text-[11px] text-neutral-600">จำนวน {item.quantity}</p>
+              </div>
+              <p className="mt-2 text-sm font-black text-[#C9A84C]">
+                {Number(item.price * item.quantity).toLocaleString("th-TH", { style: "currency", currency: "THB" })}
+              </p>
             </div>
           </div>
         ))}

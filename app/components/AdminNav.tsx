@@ -20,12 +20,12 @@ export default function AdminNav() {
   };
 
   return (
-    <header className="border-b border-gray-800 bg-[#0d0f14]">
+    <header className="border-b border-neutral-800 bg-black">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-4">
         {/* Logo + Nav */}
         <div className="flex items-center gap-10">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded bg-amber-400">
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-[#C9A84C]">
               <svg width="16" height="16" viewBox="0 0 30 30" fill="none">
                 <path
                   d="M5 25C8 18 14 8 25 5C20 10 12 16 5 25Z"
@@ -47,8 +47,8 @@ export default function AdminNav() {
                   href={item.href}
                   className={`relative text-sm font-medium transition-colors ${
                     isActive
-                      ? "text-amber-400"
-                      : "text-gray-400 hover:text-white"
+                      ? "text-[#C9A84C]"
+                      : "text-neutral-400 hover:text-white"
                   }`}
                 >
                   {item.label}
@@ -64,14 +64,14 @@ export default function AdminNav() {
         {/* Right actions */}
         <div className="flex items-center gap-3">
           {/* User avatar */}
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-600">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-700">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="h-5 w-5 text-gray-300"
+              className="h-5 w-5 text-neutral-300"
             >
               <path
                 strokeLinecap="round"
@@ -84,7 +84,7 @@ export default function AdminNav() {
           {/* Logout */}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-1.5 text-xs font-medium text-gray-400 transition-colors hover:text-red-400"
+            className="flex items-center gap-1.5 text-xs font-medium text-neutral-400 transition-colors hover:text-red-400"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />

@@ -4,8 +4,14 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { addCart, addFav, getStock } from "lib/apiServices/user.service";
-import { apiFetch } from "lib/apiServices/client";
+import {
+  addCart,
+  addFav,
+  getCurrentUser,
+  getProductBySlug,
+  addReview,
+  deleteReview,
+} from "lib/apiServices/user.service";
 import { toast } from "sonner";
 
 interface Variant {
@@ -34,19 +40,13 @@ interface Product {
   averageRating?: number;
 }
 
-interface ProductStock {
-  product_id: string;
-  color: string;
-  size: string;
-  stock: number;
-}
 
 export default function ProductDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
 
   const [product, setProduct] = useState<Product | null>(null);
-  const [productStock, setProductStock] = useState<ProductStock[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedColor, setSelectedColor] = useState<string>("red");
@@ -59,38 +59,13 @@ export default function ProductDetailPage() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchCurrentUser() {
-      try {
-        const res = await fetch('/api/user/me');
-        if (res.ok) {
-          const data = await res.json();
-          setCurrentUserId(data._id);
-        } else {
-          // User is not authenticated, that's okay
-          setCurrentUserId(null);
-        }
-      } catch (err) {
-        console.error("Failed to fetch current user", err);
-        setCurrentUserId(null);
-      }
-    }
-    fetchCurrentUser();
-  }, []);
-
-  useEffect(() => {
     async function fetchProduct() {
       try {
-        const res = await fetch(`/api/product/get-by-slug?slug=${slug}`);
-        if (res.ok) {
-          const data = await res.json();
-          
-          // Calculate average rating if it doesn't exist
-          if (!data.averageRating && data.reviews && data.reviews.length > 0) {
-            data.averageRating = data.reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / data.reviews.length;
-          }
-          
-          setProduct(data);
+        const data = await getProductBySlug(slug);
+        if (!data.averageRating && data.reviews && data.reviews.length > 0) {
+          data.averageRating = data.reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / data.reviews.length;
         }
+        setProduct(data);
       } catch (err) {
         console.error("Failed to fetch product", err);
       } finally {
@@ -100,34 +75,16 @@ export default function ProductDetailPage() {
     if (slug) fetchProduct();
   }, [slug]);
 
-  useEffect(() => {
-    async function fetchProductStock() {
-      if (!product) return;
-      if (!selectedColor || !selectedSize) return;
-      try {
-        const data = await getStock({
-          product_id: product._id,
-          color: selectedColor,
-          size: selectedSize,
-        });
-        setProductStock(data);
-      } catch (err) {
-        console.error("Failed to fetch product stock", err);
-      }
-    }
-    fetchProductStock();
-  }, [product, selectedColor, selectedSize]);
 
   useEffect(() => {
     async function fetchUser() {
       try {
-        const user = await apiFetch("/api/user/me");
+        const user = await getCurrentUser();
         setCurrentUserId(user._id);
       } catch {
         setCurrentUserId(null);
       }
     }
-
     fetchUser();
   }, []);
 
@@ -192,32 +149,15 @@ export default function ProductDetailPage() {
     if (!product) return;
 
     try {
-      const response = await apiFetch('/api/product/delete-review', {
-        method: 'DELETE',
-        body: JSON.stringify({
-          productId: product._id,
-          reviewId: reviewId,
-        }),
-      });
-
-      toast.success("ลบรีวิวแล้ว", {
-        description: "รีวิวของคุณถูกลบเรียบร้อย",
-      });
-      
-      // Update product with the response data
-      if (response.product) {
-        setProduct(response.product);
-      }
+      const response = await deleteReview({ productId: product._id, reviewId });
+      toast.success("ลบรีวิวแล้ว", { description: "รีวิวของคุณถูกลบเรียบร้อย" });
+      if (response.product) setProduct(response.product);
     } catch (error: any) {
       console.error(error);
       if (error.status === 401) {
-        toast.error("กรุณาเข้าสู่ระบบ", {
-          description: "คุณต้องเข้าสู่ระบบก่อนจึงจะลบรีวิวได้",
-        });
+        toast.error("กรุณาเข้าสู่ระบบ", { description: "คุณต้องเข้าสู่ระบบก่อนจึงจะลบรีวิวได้" });
       } else {
-        toast.error("เกิดข้อผิดพลาด", {
-          description: error.message || "ไม่สามารถลบรีวิวได้ กรุณาลองใหม่",
-        });
+        toast.error("เกิดข้อผิดพลาด", { description: error.message || "ไม่สามารถลบรีวิวได้ กรุณาลองใหม่" });
       }
     }
   };
@@ -235,30 +175,11 @@ export default function ProductDetailPage() {
     setSubmittingReview(true);
     
     try {
-      const response = await apiFetch('/api/product/add-review', {
-        method: 'POST',
-        body: JSON.stringify({
-          productId: product._id,
-          rating,
-          comment,
-        }),
-      });
-
-      console.log("API Response:", response);
-
-      toast.success("เพิ่มรีวิวแล้ว", {
-        description: "ขอบคุณสำหรับความคิดเห็นของคุณ",
-      });
-      
-      // Reset form
+      const response = await addReview({ productId: product._id, rating, comment });
+      toast.success("เพิ่มรีวิวแล้ว", { description: "ขอบคุณสำหรับความคิดเห็นของคุณ" });
       setRating(0);
       setComment("");
-      
-      // Use the updated product data from API response
-      if (response.product) {
-        setProduct(response.product);
-        console.log("Updated product from API:", response.product);
-      }
+      if (response.product) setProduct(response.product);
     } catch (error: any) {
       console.error(error);
       toast.error("เกิดข้อผิดพลาด", {
@@ -269,28 +190,8 @@ export default function ProductDetailPage() {
     }
   };
 
-  const handleDeleteComment = async (reviewId: string) => {
-    if (!product) return;
 
-    try {
-      const response = await apiFetch("/api/product/delete-review", {
-        method: "DELETE",
-        body: JSON.stringify({
-          productId: product._id,
-          reviewId,
-        }),
-      });
 
-      toast.success("ลบความคิดเห็นแล้ว");
-
-      if (response.product) {
-        setProduct(response.product);
-      }
-    } catch (error: any) {
-      toast.error("ไม่สามารถลบความคิดเห็นได้");
-    }
-  };
-  
 
   if (loading) {
     return (
@@ -312,12 +213,7 @@ export default function ProductDetailPage() {
   }
 
   const currentVariant = product.variants?.find((v) => v.color.toLowerCase() === selectedColor.toLowerCase());
-  const userReview = product?.reviews?.find(
-    (review) =>
-      review.userId?.toString() === currentUserId?.toString()
-  );
-      console.log("Current User ID:", currentUserId);
-      console.log("Reviews:", product?.reviews);
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Main content */}

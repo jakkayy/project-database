@@ -4,6 +4,7 @@ import Link from "next/link";
 import { verifyToken } from "lib/jwt";
 import { prisma } from "lib/prisma";
 import LogoutButton from "./LogoutButton";
+import SearchBox from "./SearchBox";
 
 export default async function Navbar() {
   const token = (await cookies()).get("access_token")?.value;
@@ -28,9 +29,7 @@ export default async function Navbar() {
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="flex items-center justify-between bg-neutral-900 px-10 py-2">
-        <Image src="/jordan.svg" alt="Jordan" width={20} height={20} className="invert" />
-
+      <div className="flex items-center justify-end bg-neutral-900 px-10 py-2">
         <div className="flex items-center gap-1 text-xs text-neutral-300">
 
           <span className="text-neutral-600">|</span>
@@ -56,35 +55,17 @@ export default async function Navbar() {
       
       <nav className="flex items-center justify-between border-b border-neutral-800 bg-black px-10 py-3">
       {/* Logo */}
-      <Link href="/">
-        <Image src="/nike.svg" alt="Nike" width={60} height={24} className="invert" />
+      <Link href="/" className="flex items-center gap-2">
+        <Image src="/logo.svg" alt="Logo" width={36} height={36} />
+        <span className="text-base font-black tracking-wider">
+          <span className="text-white">NIKO</span>
+          <span className="text-[#C9A84C]"> SPORTWEAR</span>
+        </span>
       </Link>
 
-      {/* Nav Links */}
-      <ul className="flex items-center gap-6 text-sm font-medium text-neutral-200">
-        <li>
-          <Link href="#" className="hover:text-[#C9A84C] transition-colors">
-            ใหม่และโดดเด่น
-          </Link>
-        </li>
-        <li>
-          <Link href="#" className="hover:text-[#C9A84C] transition-colors">
-            ผู้ชาย
-          </Link>
-        </li>
-        <li>
-          <Link href="#" className="hover:text-[#C9A84C] transition-colors">
-            ผู้หญิง
-          </Link>
-        </li>
-        <li>
-          <Link href="#" className="hover:text-[#C9A84C] transition-colors">
-            เด็ก
-          </Link>
-        </li>
-      </ul>
+      {/* Search center */}
+      <SearchBox />
 
-      {/* Right side: Balance, Search, Wishlist, Cart */}
       <div className="flex items-center gap-4">
         {/* Balance */}
         <div className="flex items-center gap-4">
@@ -100,25 +81,6 @@ export default async function Navbar() {
                 </div>
               </Link>
             )}
-        </div>
-
-        {/* Search */}
-        <div className="flex items-center gap-2 rounded-full bg-neutral-800 px-4 py-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="h-4 w-4 text-neutral-400"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-            />
-          </svg>
-          <span className="text-sm text-neutral-500">ค้นหา</span>
         </div>
 
         {/* Wishlist */}

@@ -66,13 +66,9 @@ export default function ProductCard({
   };
 
   const content = (
-    <div className="cursor-pointer group w-full">
-      <div className="relative mb-4 aspect-square w-full overflow-hidden bg-neutral-900">
-        {badge && (
-          <span className="absolute left-3 top-3 z-10 bg-[#C9A84C] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-black">
-            {badge}
-          </span>
-        )}
+    <div className="cursor-pointer group w-full rounded-lg overflow-hidden bg-neutral-950 border border-neutral-800 hover:border-neutral-600 transition-colors">
+      {/* Image area */}
+      <div className="relative aspect-square w-full overflow-hidden bg-white">
         <Image
           src={image}
           alt={name}
@@ -85,8 +81,8 @@ export default function ProductCard({
           onClick={handleFav}
           className={`absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full transition-all duration-200 ${
             isFav
-              ? "bg-white text-black"
-              : "bg-black/60 text-white hover:bg-black/80"
+              ? "bg-[#C9A84C] text-black"
+              : "bg-neutral-800/80 text-white hover:bg-neutral-700"
           }`}
         >
           <svg
@@ -95,7 +91,7 @@ export default function ProductCard({
             fill={isFav ? "currentColor" : "none"}
             stroke="currentColor"
             strokeWidth={1.5}
-            className="h-5 w-5"
+            className="h-4 w-4"
           >
             <path
               strokeLinecap="round"
@@ -104,9 +100,24 @@ export default function ProductCard({
             />
           </svg>
         </button>
+        {/* Badge */}
+        {badge && (
+          <span className="absolute bottom-3 left-3 z-10 bg-[#C9A84C] px-2 py-1 text-[9px] font-black uppercase tracking-wider text-black rounded-sm">
+            {badge}
+          </span>
+        )}
       </div>
-      <h3 className="text-sm font-bold uppercase tracking-wide text-white">{name}</h3>
-      <p className="mt-1 text-sm text-neutral-400">{basePrice} ฿</p>
+
+      {/* Info area */}
+      <div className="p-4">
+        <div className="flex items-end justify-between gap-2">
+          <div className="min-w-0">
+            <h3 className="truncate text-sm font-black uppercase tracking-wide text-white">{name}</h3>
+            <p className="mt-0.5 truncate text-[11px] uppercase tracking-wider text-neutral-500">{category}</p>
+            <p className="mt-2 text-base font-black text-white">฿{Number(basePrice).toLocaleString()}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 

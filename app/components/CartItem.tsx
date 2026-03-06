@@ -13,6 +13,8 @@ interface CartItemProps {
   size: string;
   price: string;
   initialQty?: number;
+  isSelected?: boolean;
+  onToggleSelect?: () => void;
   onRemove: (id: number) => void;
   onQuantityChange?: (id: number, newQty: number) => void;
 }
@@ -26,6 +28,8 @@ export default function CartItem({
   size,
   price,
   initialQty = 1,
+  isSelected = false,
+  onToggleSelect,
   onRemove,
   onQuantityChange
 }: CartItemProps) {
@@ -40,6 +44,24 @@ export default function CartItem({
   return (
     <div className="border-b border-neutral-800 py-6">
       <div className="flex gap-5">
+        {/* Checkbox */}
+        <div className="flex items-center">
+          <button
+            onClick={onToggleSelect}
+            className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors ${
+              isSelected
+                ? "border-[#C9A84C] bg-[#C9A84C]"
+                : "border-neutral-600 bg-transparent hover:border-neutral-400"
+            }`}
+          >
+            {isSelected && (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3 text-black">
+                <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+              </svg>
+            )}
+          </button>
+        </div>
+
         {/* Product image */}
         <div className="h-44 w-44 shrink-0 overflow-hidden bg-neutral-900 rounded-lg">
           {typeof image === "string" && image.trim() !== "" ? (

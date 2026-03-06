@@ -1,12 +1,13 @@
-import Link from "next/link";
+"use client";
 
 interface CartSummaryProps {
-  subtotal: string;
   total: string;
   items?: any[];
+  selectedCount?: number;
+  onCheckout?: () => void;
 }
 
-export default function CartSummary({ subtotal, total, items }: CartSummaryProps) {
+export default function CartSummary({ total, items, selectedCount = 0, onCheckout }: CartSummaryProps) {
   return (
     <div className="sticky top-24 rounded-none bg-neutral-900 p-6">
       <h2 className="mb-6 text-sm font-black uppercase tracking-widest text-white">
@@ -52,12 +53,20 @@ export default function CartSummary({ subtotal, total, items }: CartSummaryProps
       </div>
 
       {/* Checkout button */}
-      <Link href="/checkout" className="mt-6 flex w-full items-center justify-center gap-2 bg-[#C9A84C] py-4 text-xs font-black uppercase tracking-widest text-black transition-opacity hover:opacity-90">
-        PROCEED TO CHECKOUT
+      <button
+        onClick={onCheckout}
+        disabled={selectedCount === 0}
+        className={`mt-6 flex w-full items-center justify-center gap-2 py-4 text-xs font-black uppercase tracking-widest transition-opacity ${
+          selectedCount > 0
+            ? "bg-[#C9A84C] text-black hover:opacity-90"
+            : "bg-neutral-800 text-neutral-500 cursor-not-allowed"
+        }`}
+      >
+        {selectedCount === 0 ? "เลือกสินค้าก่อน" : `CHECKOUT (${selectedCount})`}
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="h-4 w-4">
           <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
         </svg>
-      </Link>
+      </button>
 
       
     </div>

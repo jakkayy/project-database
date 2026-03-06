@@ -40,6 +40,7 @@ export default async function FavoritesPage() {
         product: product
           ? {
               name: product.name,
+              slug: product.slug,
               images: product.images,
               category: product.category,
               basePrice: product.basePrice,

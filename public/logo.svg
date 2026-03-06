@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Outer hexagon (pointy top) -->
+  <polygon
+    points="50,4 93,27.5 93,72.5 50,96 7,72.5 7,27.5"
+    stroke="white"
+    stroke-width="7"
+    stroke-linejoin="round"
+    fill="none"
+  />
+  <!-- Inner circle ring -->
+  <circle cx="50" cy="50" r="18" stroke="white" stroke-width="7" fill="none" />
+  <!-- 3 spokes from center to hexagon edge (Y shape, 120° apart) -->
+  <!-- Top spoke: 270° = (50, 32) up to (50, 7) -->
+  <line x1="50" y1="32" x2="50" y2="11" stroke="white" stroke-width="7" stroke-linecap="round" />
+  <!-- Bottom-right spoke: 30° -->
+  <line x1="65.6" y1="59" x2="84" y2="69.5" stroke="white" stroke-width="7" stroke-linecap="round" />
+  <!-- Bottom-left spoke: 150° -->
+  <line x1="34.4" y1="59" x2="16" y2="69.5" stroke="white" stroke-width="7" stroke-linecap="round" />
+</svg>

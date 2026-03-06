@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import CartItem from "@/app/components/CartItem";
 import CartSummary from "@/app/components/CartSummary";
 
@@ -11,21 +12,32 @@ interface Props {
 
 export default function CartClient({ items }: Props) {
   const router = useRouter();
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
-  const newTotal = items.reduce(
+  const toggleSelect = (id: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const selectedItems = items.filter((item) => selectedIds.has(item.cartItem_id));
+  const selectedTotal = selectedItems.reduce(
     (sum, item) => sum + Number(item.price) * item.quantity,
     0
   );
 
+  const handleCheckout = () => {
+    const ids = Array.from(selectedIds).join(",");
+    router.push(`/checkout?items=${ids}`);
+  };
+
   return (
     <div className="mx-auto max-w-7xl px-10 py-10">
       <div className="mb-10">
-        <h1 className="text-4xl font-black uppercase text-white">
-          ตะกร้าสินค้า
-        </h1>
-        <p className="mt-1 text-sm text-neutral-400">
-          ตรวจสอบรายการสินค้าที่คุณเลือกไว้
-        </p>
+        <h1 className="text-4xl font-black uppercase text-white">ตะกร้าสินค้า</h1>
+        <p className="mt-1 text-sm text-neutral-400">เลือกสินค้าที่ต้องการสั่งซื้อ</p>
       </div>
 
       <div className="flex gap-10">
@@ -44,6 +56,8 @@ export default function CartClient({ items }: Props) {
                 currency: "THB",
               })}
               initialQty={item.quantity}
+              isSelected={selectedIds.has(item.cartItem_id)}
+              onToggleSelect={() => toggleSelect(item.cartItem_id)}
               onRemove={() => router.refresh()}
               onQuantityChange={() => router.refresh()}
             />
@@ -52,15 +66,13 @@ export default function CartClient({ items }: Props) {
 
         <div className="w-96 shrink-0">
           <CartSummary
-            subtotal={newTotal.toLocaleString("th-TH", {
+            total={selectedTotal.toLocaleString("th-TH", {
               style: "currency",
               currency: "THB",
             })}
-            total={newTotal.toLocaleString("th-TH", {
-              style: "currency",
-              currency: "THB",
-            })}
-            items={items}
+            items={selectedItems}
+            selectedCount={selectedIds.size}
+            onCheckout={handleCheckout}
           />
         </div>
       </div>

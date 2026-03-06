@@ -37,7 +37,7 @@ async function seed() {
 
     const products = await Product.insertMany([
       {
-        name: "Air Zoom Alpha",
+        name: "Nike Air Zoom Alpha",
         slug: "air-zoom-alpha",
         category: "Running",
         basePrice: 4900,
@@ -48,7 +48,7 @@ async function seed() {
         rating: [4.5],
       },
       {
-        name: "Street Flex Pro",
+        name: "Nike Street Flex Pro",
         slug: "street-flex-pro",
         category: "Lifestyle",
         basePrice: 3900,
@@ -59,7 +59,7 @@ async function seed() {
         rating: [4.2],
       },
       {
-        name: "Ultraboost Light",
+        name: "Adidas Ultraboost Light",
         slug: "ultraboost-light",
         category: "Running",
         basePrice: 6900,
@@ -70,7 +70,7 @@ async function seed() {
         rating: [4.8],
       },
       {
-        name: "574 Core",
+        name: "New Balance 574 Core",
         slug: "574-core",
         category: "Lifestyle",
         basePrice: 3200,
@@ -81,7 +81,7 @@ async function seed() {
         rating: [4.4],
       },
       {
-        name: "Chuck Taylor All Star",
+        name: "Converse Chuck Taylor All Star",
         slug: "chuck-taylor-all-star",
         category: "Lifestyle",
         basePrice: 2500,
@@ -92,7 +92,7 @@ async function seed() {
         rating: [4.6],
       },
       {
-        name: "Gel-Kayano 30",
+        name: "Asics Gel-Kayano 30",
         slug: "gel-kayano-30",
         category: "Running",
         basePrice: 6500,
@@ -103,7 +103,7 @@ async function seed() {
         rating: [4.7],
       },
       {
-        name: "Clyde All-Pro",
+        name: "Puma Clyde All-Pro",
         slug: "clyde-all-pro",
         category: "Basketball",
         basePrice: 4800,
@@ -114,7 +114,7 @@ async function seed() {
         rating: [4.3],
       },
       {
-        name: "Metcon 9",
+        name: "Reebok Metcon 9",
         slug: "metcon-9",
         category: "Training",
         basePrice: 5200,
@@ -125,7 +125,7 @@ async function seed() {
         rating: [4.5],
       },
       {
-        name: "FuelCell Rebel v3",
+        name: "New Balance FuelCell Rebel v3",
         slug: "fuelcell-rebel-v3",
         category: "Running",
         basePrice: 4700,
@@ -136,7 +136,7 @@ async function seed() {
         rating: [4.4],
       },
       {
-        name: "Old Skool Classic",
+        name: "Vans Old Skool Classic",
         slug: "old-skool-classic",
         category: "Lifestyle",
         basePrice: 2900,
@@ -147,7 +147,7 @@ async function seed() {
         rating: [4.5],
       },
       {
-        name: "HOVR Phantom 3",
+        name: "Under Armour HOVR Phantom 3",
         slug: "hovr-phantom-3",
         category: "Running",
         basePrice: 5400,
@@ -158,7 +158,7 @@ async function seed() {
         rating: [4.2],
       },
       {
-        name: "Zoom Freak 5",
+        name: "Nike Zoom Freak 5",
         slug: "zoom-freak-5",
         category: "Basketball",
         basePrice: 5300,

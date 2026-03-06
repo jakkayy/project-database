@@ -1,56 +1,57 @@
 "use client";
 import { useState } from "react";
-import { toast } from "sonner";
-import FavoritesItem from "@/app/components/FavoritesItem";
+import ProductCard from "@/app/components/ProductCard";
+
+const CATEGORIES = ["ALL", "RUNNING", "TRAINING", "LIFESTYLE"];
 
 export default function FavClient({ initialItems }: { initialItems: any[] }) {
-  const [items, setItems] = useState(initialItems);
+  const [items] = useState(initialItems);
+  const [activeCategory, setActiveCategory] = useState("ALL");
 
-  const handleDelete = async (favItem_id: number) => {
-    const res = await fetch("/api/favorite/delete-fav", {
-      method: "DELETE",
-      body: JSON.stringify({ favItem_id }),
-    });
-
-    if (res.ok) {
-      setItems(prev => prev.filter(item => item.favItem_id !== favItem_id));
-    }
-  };
-
-  const handleAddToCart = async (product_id: string, basePrice: number, name: string) => {
-    try {
-      const res = await fetch("/api/cart/add-cart", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          product_id,
-          quantity: 1,
-          basePrice,
-          size: "N/A",
-          color: "N/A",
-        }),
-      });
-
-      if (!res.ok) throw new Error();
-      toast.success("เพิ่มในตะกร้าแล้ว", { description: name });
-    } catch {
-      toast.error("เกิดข้อผิดพลาด", { description: "กรุณาลองใหม่อีกครั้ง" });
-    }
-  };
+  const filtered = activeCategory === "ALL"
+    ? items.filter((item) => item.product?.name && item.product?.basePrice)
+    : items.filter((item) => item.product?.name && item.product?.basePrice && item.product?.category?.toUpperCase() === activeCategory);
 
   return (
-    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
-      {items.map((item) => (
-        <FavoritesItem
-          key={item.favItem_id}
-          image={item.product?.images?.[0] || ""}
-          name={item.product?.name || "Unknown"}
-          category={item.product?.category || "Category"}
-          price={item.product?.basePrice ? `฿${item.product.basePrice.toLocaleString()}` : "N/A"}
-          onDelete={() => handleDelete(item.favItem_id)}
-          onAddToCart={() => handleAddToCart(item.product_id, item.product?.basePrice ?? 0, item.product?.name || "")}
-        />
-      ))}
+    <div>
+      {/* Filter Pills */}
+      <div className="flex gap-3 mb-8">
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={`px-5 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-200 ${
+              activeCategory === cat
+                ? "bg-[#C9A84C] text-black"
+                : "bg-neutral-900 text-neutral-400 border border-neutral-800 hover:border-neutral-600 hover:text-white"
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {filtered.length === 0 ? (
+        <div className="flex items-center justify-center py-20">
+          <p className="text-xs uppercase tracking-wider text-neutral-500">ไม่มีสินค้าในหมวดหมู่นี้</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-3 gap-5">
+          {filtered.map((item) => (
+            <ProductCard
+              key={item.favItem_id}
+              _id={item.product?._id}
+              image={item.product?.images?.[0] || ""}
+              name={item.product?.name || "Unknown"}
+              category={item.product?.category || ""}
+              basePrice={item.product?.basePrice}
+              slug={item.product?.slug || ""}
+              initialIsFav={true}
+              initialFavItemId={item.favItem_id}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

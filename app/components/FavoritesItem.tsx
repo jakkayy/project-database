@@ -1,12 +1,13 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface WishlistItemProps {
   image: string;
   name: string;
   category: string;
   price: string;
+  slug: string;
   onDelete?: () => void;
-  onAddToCart?: () => void;
 }
 
 export default function FavoritesItem({
@@ -14,8 +15,8 @@ export default function FavoritesItem({
   name,
   category,
   price,
+  slug,
   onDelete,
-  onAddToCart,
 }: WishlistItemProps) {
   const imageSrc = image && image.trim() !== "" ? image : "/products/shoe1.svg";
 
@@ -23,14 +24,16 @@ export default function FavoritesItem({
     <div className="w-full max-w-sm">
       {/* Product image with heart icon */}
       <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
-        <Image
-          src={imageSrc}
-          alt={name || "Product Image"}
-          width={600}
-          height={600}
-          className="h-full w-full object-cover"
-          unoptimized={imageSrc.startsWith("http") ? false : true}
-        />
+        <Link href={`/product/${slug}`} className="block h-full w-full">
+          <Image
+            src={imageSrc}
+            alt={name || "Product Image"}
+            width={600}
+            height={600}
+            className="h-full w-full object-cover"
+            unoptimized={imageSrc.startsWith("http") ? false : true}
+          />
+        </Link>
         {/* Heart icon — black on white (favorited state) */}
         <button
           onClick={onDelete}
@@ -48,21 +51,15 @@ export default function FavoritesItem({
       </div>
 
       {/* Product info */}
-      <div className="mt-3 flex items-start justify-between">
-        <div>
-          <h3 className="text-base font-medium text-white">{name}</h3>
-          <p className="text-sm text-[#C9A84C]">{category}</p>
+      <Link href={`/product/${slug}`}>
+        <div className="mt-3 flex items-start justify-between">
+          <div>
+            <h3 className="text-base font-medium text-white">{name}</h3>
+            <p className="text-sm text-[#C9A84C]">{category}</p>
+          </div>
+          <p className="text-base text-white">{price}</p>
         </div>
-        <p className="text-base text-white">{price}</p>
-      </div>
-
-      {/* Add to cart button */}
-      <button
-        onClick={onAddToCart}
-        className="mt-3 rounded-full border border-[#C9A84C] px-5 py-2 text-sm font-medium text-[#C9A84C] transition-colors hover:border-black"
-      >
-        เพิ่มในตะกร้า
-      </button>
+      </Link>
     </div>
   );
 }

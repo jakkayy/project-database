@@ -69,10 +69,10 @@ export default function AddressSelector({
       <h2 className="text-xs font-semibold uppercase tracking-widest text-neutral-400">เลือกที่อยู่</h2>
       <div className="grid gap-3">
         {addresses.map((addr) => (
-          <div 
+          <div
             key={addr.address_id}
             onClick={() => onAddressSelect(addr.address_id)}
-            className={`relative cursor-pointer border p-4 transition-all ${selectedAddressId === addr.address_id ? "border-[#C9A84C] bg-neutral-800" : "border-neutral-700 hover:border-neutral-500"}`}
+            className={`relative cursor-pointer rounded-lg border p-4 transition-all ${selectedAddressId === addr.address_id ? "border-[#C9A84C] bg-neutral-950" : "border-neutral-800 bg-neutral-950 hover:border-neutral-600"}`}
           >
             {/* ปุ่มลบ */}
             <button

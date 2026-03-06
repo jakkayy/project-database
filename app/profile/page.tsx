@@ -65,10 +65,7 @@ export default async function ProfilePage() {
         <Link href="/favorites" className="pb-3 -mb-4 transition-colors hover:text-white">
           รายการโปรด
         </Link>
-        <Link href="/setting" className="pb-3 -mb-4 transition-colors hover:text-white">
-          การตั้งค่า
-        </Link>
-        <Link href="/finance" className="hover:text-black pb-3 -mb-4">
+        <Link href="/finance" className="hover:text-white pb-3 -mb-4">
           การเงิน
         </Link>
       </div>
@@ -105,77 +102,8 @@ export default async function ProfilePage() {
           </div>
         </div>
 
-        {/* Interests Section */}
-        <div className="mt-12">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-black uppercase tracking-widest text-white">ความสนใจ</h2>
-            <button className="text-xs uppercase tracking-wider text-neutral-500 transition-colors hover:text-[#C9A84C]">
-              แก้ไข
-            </button>
-          </div>
-
-          {/* Tabs */}
-          <div className="mt-6 flex gap-4 border-b border-neutral-800">
-            {tabs.map((tab, index) => (
-              <button
-                key={tab}
-                className={`pb-3 text-xs uppercase tracking-wider ${
-                  index === 0
-                    ? "border-b-2 border-[#C9A84C] font-semibold text-white"
-                    : "text-neutral-500 transition-colors hover:text-white"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-
-          {/* Interest Description */}
-          <p className="mt-4 text-xs text-neutral-500">
-            เพิ่มความสนใจของคุณเพื่อสื่อสารและแลกเปลี่ยนสินค้าตามสิ่งที่คุณสนใจ
-          </p>
-
-          {/* Interest Cards */}
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-            {/* Add Interest Card */}
-            <div className="flex aspect-square cursor-pointer flex-col items-center justify-center border border-dashed border-neutral-700 transition-colors hover:border-[#C9A84C]">
-              <div className="flex h-10 w-10 items-center justify-center border border-neutral-600">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="h-5 w-5 text-neutral-400"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15"
-                  />
-                </svg>
-              </div>
-              <span className="mt-3 text-xs uppercase tracking-wider text-neutral-400">
-                เพิ่มความสนใจ
-              </span>
-            </div>
-
-            {/* Interest Image Cards */}
-            {interestImages.map((src, index) => (
-              <div
-                key={index}
-                className="relative aspect-square overflow-hidden bg-neutral-900"
-              >
-                <img
-                  src={src}
-                  alt={`Interest ${index + 1}`}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );
 }
+

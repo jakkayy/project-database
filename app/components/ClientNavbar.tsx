@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import LogoutButton from './LogoutButton';
+import SearchBox from './SearchBox';
+import { getProfile } from 'lib/apiServices/user.service';
 
 export default function ClientNavbar() {
   const [account, setAccount] = useState<{ firstname: string, balance: number } | null>(null);
@@ -11,18 +13,9 @@ export default function ClientNavbar() {
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch('/api/auth/profile', {
-        credentials: 'include'
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setAccount(data);
-      } else {
-        setAccount(null);
-      }
-    } catch (error) {
-      console.error('Auth check failed:', error);
+      const data = await getProfile();
+      setAccount(data);
+    } catch {
       setAccount(null);
     } finally {
       setLoading(false);
@@ -40,9 +33,7 @@ export default function ClientNavbar() {
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="flex items-center justify-between bg-neutral-900 px-10 py-2">
-        <Image src="/jordan.svg" alt="Jordan" width={20} height={20} className="invert" />
-
+      <div className="flex items-center justify-end bg-neutral-900 px-10 py-2">
         <div className="flex items-center gap-1 text-xs text-neutral-300">
           {loading ? (
             <span className="px-2">Loading...</span>
@@ -72,43 +63,16 @@ export default function ClientNavbar() {
       
       <nav className="flex items-center justify-between border-b border-neutral-800 bg-black px-10 py-3">
         {/* Logo */}
-        <Link href="/">
-          <Image src="/nike.svg" alt="Nike" width={60} height={24} className="invert" />
+        <Link href="/" className="flex items-center gap-2">
+          <Image src="/logo.svg" alt="Logo" width={36} height={36} />
+          <span className="text-base font-black tracking-wider">
+            <span className="text-white">NIKO</span>
+            <span className="text-[#C9A84C]"> SPORTWEAR</span>
+          </span>
         </Link>
 
-        {/* Nav Links */}
-        <ul className="flex items-center gap-6 text-sm font-medium text-neutral-200">
-          <li>
-            <Link href="#" className="hover:text-[#C9A84C] transition-colors">
-              ข้อเสนอจำกัดเวลา
-            </Link>
-          </li>
-          <li>
-            <Link href="#" className="hover:text-[#C9A84C] transition-colors">
-              ใหม่และโดดเด่น
-            </Link>
-          </li>
-          <li>
-            <Link href="#" className="hover:text-[#C9A84C] transition-colors">
-              ผู้ชาย
-            </Link>
-          </li>
-          <li>
-            <Link href="#" className="hover:text-[#C9A84C] transition-colors">
-              ผู้หญิง
-            </Link>
-          </li>
-          <li>
-            <Link href="#" className="hover:text-[#C9A84C] transition-colors">
-              เด็ก
-            </Link>
-          </li>
-          <li>
-            <Link href="#" className="hover:text-[#C9A84C] transition-colors">
-              SNKRS
-            </Link>
-          </li>
-        </ul>
+        {/* Search center */}
+        <SearchBox />
 
         {/* Right side: Balance, Search, Wishlist, Cart */}
         <div className="flex items-center gap-4">
@@ -126,25 +90,6 @@ export default function ClientNavbar() {
                   </div>
                 </Link>
               )}
-          </div>
-
-          {/* Search */}
-          <div className="flex items-center gap-2 rounded-full bg-neutral-800 px-4 py-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="h-4 w-4 text-neutral-400"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-              />
-            </svg>
-            <span className="text-sm text-neutral-500">ค้นหา</span>
           </div>
 
           {/* Wishlist */}

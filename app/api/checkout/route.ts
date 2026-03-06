@@ -7,9 +7,14 @@ import Product from "@/app/models/Product";
 import { cookies } from "next/headers";
 import { requireAuth } from "@/lib/auth";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     await connectMongo();
+    const { searchParams } = new URL(request.url);
+    const itemsParam = searchParams.get("items");
+    const selectedIds = itemsParam
+      ? itemsParam.split(",").map((id) => parseInt(id)).filter(Boolean)
+      : null;
 
     // get token from cookie
     const token = (await cookies()).get("access_token")?.value;
@@ -41,13 +46,17 @@ export async function GET() {
       return NextResponse.json({ items: [], total: 0 });
     }
 
-    const productIds = cart.items.map((item) => item.product_id);
+    const cartItems = selectedIds
+      ? cart.items.filter((item) => selectedIds.includes(item.cartItem_id))
+      : cart.items;
+
+    const productIds = cartItems.map((item) => item.product_id);
 
     const products = await Product.find({
       _id: { $in: productIds },
     });
 
-    const itemsWithProduct = cart.items.map((item) => {
+    const itemsWithProduct = cartItems.map((item) => {
       const product = products.find(
         (p) => p._id.toString() === item.product_id
       );

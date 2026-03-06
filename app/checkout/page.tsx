@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import AddressSelector from "@/app/components/AddressSelector";
 import CheckoutOrderSummary from "@/app/components/CheckoutOrderSummary";
 import ClientNavbar from "@/app/components/ClientNavbar";
@@ -16,6 +17,7 @@ type CheckoutItem = {
 };
 
 export default function CheckoutPage() {
+  const searchParams = useSearchParams();
   const [addresses, setAddresses] = useState([]);
   const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
   const [items, setItems] = useState<CheckoutItem[]>([]);
@@ -24,7 +26,9 @@ export default function CheckoutPage() {
 
   const fetchCheckout = async () => {
     try {
-      const res = await fetch("/api/checkout");
+      const itemsParam = searchParams.get("items");
+      const url = itemsParam ? `/api/checkout?items=${itemsParam}` : "/api/checkout";
+      const res = await fetch(url);
       const data = await res.json();
 
       setItems(data.items);
