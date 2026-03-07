@@ -111,7 +111,7 @@ async function seed() {
       {
         name: "หนังสือเรียนมือสอง",
         slug: "หนังสือเรียนมือสอง",
-        category: "Others",
+        category: "Other",
         basePrice: 200,
         images: [
           "https://down-th.img.susercontent.com/file/th-11134207-7r991-loanpdb9jzzk93@resize_w900_nl.webp",
