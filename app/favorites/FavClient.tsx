@@ -2,7 +2,7 @@
 import { useState } from "react";
 import ProductCard from "@/app/components/ProductCard";
 
-const CATEGORIES = ["ALL", "RUNNING", "TRAINING", "LIFESTYLE"];
+const CATEGORIES = ["ALL", "CLOTHES", "SHOES", "ACCESSORIES", "OTHER"];
 
 export default function FavClient({ initialItems }: { initialItems: any[] }) {
   const [items] = useState(initialItems);

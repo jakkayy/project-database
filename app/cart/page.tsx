@@ -1,6 +1,5 @@
 export const dynamic = "force-dynamic";
 import Navbar from "@/app/components/Navbar";
-import ChatbotWidget from "@/app/components/ChatbotWidget";
 import CartClient from "./CartClient";
 import { cookies } from "next/headers";
 import { requireAuth } from "lib/auth";
@@ -68,7 +67,6 @@ export default async function CartPage() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <CartClient items={itemsWithProduct} total={total} />
-      <ChatbotWidget />
     </div>
   );
 }

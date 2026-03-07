@@ -1,11 +1,9 @@
 import AdminNav from "../../components/AdminNav";
 import InventoryAlerts from "../components/InventoryAlerts";
 import SalesChart from "../components/SalesChart";
-import ChatAnalysisWidget from "../components/ChatAnalysisWidget";
 import { prisma } from "lib/prisma";
 import { connectMongo } from "lib/mongodb";
 import Product from "@/app/models/Product";
-import Chat from "@/app/models/Chat";
 import { OrderStatus, Prisma } from "@prisma/client";
 import mongoose from "mongoose";
 import { cookies } from "next/headers";
@@ -125,37 +123,6 @@ export default async function AdminDashboardPage() {
     productMap[p._id.toString()] = p.name;
   }
 
-  // Fetch chats and count product mentions in aiReply
-  const chats = await Chat.find({}, { aiReply: 1 }).lean() as { aiReply: string }[];
-  const totalChats = chats.length;
-  const mentionCount: Record<string, number> = {};
-  for (const chat of chats) {
-    const reply = chat.aiReply ?? "";
-    for (const name of allProductNames) {
-      if (reply.includes(name)) {
-        mentionCount[name] = (mentionCount[name] ?? 0) + 1;
-      }
-    }
-  }
-
-  // Build sold count map by product name for comparison
-  const soldByName: Record<string, number> = {};
-  for (const r of topSalesRaw) {
-    const name = productMap[r.product_id];
-    if (name) soldByName[name] = r._sum.quantity ?? 0;
-  }
-
-  // Top AI-recommended products (top 5, sorted by mention count)
-  const topRecommended = Object.entries(mentionCount)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-    .map(([name, count]) => ({
-      name,
-      count,
-      sold: soldByName[name] ?? 0,
-      opportunity: count > 0 && (soldByName[name] ?? 0) === 0,
-    }));
-
   // Build top selling list with relative percentage bar
   const maxSold = topSalesRaw[0]?._sum.quantity ?? 1;
   const topSelling = topSalesRaw.map((r) => ({
@@ -191,13 +158,6 @@ export default async function AdminDashboardPage() {
       subtitle: "Needs fulfillment",
       subtitleColor: "text-neutral-500",
       borderColor: "border-l-amber-500",
-    },
-    {
-      title: "CHATBOT CONVERSATIONS",
-      value: totalChats.toLocaleString(),
-      subtitle: "Total product inquiries",
-      subtitleColor: "text-blue-600",
-      borderColor: "border-l-blue-500",
     },
   ];
 
@@ -289,57 +249,6 @@ export default async function AdminDashboardPage() {
           <SalesChart data={salesChartData} />
         </div>
 
-        <ChatAnalysisWidget />
-
-        {/* Chat Analysis */}
-        <div className="mt-6 rounded-xl border border-gray-200 bg-white shadow-sm p-6">
-          <div className="flex items-center justify-between mb-1">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-gray-900">
-              AI Most Recommended Products
-            </h2>
-            <span className="text-xs text-gray-400">จาก {totalChats} บทสนทนา</span>
-          </div>
-          <p className="text-xs text-gray-400 mb-4">
-            สินค้าที่ AI แนะนำบ่อย แต่ยังขายน้อย = โอกาสทำโปรโมชั่น
-          </p>
-
-          {topRecommended.length === 0 ? (
-            <p className="text-xs text-gray-400">ยังไม่มีข้อมูลจาก chatbot</p>
-          ) : (
-            <div className="overflow-hidden rounded-lg border border-gray-200">
-              <table className="w-full text-xs">
-                <thead>
-                  <tr className="border-b border-gray-200 bg-gray-50">
-                    <th className="px-4 py-2.5 text-left font-semibold uppercase tracking-wider text-gray-500">สินค้า</th>
-                    <th className="px-4 py-2.5 text-center font-semibold uppercase tracking-wider text-gray-500">ถูกแนะนำ</th>
-                    <th className="px-4 py-2.5 text-center font-semibold uppercase tracking-wider text-gray-500">ขายได้</th>
-                    <th className="px-4 py-2.5 text-center font-semibold uppercase tracking-wider text-gray-500">สัญญาณ</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {topRecommended.map((item, i) => (
-                    <tr key={i} className="border-b border-gray-100 last:border-0 hover:bg-gray-50">
-                      <td className="px-4 py-3 font-medium text-gray-900">{item.name}</td>
-                      <td className="px-4 py-3 text-center text-blue-600 font-bold">{item.count}</td>
-                      <td className="px-4 py-3 text-center text-gray-600">{item.sold}</td>
-                      <td className="px-4 py-3 text-center">
-                        {item.opportunity ? (
-                          <span className="inline-block rounded-full border border-green-300 bg-green-50 px-2 py-0.5 text-[10px] font-semibold text-green-700">
-                            HIGH DEMAND
-                          </span>
-                        ) : (
-                          <span className="inline-block rounded-full border border-gray-200 bg-gray-50 px-2 py-0.5 text-[10px] text-gray-400">
-                            NORMAL
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
       </main>
     </div>
   );

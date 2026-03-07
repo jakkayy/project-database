@@ -1,6 +1,5 @@
 import Navbar from "@/app/components/Navbar";
 import FavoritesItem from "@/app/components/FavoritesItem";
-import ChatbotWidget from "@/app/components/ChatbotWidget";
 import FavClient from "./FavClient";
 import { cookies } from "next/headers";
 import { requireAuth } from "lib/auth";
@@ -65,15 +64,12 @@ export default async function FavoritesPage() {
   );
 
   return (
-    <>
-      <div className="min-h-screen bg-gray-50">
-        <Navbar />
-        <div className="mx-auto max-w-7xl px-10 py-10">
-          <h1 className="mb-8 text-3xl font-extrabold text-gray-900">Wishlist</h1>
-          <FavClient initialItems={itemsWithProduct} />
-        </div>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <div className="mx-auto max-w-7xl px-10 py-10">
+        <h1 className="mb-8 text-3xl font-extrabold text-gray-900">Wishlist</h1>
+        <FavClient initialItems={itemsWithProduct} />
       </div>
-      <ChatbotWidget />
-    </>
+    </div>
   );
 }

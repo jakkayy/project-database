@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { getAllProduct, getFav } from "lib/apiServices/user.service";
 
-const CATEGORIES = ["ALL", "RUNNING", "TRAINING", "LIFESTYLE"];
+const CATEGORIES = ["ALL", "CLOTHES", "SHOES", "ACCESSORIES", "OTHER"];
 
 export default function NewArrivals() {
   const [products, setProducts] = useState<any[]>([]);
