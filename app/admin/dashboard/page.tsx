@@ -177,16 +177,16 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Stat cards */}
-        <div className="grid grid-cols-3 gap-5">
+        <div className="grid grid-cols-2 gap-5">
           {statCards.map((card, i) => (
             <div
               key={i}
-              className={`rounded-xl border border-gray-200 border-l-4 ${card.borderColor} bg-white shadow-sm p-5`}
+              className={`rounded-xl border border-gray-200 border-l-4 ${card.borderColor} bg-white shadow-sm p-6`}
             >
               <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
                 {card.title}
               </p>
-              <p className="mt-3 text-3xl font-black text-gray-900">
+              <p className="mt-3 text-4xl font-black text-gray-900">
                 {card.value}
               </p>
               <p className={`mt-1.5 text-xs font-medium ${card.subtitleColor}`}>
@@ -196,9 +196,8 @@ export default async function AdminDashboardPage() {
           ))}
         </div>
 
-        {/* Quick stats row */}
+        {/* Top Products + Inventory Alerts */}
         <div className="mt-6 grid grid-cols-3 items-start gap-5">
-          {/* Top Products */}
           <div className="col-span-2 rounded-xl border border-gray-200 bg-white shadow-sm p-6">
             <h2 className="text-sm font-bold uppercase tracking-wider text-gray-900">
               Top Selling Products
@@ -233,8 +232,6 @@ export default async function AdminDashboardPage() {
               )}
             </div>
           </div>
-
-          {/* Inventory Alerts */}
           <InventoryAlerts alerts={inventoryAlerts} />
         </div>
 

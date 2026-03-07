@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import AdminNav from "../../components/AdminNav";
-import { getAdminInventory, addProduct, updateStock } from "lib/apiServices/admin.service";
+import { getAdminInventory, addProduct } from "lib/apiServices/admin.service";
 import { toast } from "sonner";
 
 export default function AdminProductPage() {
@@ -31,14 +31,6 @@ export default function AdminProductPage() {
   };
 
   useEffect(() => { fetchInventory(); }, []);
-
-  const handleUpdateStock = async (variantId: number, currentStock: number, amount: number) => {
-    const newStock = Math.max(0, currentStock + amount);
-    try {
-      await updateStock({ variantId, newStock });
-      await fetchInventory();
-    } catch (err) { console.error(err); }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,11 +114,7 @@ export default function AdminProductPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <button onClick={() => variant && handleUpdateStock(variant.id, variant.stock, -1)} className="w-5 h-5 flex items-center justify-center border border-gray-200 rounded text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all">-</button>
-                        <span className="text-green-600 font-mono font-bold text-sm min-w-[60px] text-center">{stock} Units</span>
-                        <button onClick={() => variant && handleUpdateStock(variant.id, variant.stock, 1)} className="w-5 h-5 flex items-center justify-center border border-gray-200 rounded text-gray-400 hover:bg-green-50 hover:text-green-600 transition-all">+</button>
-                      </div>
+                      <span className="text-green-600 font-mono font-bold text-sm">{stock} Units</span>
                     </td>
                     <td className="px-6 py-4">
                       <span className="text-green-600 font-bold text-sm">฿{p.basePrice.toLocaleString()}</span>
