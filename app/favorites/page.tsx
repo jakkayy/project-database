@@ -1,11 +1,10 @@
 import ClientNavbar from "@/app/components/ClientNavbar";
-import FavoritesItem from "@/app/components/FavoritesItem";
 import FavClient from "./FavClient";
 import { cookies } from "next/headers";
 import { requireAuth } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { connectMongo } from "lib/mongodb";
-import Product from "@/app/models/Product"; // โมเดล MongoDB ของคุณ
+import Product from "@/app/models/Product";
 import Link from "next/link";
 
 export default async function FavoritesPage() {
@@ -76,6 +75,7 @@ export default async function FavoritesPage() {
           product_id: item.product_id,
           product: product
             ? {
+                _id: String(product._id),
                 name: product.name,
                 slug: product.slug,
                 images: product.images,

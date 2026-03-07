@@ -7,12 +7,12 @@ import Link from "next/link";
 import {
   addCart,
   addFav,
+  deleteFav,
   getCurrentUser,
+  getFav,
   getProductBySlug,
   addReview,
   deleteReview,
-  getFav,
-  deleteFav,
 } from "lib/apiServices/user.service";
 import { toast } from "sonner";
 
@@ -21,11 +21,11 @@ interface Variant {
   sizes: { size: string; stock: number }[];
 }
 
-
 interface FavoriteItem {
   favItem_id: number;
   product_id: string;
 }
+
 
 interface Product {
   _id: string;
@@ -67,18 +67,33 @@ export default function ProductDetailPage() {
   const [submittingReview, setSubmittingReview] = useState(false);
   const [showAllComments, setShowAllComments] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-  const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
-  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [isFav, setIsFav] = useState(false);
   const [favItemId, setFavItemId] = useState<number | null>(null);
+  const [favLoading, setFavLoading] = useState(false);
+
+  const syncFavoriteState = async (productId: string) => {
+    try {
+      const favItems = (await getFav()) as FavoriteItem[];
+      const matched = (favItems ?? []).find((item) => item.product_id === productId);
+      setIsFav(Boolean(matched));
+      setFavItemId(matched?.favItem_id ?? null);
+    } catch {
+      setIsFav(false);
+      setFavItemId(null);
+    }
+  };
 
   useEffect(() => {
     async function fetchProduct() {
       try {
         const data = await getProductBySlug(slug);
         if (!data.averageRating && data.reviews && data.reviews.length > 0) {
-          data.averageRating = data.reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / data.reviews.length;
+          data.averageRating =
+            data.reviews.reduce((sum: number, review: { rating: number }) => sum + review.rating, 0) /
+            data.reviews.length;
         }
         setProduct(data);
+        await syncFavoriteState(data._id);
         if (data.variants && data.variants.length > 0) {
           setSelectedColor(data.variants[0].color);
         }
@@ -97,77 +112,60 @@ export default function ProductDetailPage() {
       try {
         const user = await getCurrentUser();
         setCurrentUserId(user._id);
-        
-        // Fetch user's favorites
-        try {
-          const favItems = await getFav();
-          setFavorites(favItems);
-        } catch (error) {
-          console.log("No favorites or user not logged in");
-          setFavorites([]);
-        }
       } catch {
         setCurrentUserId(null);
-        setFavorites([]);
       }
     }
     fetchUser();
   }, []);
 
-  // Check if current product is in wishlist
-  useEffect(() => {
-    if (product && favorites.length > 0) {
-      const favoriteItem = favorites.find(fav => fav.product_id === product._id);
-      setIsInWishlist(!!favoriteItem);
-      setFavItemId(favoriteItem?.favItem_id || null);
-    } else {
-      setIsInWishlist(false);
-      setFavItemId(null);
-    }
-  }, [product, favorites]);
-
   const handleAddToFav = async () => {
-    if (!product) return;
+    if (!product || favLoading) return;
 
+    setFavLoading(true);
     try {
-      if (isInWishlist && favItemId) {
-        // Remove from wishlist
-        await deleteFav(favItemId);
-        toast.error("Removed from wishlist", {
-          description: product.name,
-          icon: "♡",
-        });
-        // Update favorites list
-        setFavorites(prev => prev.filter(fav => fav.favItem_id !== favItemId));
-      } else {
-        // Add to wishlist
-        await addFav({
-          product_id: product._id,
-        });
-
-        toast.success("Added to wishlist", {
-          description: product.name,
-          icon: "♡",
-        });
-        // Refresh favorites list
-        try {
-          const favItems = await getFav();
-          setFavorites(favItems);
-        } catch (error) {
-          console.log("Failed to refresh favorites");
+      if (isFav) {
+        let targetFavItemId = favItemId;
+        if (targetFavItemId === null) {
+          const favItems = (await getFav()) as FavoriteItem[];
+          const matched = (favItems ?? []).find((item) => item.product_id === product._id);
+          targetFavItemId = matched?.favItem_id ?? null;
         }
+
+        if (targetFavItemId !== null) {
+          await deleteFav(targetFavItemId);
+        }
+
+        setIsFav(false);
+        setFavItemId(null);
+        toast("Removed from wishlist", {
+          description: product.name,
+        });
+        return;
       }
-    } catch (error: any) {
+
+      const res = await addFav({ product_id: product._id });
+      setIsFav(true);
+      setFavItemId(res?.data?.favItem_id ?? null);
+
+      toast.success("Added to wishlist", {
+        description: product.name,
+        icon: "♡",
+      });
+    } catch (error: unknown) {
       console.error(error);
-      if (error?.status === 401) {
+      const status = (error as { status?: number })?.status;
+      if (status === 401) {
         toast.error("Please sign in first", {
           description: "Sign in to save your wishlist",
         });
         return;
       }
       toast.error("An error occurred", {
-        description: "Could not update wishlist. Please try again",
+        description: "Could not add to wishlist. Please try again",
       });
+    } finally {
+      setFavLoading(false);
     }
   };
 
@@ -208,20 +206,15 @@ export default function ProductDetailPage() {
     try {
       const response = await deleteReview({ productId: product._id, reviewId });
       toast.success("Review deleted", { description: "Your review has been removed" });
-      if (response.product) {
-        // Preserve all original product data and only update reviews-related fields
-        setProduct(prev => prev ? {
-          ...prev,
-          reviews: response.product.reviews,
-          averageRating: response.product.averageRating
-        } : null);
-      }
-    } catch (error: any) {
+      if (response.product) setProduct(response.product);
+    } catch (error: unknown) {
       console.error(error);
-      if (error.status === 401) {
+      const status = (error as { status?: number })?.status;
+      const message = (error as { message?: string })?.message;
+      if (status === 401) {
         toast.error("Please sign in", { description: "You must be signed in to delete a review" });
       } else {
-        toast.error("An error occurred", { description: error.message || "Could not delete review. Please try again" });
+        toast.error("An error occurred", { description: message || "Could not delete review. Please try again" });
       }
     }
   };
@@ -243,18 +236,12 @@ export default function ProductDetailPage() {
       toast.success("Review submitted", { description: "Thank you for your feedback" });
       setRating(0);
       setComment("");
-      if (response.product) {
-        // Preserve all original product data and only update reviews-related fields
-        setProduct(prev => prev ? {
-          ...prev,
-          reviews: response.product.reviews,
-          averageRating: response.product.averageRating
-        } : null);
-      }
-    } catch (error: any) {
+      if (response.product) setProduct(response.product);
+    } catch (error: unknown) {
       console.error(error);
+      const message = (error as { message?: string })?.message;
       toast.error("An error occurred", {
-        description: error.message || "Could not submit review. Please try again",
+        description: message || "Could not submit review. Please try again",
       });
     } finally {
       setSubmittingReview(false);
@@ -475,18 +462,19 @@ export default function ProductDetailPage() {
             {/* Wishlist button */}
             <button 
               onClick={handleAddToFav}
-              className={`mt-3 flex w-full items-center justify-center gap-2 border py-4 text-xs font-black uppercase tracking-widest rounded-xl transition-colors ${
-                isInWishlist 
-                  ? "border-red-500 bg-red-50 text-red-600 hover:border-red-600 hover:bg-red-100" 
+              disabled={favLoading}
+              className={`mt-3 flex w-full items-center justify-center gap-2 border py-4 text-xs font-black uppercase tracking-widest rounded-xl transition-colors disabled:cursor-not-allowed disabled:opacity-70 ${
+                isFav
+                  ? "border-green-500 bg-green-500 text-white hover:opacity-90"
                   : "border-gray-200 text-gray-600 hover:border-green-500 hover:text-green-500"
               }`}>
-              {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+              {isFav ? "In Wishlist" : "Add to Wishlist"}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                fill={isInWishlist ? "#ef4444" : "none"}
+                fill={isFav ? "currentColor" : "none"}
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
-                stroke={isInWishlist ? "#ef4444" : "currentColor"}
+                stroke="currentColor"
                 className="h-5 w-5"
               >
                 <path
