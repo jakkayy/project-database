@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface Address {
   address_id: number;
@@ -36,7 +37,14 @@ export default function AddressSelector({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    
+    // Only allow numbers for phone and postal code
+    if (name === "phone" || name === "postalCode") {
+      const numericValue = value.replace(/\D/g, ""); // Remove non-numeric characters
+      setFormData(prev => ({ ...prev, [name]: type === "checkbox" ? checked : numericValue }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,6 +57,7 @@ export default function AddressSelector({
     if (res.ok) {
       setShowModal(false);
       refreshAddresses();
+      toast.success("Address added successfully");
       setFormData({ 
         firstname: "", lastname: "", addressLine: "", apartment: "",
         city: "", province: "", postalCode: "", country: "Thailand", phone: "", isDefault: false 
@@ -60,7 +69,10 @@ export default function AddressSelector({
     e.stopPropagation(); 
     if (confirm("Are you sure you want to remove this address?")) {
       const res = await fetch(`/api/address?addressId=${addressId}`, { method: "DELETE" });
-      if (res.ok) refreshAddresses(); 
+      if (res.ok) {
+        refreshAddresses();
+        toast.error("Address deleted successfully");
+      }
     }
   };
 
@@ -117,10 +129,10 @@ export default function AddressSelector({
                 <input name="province" value={formData.province} onChange={handleChange} placeholder="Province*" required className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-900 focus:border-green-500 outline-none" />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <input name="postalCode" value={formData.postalCode} onChange={handleChange} placeholder="Postal Code*" required className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-900 focus:border-green-500 outline-none" />
+                <input name="postalCode" value={formData.postalCode} onChange={handleChange} placeholder="Postal Code (Numbers only)*" required className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-900 focus:border-green-500 outline-none" />
                 <input name="country" value={formData.country} onChange={handleChange} placeholder="Country*" required className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-900 focus:border-green-500 outline-none" />
               </div>
-              <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Phone*" required className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-900 focus:border-green-500 outline-none" />
+              <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Phone (Numbers only)*" required className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-900 focus:border-green-500 outline-none" />
               <div className="flex justify-end gap-4 mt-6">
                 <button type="button" onClick={() => setShowModal(false)} className="text-gray-500 text-xs uppercase hover:text-gray-900">Cancel</button>
                 <button type="submit" className="bg-green-500 rounded-lg px-8 py-2.5 text-xs font-black text-white uppercase hover:opacity-90">Save</button>

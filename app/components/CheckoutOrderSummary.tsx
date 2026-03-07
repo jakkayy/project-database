@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useState } from "react";
 
 interface Address {
   address_id: number;
@@ -30,6 +31,7 @@ export default function CheckoutOrderSummary({
   currentBalance,
 }: CheckoutOrderSummaryProps) {
   const afterBalance = currentBalance - total
+  const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
   
   return (
     <div className="space-y-4">
@@ -95,8 +97,23 @@ export default function CheckoutOrderSummary({
         {items.map((item, index) => (
           <div key={index} className="flex overflow-hidden rounded-xl border border-gray-200 bg-white hover:border-gray-400 transition-colors">
             {/* Image */}
-            <div className="h-28 w-28 shrink-0 overflow-hidden bg-gray-100">
-              <Image src={item.product?.images?.[0]} alt={item.product?.name} width={112} height={112} className="h-full w-full object-cover" />
+            <div className="h-30 w-30 shrink-0 overflow-hidden bg-gray-100">
+              {item.product?.images?.[0] && !imageErrors.has(index) ? (
+                <Image 
+                  src={item.product.images[0]} 
+                  alt={item.product?.name || "Product image"} 
+                  width={120} 
+                  height={120} 
+                  className="h-full w-full object-cover" 
+                  onError={() => {
+                    setImageErrors(prev => new Set(prev).add(index));
+                  }}
+                />
+              ) : (
+                <div className="h-full w-full flex items-center justify-center text-gray-400 text-xs">
+                  NO IMAGE
+                </div>
+              )}
             </div>
             {/* Info */}
             <div className="flex flex-1 flex-col justify-between p-4">

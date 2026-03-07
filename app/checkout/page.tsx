@@ -91,7 +91,9 @@ export default function CheckoutPage() {
       toast.success("Payment successful!", {
         description: "Your order has been placed",
       });
-      window.location.href = "/history";
+      setTimeout(() => {
+        window.location.href = "/history";
+      }, 800);
     } catch (error) {
       console.error("Payment error:", error);
     }

@@ -1,4 +1,4 @@
-import Navbar from "@/app/components/Navbar";
+import ClientNavbar from "@/app/components/ClientNavbar";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/jwt";
 import { prisma } from "@/lib/prisma";
@@ -48,8 +48,30 @@ export default async function ProfilePage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
+    <div className="flex min-h-screen flex-col bg-gray-50">
+      <ClientNavbar />
+
+      {/* Sub Navigation */}
+      <div className="flex items-center justify-between border-b border-gray-200 bg-white px-10 py-4">
+        <h1 className="text-2xl font-black uppercase tracking-tight text-gray-900">Profile</h1>
+        <div className="flex gap-8 text-sm text-gray-400">
+          <Link
+            href="/profile"
+            className="border-b-2 border-green-500 pb-3 -mb-4 font-semibold text-gray-900"
+          >
+            Profile
+          </Link>
+          <Link href="/history" className="transition-colors hover:text-gray-900">
+            Orders
+          </Link>
+          <Link href="/favorites" className="transition-colors hover:text-gray-900">
+            Wishlist
+          </Link>
+        </div>
+      </div>
+
+      {/* Profile Content */}
+      <div className="flex-1 px-10 py-8">
 
       {/* Profile Info */}
       <div className="mx-auto max-w-5xl px-10 py-10">
@@ -85,6 +107,7 @@ export default async function ProfilePage() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

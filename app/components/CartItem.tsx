@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { deleteCart, updateCartItem } from "lib/apiServices/user.service";
+import { toast } from "sonner";
 
 interface CartItemProps {
   cartItem_id: number;
@@ -95,6 +96,9 @@ export default function CartItem({
                   try {
                     if (qty === 1) {
                       await deleteCart(cartItem_id);
+                      toast.error("Item removed from cart", {
+                        description: name,
+                      });
                       onRemove(cartItem_id);
                       return;
                     }
@@ -143,6 +147,9 @@ export default function CartItem({
               onClick={async () => {
                 try {
                   await deleteCart(cartItem_id);
+                  toast.error("Item removed from cart", {
+                    description: name,
+                  });
                   onRemove(cartItem_id);
                 } catch (err) {
                   console.error("Failed to remove item", err);

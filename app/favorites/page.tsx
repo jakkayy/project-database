@@ -1,4 +1,4 @@
-import Navbar from "@/app/components/Navbar";
+import ClientNavbar from "@/app/components/ClientNavbar";
 import FavoritesItem from "@/app/components/FavoritesItem";
 import FavClient from "./FavClient";
 import { cookies } from "next/headers";
@@ -6,6 +6,7 @@ import { requireAuth } from "lib/auth";
 import { prisma } from "lib/prisma";
 import { connectMongo } from "lib/mongodb";
 import Product from "@/app/models/Product"; // โมเดล MongoDB ของคุณ
+import Link from "next/link";
 
 export default async function FavoritesPage() {
   const token = (await cookies()).get("access_token")?.value;
@@ -19,9 +20,32 @@ export default async function FavoritesPage() {
 
   if (!fav || fav.items.length === 0) {
     return (
-      <div className="min-h-screen bg-white">
-        <Navbar />
-        <div className="p-10 text-center text-gray-500">Your wishlist is empty</div>
+      <div className="flex min-h-screen flex-col bg-gray-50">
+        <ClientNavbar />
+
+        {/* Sub Navigation */}
+        <div className="flex items-center justify-between border-b border-gray-200 bg-white px-10 py-4">
+          <h1 className="text-2xl font-black uppercase tracking-tight text-gray-900">Wishlist</h1>
+          <div className="flex gap-8 text-sm text-gray-400">
+            <Link href="/profile" className="transition-colors hover:text-gray-900">
+              Profile
+            </Link>
+            <Link href="/history" className="transition-colors hover:text-gray-900">
+              Orders
+            </Link>
+            <Link
+              href="/favorites"
+              className="border-b-2 border-green-500 pb-3 -mb-4 font-semibold text-gray-900"
+            >
+              Wishlist
+            </Link>
+          </div>
+        </div>
+
+        {/* Empty State Content */}
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center text-gray-500">Your wishlist is empty</div>
+        </div>
       </div>
     );
   }
@@ -64,11 +88,33 @@ export default async function FavoritesPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <div className="mx-auto max-w-7xl px-10 py-10">
-        <h1 className="mb-8 text-3xl font-extrabold text-gray-900">Wishlist</h1>
-        <FavClient initialItems={itemsWithProduct} />
+    <div className="flex min-h-screen flex-col bg-gray-50">
+      <ClientNavbar />
+
+      {/* Sub Navigation */}
+      <div className="flex items-center justify-between border-b border-gray-200 bg-white px-10 py-4">
+        <h1 className="text-2xl font-black uppercase tracking-tight text-gray-900">Wishlist</h1>
+        <div className="flex gap-8 text-sm text-gray-400">
+          <Link href="/profile" className="transition-colors hover:text-gray-900">
+            Profile
+          </Link>
+          <Link href="/history" className="transition-colors hover:text-gray-900">
+            Orders
+          </Link>
+          <Link
+            href="/favorites"
+            className="border-b-2 border-green-500 pb-3 -mb-4 font-semibold text-gray-900"
+          >
+            Wishlist
+          </Link>
+        </div>
+      </div>
+
+      {/* Wishlist Content */}
+      <div className="flex-1 px-10 py-8">
+        <div className="mx-auto max-w-7xl">
+          <FavClient initialItems={itemsWithProduct} />
+        </div>
       </div>
     </div>
   );
