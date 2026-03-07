@@ -11,6 +11,8 @@ import {
   getProductBySlug,
   addReview,
   deleteReview,
+  getFav,
+  deleteFav,
 } from "lib/apiServices/user.service";
 import { toast } from "sonner";
 
@@ -19,6 +21,11 @@ interface Variant {
   sizes: { size: string; stock: number }[];
 }
 
+
+interface FavoriteItem {
+  favItem_id: number;
+  product_id: string;
+}
 
 interface Product {
   _id: string;
@@ -60,6 +67,9 @@ export default function ProductDetailPage() {
   const [submittingReview, setSubmittingReview] = useState(false);
   const [showAllComments, setShowAllComments] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
+  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [favItemId, setFavItemId] = useState<number | null>(null);
 
   useEffect(() => {
     async function fetchProduct() {
@@ -87,25 +97,66 @@ export default function ProductDetailPage() {
       try {
         const user = await getCurrentUser();
         setCurrentUserId(user._id);
+        
+        // Fetch user's favorites
+        try {
+          const favItems = await getFav();
+          setFavorites(favItems);
+        } catch (error) {
+          console.log("No favorites or user not logged in");
+          setFavorites([]);
+        }
       } catch {
         setCurrentUserId(null);
+        setFavorites([]);
       }
     }
     fetchUser();
   }, []);
 
+  // Check if current product is in wishlist
+  useEffect(() => {
+    if (product && favorites.length > 0) {
+      const favoriteItem = favorites.find(fav => fav.product_id === product._id);
+      setIsInWishlist(!!favoriteItem);
+      setFavItemId(favoriteItem?.favItem_id || null);
+    } else {
+      setIsInWishlist(false);
+      setFavItemId(null);
+    }
+  }, [product, favorites]);
+
   const handleAddToFav = async () => {
     if (!product) return;
 
     try {
-      await addFav({
-        product_id: product._id,
-      });
+      if (isInWishlist && favItemId) {
+        // Remove from wishlist
+        await deleteFav(favItemId);
+        toast.error("Removed from wishlist", {
+          description: product.name,
+          icon: "♡",
+        });
+        // Update favorites list
+        setFavorites(prev => prev.filter(fav => fav.favItem_id !== favItemId));
+      } else {
+        // Add to wishlist
+        await addFav({
+          product_id: product._id,
+        });
 
-      toast.success("Added to wishlist", {
-        description: product.name,
-        icon: "♡",
-      });
+        toast.success("Added to wishlist", {
+          description: product.name,
+          icon: "♡",
+        });
+        // Refresh favorites list
+        try {
+          const favItems = await getFav();
+          setFavorites(favItems);
+        } catch (error) {
+          console.log("Failed to refresh favorites");
+        }
+      }
     } catch (error: any) {
       console.error(error);
       if (error?.status === 401) {
@@ -115,7 +166,7 @@ export default function ProductDetailPage() {
         return;
       }
       toast.error("An error occurred", {
-        description: "Could not add to wishlist. Please try again",
+        description: "Could not update wishlist. Please try again",
       });
     }
   };
@@ -157,7 +208,14 @@ export default function ProductDetailPage() {
     try {
       const response = await deleteReview({ productId: product._id, reviewId });
       toast.success("Review deleted", { description: "Your review has been removed" });
-      if (response.product) setProduct(response.product);
+      if (response.product) {
+        // Preserve all original product data and only update reviews-related fields
+        setProduct(prev => prev ? {
+          ...prev,
+          reviews: response.product.reviews,
+          averageRating: response.product.averageRating
+        } : null);
+      }
     } catch (error: any) {
       console.error(error);
       if (error.status === 401) {
@@ -185,7 +243,14 @@ export default function ProductDetailPage() {
       toast.success("Review submitted", { description: "Thank you for your feedback" });
       setRating(0);
       setComment("");
-      if (response.product) setProduct(response.product);
+      if (response.product) {
+        // Preserve all original product data and only update reviews-related fields
+        setProduct(prev => prev ? {
+          ...prev,
+          reviews: response.product.reviews,
+          averageRating: response.product.averageRating
+        } : null);
+      }
     } catch (error: any) {
       console.error(error);
       toast.error("An error occurred", {
@@ -410,14 +475,18 @@ export default function ProductDetailPage() {
             {/* Wishlist button */}
             <button 
               onClick={handleAddToFav}
-              className="mt-3 flex w-full items-center justify-center gap-2 border border-gray-200 py-4 text-xs font-black uppercase tracking-widest text-gray-600 rounded-xl transition-colors hover:border-green-500 hover:text-green-500">
-              Add to Wishlist
+              className={`mt-3 flex w-full items-center justify-center gap-2 border py-4 text-xs font-black uppercase tracking-widest rounded-xl transition-colors ${
+                isInWishlist 
+                  ? "border-red-500 bg-red-50 text-red-600 hover:border-red-600 hover:bg-red-100" 
+                  : "border-gray-200 text-gray-600 hover:border-green-500 hover:text-green-500"
+              }`}>
+              {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                fill="none"
+                fill={isInWishlist ? "#ef4444" : "none"}
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
-                stroke="currentColor"
+                stroke={isInWishlist ? "#ef4444" : "currentColor"}
                 className="h-5 w-5"
               >
                 <path
