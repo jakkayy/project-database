@@ -19,18 +19,20 @@ export async function POST(req: Request) {
             create: { user_id: user.user_id },
         });
 
-        const exiting = await prisma.cartItem.findFirst({
+        const existing = await prisma.cartItem.findFirst({
             where: {
                 cart_id: cart.cart_id,
                 product_id,
+                size,
+                color,
             },
         });
 
-        if (exiting) {
+        if (existing) {
             const updated = await prisma.cartItem.update({
-                where: { cartItem_id: exiting.cartItem_id},
+                where: { cartItem_id: existing.cartItem_id},
                 data: {
-                    quantity: exiting.quantity + (quantity ?? 1),
+                    quantity: existing.quantity + (quantity ?? 1),
                 },
             });
 

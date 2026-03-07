@@ -45,9 +45,13 @@ export async function GET() {
       inStockItems.map(async (item) => {
         const product = await Product.findById(item.product_id);
 
+        console.log(`DEBUG: Cart API color handling - item.color: ${item.color}, product.color: ${product?.color}`);
+
         return {
           cartItem_id: item.cartItem_id,
-          test_size: item.size,
+          product_id: item.product_id,
+          size: item.size,
+          color: item.color || "Default",
           price: item.price,
           quantity: item.quantity,
           product: product
@@ -56,7 +60,6 @@ export async function GET() {
                 images: product.images,
                 category: product.category,
                 basePrice: product.basePrice,
-                color: product.color,
               }
             : null,
         };
@@ -67,6 +70,11 @@ export async function GET() {
       (sum, item) => sum + Number(item.price) * item.quantity,
       0
     );
+
+    console.log("DEBUG: Final API response:", {
+      items: itemsWithProduct,
+      total,
+    });
 
     return NextResponse.json({
       items: itemsWithProduct,

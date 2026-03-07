@@ -44,13 +44,13 @@ export default async function CartPage() {
         quantity: item.quantity,
         price: Number(item.price), 
         size: item.size,
+        color: item.color,
         createdAt: item.createdAt,
         product: product
           ? {
               name: product.name,
               images: product.images?.[0],
               category: product.category,
-              color: product.color,
               basePrice: product.basePrice,
             }
           : null,

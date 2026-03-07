@@ -49,7 +49,7 @@ export default function CartClient({ items }: Props) {
               image={item.product?.images}
               name={item.product?.name}
               description={item.product?.category}
-              color={item.product?.color}
+              color={item.color}
               size={item.size}
               price={item.price.toLocaleString("th-TH", {
                 style: "currency",

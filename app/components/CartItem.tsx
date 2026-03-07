@@ -40,8 +40,6 @@ export default function CartItem({
     setQty(initialQty);
   }, [initialQty]);
 
-  console.log("CartItem image:", image);
-
   return (
     <div className="border-b border-gray-200 py-6">
       <div className="flex gap-5">

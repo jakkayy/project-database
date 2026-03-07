@@ -67,6 +67,7 @@ export async function GET(request: Request) {
         quantity: item.quantity,
         price: Number(item.price),
         size: item.size,
+        color: item.color,
         product: product
           ? {
               name: product.name,

@@ -118,13 +118,13 @@ export default function CheckoutOrderSummary({
             {/* Info */}
             <div className="flex flex-1 flex-col justify-between p-4">
               <div>
-                <p className="text-sm font-black uppercase tracking-wide text-gray-900 leading-tight">{item.product?.name}</p>
-                <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-widest text-gray-400">
-                  {item.product?.category}{item.color ? ` · ${item.color}` : ""}{item.size ? ` · SIZE ${item.size}` : ""}
+                <p className="text-sm font-bold text-gray-900">{item.product?.name}</p>
+                <p className="mt-0.5 text-xs uppercase tracking-wider text-gray-400">
+                  {item.product?.category}{item.color ? ` / ${item.color}` : ""}{item.size ? ` / SIZE ${item.size}` : ""}
                 </p>
-                <p className="mt-1 text-[11px] text-gray-400">Qty: {item.quantity}</p>
+                <p className="mt-1 text-xs text-gray-400">Qty: {item.quantity}</p>
               </div>
-              <p className="mt-2 text-sm font-black text-green-600">
+              <p className="mt-2 text-sm font-bold text-green-600">
                 {Number(item.price * item.quantity).toLocaleString("th-TH", { style: "currency", currency: "THB" })}
               </p>
             </div>
