@@ -1,5 +1,4 @@
 import Navbar from "@/app/components/Navbar";
-import FavoritesItem from "@/app/components/FavoritesItem";
 import FavClient from "./FavClient";
 import { cookies } from "next/headers";
 import { requireAuth } from "lib/auth";
@@ -52,6 +51,7 @@ export default async function FavoritesPage() {
           product_id: item.product_id,
           product: product
             ? {
+                _id: String(product._id),
                 name: product.name,
                 slug: product.slug,
                 images: product.images,

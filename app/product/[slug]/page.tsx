@@ -7,7 +7,9 @@ import Link from "next/link";
 import {
   addCart,
   addFav,
+  deleteFav,
   getCurrentUser,
+  getFav,
   getProductBySlug,
   addReview,
   deleteReview,
@@ -17,6 +19,11 @@ import { toast } from "sonner";
 interface Variant {
   color: string;
   sizes: { size: string; stock: number }[];
+}
+
+interface FavoriteItem {
+  favItem_id: number;
+  product_id: string;
 }
 
 
@@ -60,15 +67,33 @@ export default function ProductDetailPage() {
   const [submittingReview, setSubmittingReview] = useState(false);
   const [showAllComments, setShowAllComments] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [isFav, setIsFav] = useState(false);
+  const [favItemId, setFavItemId] = useState<number | null>(null);
+  const [favLoading, setFavLoading] = useState(false);
+
+  const syncFavoriteState = async (productId: string) => {
+    try {
+      const favItems = (await getFav()) as FavoriteItem[];
+      const matched = (favItems ?? []).find((item) => item.product_id === productId);
+      setIsFav(Boolean(matched));
+      setFavItemId(matched?.favItem_id ?? null);
+    } catch {
+      setIsFav(false);
+      setFavItemId(null);
+    }
+  };
 
   useEffect(() => {
     async function fetchProduct() {
       try {
         const data = await getProductBySlug(slug);
         if (!data.averageRating && data.reviews && data.reviews.length > 0) {
-          data.averageRating = data.reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / data.reviews.length;
+          data.averageRating =
+            data.reviews.reduce((sum: number, review: { rating: number }) => sum + review.rating, 0) /
+            data.reviews.length;
         }
         setProduct(data);
+        await syncFavoriteState(data._id);
         if (data.variants && data.variants.length > 0) {
           setSelectedColor(data.variants[0].color);
         }
@@ -95,20 +120,42 @@ export default function ProductDetailPage() {
   }, []);
 
   const handleAddToFav = async () => {
-    if (!product) return;
+    if (!product || favLoading) return;
 
+    setFavLoading(true);
     try {
-      await addFav({
-        product_id: product._id,
-      });
+      if (isFav) {
+        let targetFavItemId = favItemId;
+        if (targetFavItemId === null) {
+          const favItems = (await getFav()) as FavoriteItem[];
+          const matched = (favItems ?? []).find((item) => item.product_id === product._id);
+          targetFavItemId = matched?.favItem_id ?? null;
+        }
+
+        if (targetFavItemId !== null) {
+          await deleteFav(targetFavItemId);
+        }
+
+        setIsFav(false);
+        setFavItemId(null);
+        toast("Removed from wishlist", {
+          description: product.name,
+        });
+        return;
+      }
+
+      const res = await addFav({ product_id: product._id });
+      setIsFav(true);
+      setFavItemId(res?.data?.favItem_id ?? null);
 
       toast.success("Added to wishlist", {
         description: product.name,
         icon: "♡",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
-      if (error?.status === 401) {
+      const status = (error as { status?: number })?.status;
+      if (status === 401) {
         toast.error("Please sign in first", {
           description: "Sign in to save your wishlist",
         });
@@ -117,6 +164,8 @@ export default function ProductDetailPage() {
       toast.error("An error occurred", {
         description: "Could not add to wishlist. Please try again",
       });
+    } finally {
+      setFavLoading(false);
     }
   };
 
@@ -158,12 +207,14 @@ export default function ProductDetailPage() {
       const response = await deleteReview({ productId: product._id, reviewId });
       toast.success("Review deleted", { description: "Your review has been removed" });
       if (response.product) setProduct(response.product);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
-      if (error.status === 401) {
+      const status = (error as { status?: number })?.status;
+      const message = (error as { message?: string })?.message;
+      if (status === 401) {
         toast.error("Please sign in", { description: "You must be signed in to delete a review" });
       } else {
-        toast.error("An error occurred", { description: error.message || "Could not delete review. Please try again" });
+        toast.error("An error occurred", { description: message || "Could not delete review. Please try again" });
       }
     }
   };
@@ -186,10 +237,11 @@ export default function ProductDetailPage() {
       setRating(0);
       setComment("");
       if (response.product) setProduct(response.product);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
+      const message = (error as { message?: string })?.message;
       toast.error("An error occurred", {
-        description: error.message || "Could not submit review. Please try again",
+        description: message || "Could not submit review. Please try again",
       });
     } finally {
       setSubmittingReview(false);
@@ -410,11 +462,16 @@ export default function ProductDetailPage() {
             {/* Wishlist button */}
             <button 
               onClick={handleAddToFav}
-              className="mt-3 flex w-full items-center justify-center gap-2 border border-gray-200 py-4 text-xs font-black uppercase tracking-widest text-gray-600 rounded-xl transition-colors hover:border-green-500 hover:text-green-500">
-              Add to Wishlist
+              disabled={favLoading}
+              className={`mt-3 flex w-full items-center justify-center gap-2 border py-4 text-xs font-black uppercase tracking-widest rounded-xl transition-colors disabled:cursor-not-allowed disabled:opacity-70 ${
+                isFav
+                  ? "border-green-500 bg-green-500 text-white hover:opacity-90"
+                  : "border-gray-200 text-gray-600 hover:border-green-500 hover:text-green-500"
+              }`}>
+              {isFav ? "In Wishlist" : "Add to Wishlist"}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                fill="none"
+                fill={isFav ? "currentColor" : "none"}
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
