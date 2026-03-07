@@ -131,7 +131,7 @@ export default function SearchBox() {
                         width={56}
                         height={56}
                         className="h-full w-full object-cover"
-                        unoptimized={img.startsWith("http") ? false : true}
+                        unoptimized={true}
                       />
                     </div>
                     <div className="min-w-0 flex-1">
