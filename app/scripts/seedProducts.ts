@@ -189,12 +189,22 @@ async function seed() {
     // =========================
 
     for (const product of products) {
+      let size: string;
+      if (product.category === "Shoes") {
+        size = String(Math.floor(Math.random() * 4) + 42); // 42-45
+      } else if (product.category === "Clothes") {
+        size = Math.random() < 0.5 ? "L" : "XL";
+      } else {
+        size = "One Size";
+      }
+
       await prisma.productStock.create({
         data: {
           product_id: product._id.toString(),
+          shop_id: product.shop_id,
           color: "black",
-          size: "M",
-          stock: Math.floor(Math.random() * 20) + 1,
+          size,
+          stock: Math.floor(Math.random() * 3) + 1,
         },
       });
     }
