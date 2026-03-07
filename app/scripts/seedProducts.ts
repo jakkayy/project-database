@@ -37,135 +37,147 @@ async function seed() {
 
     const products = await Product.insertMany([
       {
-        name: "Nike Air Zoom Alpha",
-        slug: "air-zoom-alpha",
-        category: "Running",
-        basePrice: 4900,
+        name: "Vintage Michael Jackson T-Shirt",
+        slug: "Vintage Michael Jackson T-Shirt",
+        category: "Clothes",
+        basePrice: 1800,
         images: [
-          "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto,u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/477abbf8-b37a-4fe6-b516-08e294a8487a/AIR+ZOOM+ALPHAFLY+NEXT%25+3.png",
+          "https://di2ponv0v5otw.cloudfront.net/posts/2024/03/23/65ff1e386c0504f4fb2a543c/m_wp_65ff1f11c5df6c1134f12582.webp",
         ],
-        tags: ["running", "nike"],
+        tags: ["Clothes", "Michael Jackson", "Vintage"],
+        shop_id: 1,
         rating: [4.5],
       },
       {
-        name: "Nike Street Flex Pro",
-        slug: "street-flex-pro",
-        category: "Lifestyle",
-        basePrice: 3900,
+        name: "เสื้อ liverpool มือสอง",
+        slug: "เสื้อ liverpool มือสอง",
+        category: "Clothes",
+        basePrice: 1300,
         images: [
-          "https://static.nike.com/a/images/t_web_pdp_535_v2/f_auto,u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/45b9bc22-9b41-472a-b742-cdd097f293c8/TIEMPO+STREETGATO+PRM.png",
+          "https://www.tradeinn.com/f/14211/142117501/adidas-liverpool-fc-25-26-goalkeeper-third-junior-short-sleeve-t-shirt.webp",
         ],
-        tags: ["casual", "nike"],
+        tags: ["Clothes", "liverpool", "football"],
+        shop_id: 1,
         rating: [4.2],
       },
       {
-        name: "Adidas Ultraboost Light",
-        slug: "ultraboost-light",
-        category: "Running",
-        basePrice: 6900,
+        name: "แจ้คเก็ต ny มือสอง",
+        slug: "แจ้คเก็ต ny มือสอง",
+        category: "Clothes",
+        basePrice: 2900,
         images: [
-          "https://media.arirunningstore.com/media/catalog/product/cache/6e478a31517304dced53ac4d3f3d5560/_/h/_hq6353_-_hq6351__01.jpg"
+          "https://down-th.img.susercontent.com/file/id-11134207-7rasg-m48aw2u20kh60a.webp"
         ],
-        tags: ["running", "adidas"],
+        tags: ["Clothes", "ny", "jacket"],
+        shop_id: 2,
         rating: [4.8],
       },
       {
-        name: "New Balance 574 Core",
-        slug: "574-core",
-        category: "Lifestyle",
-        basePrice: 3200,
+        name: "Uniqlo Shirt Light Blue Denim",
+        slug: "Uniqlo Shirt Light Blue Denim",
+        category: "Clothes",
+        basePrice: 400,
         images: [
-          "https://www.footlocker.co.th/media/catalog/product/9/9/9991-NEWWL574EVWBDVY08H-1.jpg",
+          "https://i.ebayimg.com/images/g/Z~kAAOSw8odnf5wo/s-l1600.webp",
         ],
-        tags: ["casual", "newbalance"],
+        tags: ["Clothes", "Uniqlo", "Denim Shirt"],
+        shop_id: 2,
         rating: [4.4],
       },
       {
-        name: "Converse Chuck Taylor All Star",
-        slug: "chuck-taylor-all-star",
-        category: "Lifestyle",
+        name: "รองเท้าvintage มือสอง",
+        slug: "รองเท้าvintage มือสอง",
+        category: "Shoes",
         basePrice: 2500,
         images: [
-          "https://www.converse.co.th/media/catalog/product/cache/8fcecb462959d400cda3532b9c3dc9f0/5/7/570256c_a_08x1-1.png",
+          "https://down-th.img.susercontent.com/file/th-11134207-7r98r-lwu2fipopbrjf3",
         ],
-        tags: ["casual", "converse"],
+        tags: ["shoes", "vintage", "sneakers"],
+        shop_id: 1,
         rating: [4.6],
       },
       {
-        name: "Asics Gel-Kayano 30",
-        slug: "gel-kayano-30",
-        category: "Running",
-        basePrice: 6500,
+        name: "UNIQLO SHORT SLEEVE SHIRT",
+        slug: "uniqlo-short-sleeve-shirt",
+        category: "Clothes",
+        basePrice: 500,
         images: [
-          "https://run2paradise.com/wp-content/uploads/2024/01/KAYANO-30-ช-ด.jpg",
+          "https://media.karousell.com/media/photos/products/2023/5/22/uniqlo_short_sleeve_shirt_1684748311_fdac1cb7_progressive.jpg",
         ],
-        tags: ["running", "asics"],
+        tags: ["Clothes", "Uniqlo", "Short Sleeve Shirt"],
+        shop_id: 1,
         rating: [4.7],
       },
       {
-        name: "Puma Clyde All-Pro",
-        slug: "clyde-all-pro",
-        category: "Basketball",
-        basePrice: 4800,
+        name: "หนังสือเรียนมือสอง",
+        slug: "หนังสือเรียนมือสอง",
+        category: "Others",
+        basePrice: 200,
         images: [
-          "https://www.nicekicks.com/files/2020/11/puma-clyde-all-pro-release-information-2.jpg",
+          "https://down-th.img.susercontent.com/file/th-11134207-7r991-loanpdb9jzzk93@resize_w900_nl.webp",
         ],
         tags: ["basketball", "puma"],
+        shop_id: 2,
         rating: [4.3],
       },
       {
-        name: "Reebok Metcon 9",
-        slug: "metcon-9",
-        category: "Training",
+        name: "Bellaria Hand Purse for Women",
+        slug: "bellaria-hand-purse-for-women",
+        category: "Accessories",
         basePrice: 5200,
         images: [
-          "https://vsathletics.com/store/images/P/AURORA_DZ2617-005_PHSRH000-2000.jpg",
+          "https://theholistik.com/cdn/shop/files/Bellaria-womens-purse-brown-1.webp?v=1724437313&width=823",
         ],
-        tags: ["training", "gym"],
+        tags: ["Accessories", "Bellaria", "Hand Purse"],
+        shop_id: 1,
         rating: [4.5],
       },
       {
         name: "New Balance FuelCell Rebel v3",
         slug: "fuelcell-rebel-v3",
-        category: "Running",
-        basePrice: 4700,
+        category: "Shoes",
+        basePrice: 1700,
         images: [
           "https://run2paradise.com/wp-content/uploads/2024/01/5-2.jpg",
         ],
         tags: ["running", "newbalance"],
+        shop_id: 2,
         rating: [4.4],
       },
       {
         name: "Vans Old Skool Classic",
         slug: "old-skool-classic",
-        category: "Lifestyle",
-        basePrice: 2900,
+        category: "Shoes",
+        basePrice: 900,
         images: [
           "https://www.footlocker.co.th/media/catalog/product/9/9/9991-VAS000D3HY2800509H-2.jpg",
         ],
         tags: ["casual", "vans"],
+        shop_id: 2,
         rating: [4.5],
       },
       {
         name: "Under Armour HOVR Phantom 3",
         slug: "hovr-phantom-3",
-        category: "Running",
-        basePrice: 5400,
+        category: "Shoes",
+        basePrice: 3400,
         images: [
           "https://underarmour.scene7.com/is/image/Underarmour/3025517-001_DEFAULT?rp=standard-30pad|pdpZoomDesktop&scl=0.50&fmt=jpg&qlt=85&resMode=sharp2&cache=on,on&bgc=f0f0f0&wid=1836&hei=1950&size=850,850",
         ],
         tags: ["running", "underarmour"],
+        shop_id: 1,
         rating: [4.2],
       },
       {
         name: "Nike Zoom Freak 5",
         slug: "zoom-freak-5",
-        category: "Basketball",
-        basePrice: 5300,
+        category: "Shoes",
+        basePrice: 3300,
         images: [
           "https://image.goxip.com/_ZmyqjEnfiCwDeXHkskCS6KgjDg=/fit-in/500x500/filters:format(jpg):quality(80):fill(white)/https:%2F%2Fimages.stockx.com%2Fimages%2FNike-Zoom-Freak-5-Emerging-Powers-GS.jpg",
         ],
         tags: ["basketball", "nike"],
+        shop_id: 2,
         rating: [4.6],
       },
     ]);
@@ -177,21 +189,14 @@ async function seed() {
     // =========================
 
     for (const product of products) {
-      const sizes = ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45"];
-      const colors = ["red", "black", "white"]
-
-      for (const size of sizes) {
-        for (const color of colors) {
-          await prisma.productStock.create({
-            data: {
-              product_id: product._id.toString(),
-              color: color,
-              size: size,
-              stock: Math.floor(Math.random() * 20) + 1,
-            },
-          });
-        }
-      }
+      await prisma.productStock.create({
+        data: {
+          product_id: product._id.toString(),
+          color: "black",
+          size: "M",
+          stock: Math.floor(Math.random() * 20) + 1,
+        },
+      });
     }
 
     console.log("ProductStock inserted in MySQL ✅");
