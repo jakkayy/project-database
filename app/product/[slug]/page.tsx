@@ -138,7 +138,7 @@ export default function ProductDetailPage() {
 
         setIsFav(false);
         setFavItemId(null);
-        toast("Removed from wishlist", {
+        toast.error("Removed from wishlist", {
           description: product.name,
         });
         return;
@@ -205,8 +205,14 @@ export default function ProductDetailPage() {
 
     try {
       const response = await deleteReview({ productId: product._id, reviewId });
-      toast.success("Review deleted", { description: "Your review has been removed" });
-      if (response.product) setProduct(response.product);
+      toast.error("Review deleted", { description: "Your review has been removed" });
+      if (response.product) {
+        setProduct(prev => prev ? {
+          ...prev,
+          reviews: response.product.reviews,
+          averageRating: response.product.averageRating
+        } : null);
+      }
     } catch (error: unknown) {
       console.error(error);
       const status = (error as { status?: number })?.status;
@@ -236,7 +242,13 @@ export default function ProductDetailPage() {
       toast.success("Review submitted", { description: "Thank you for your feedback" });
       setRating(0);
       setComment("");
-      if (response.product) setProduct(response.product);
+      if (response.product) {
+        setProduct(prev => prev ? {
+          ...prev,
+          reviews: response.product.reviews,
+          averageRating: response.product.averageRating
+        } : null);
+      }
     } catch (error: unknown) {
       console.error(error);
       const message = (error as { message?: string })?.message;
@@ -463,15 +475,15 @@ export default function ProductDetailPage() {
             <button 
               onClick={handleAddToFav}
               disabled={favLoading}
-              className={`mt-3 flex w-full items-center justify-center gap-2 border py-4 text-xs font-black uppercase tracking-widest rounded-xl transition-colors disabled:cursor-not-allowed disabled:opacity-70 ${
-                isFav
-                  ? "border-green-500 bg-green-500 text-white hover:opacity-90"
-                  : "border-gray-200 text-gray-600 hover:border-green-500 hover:text-green-500"
+              className={`mt-3 flex w-full items-center justify-center gap-2 border py-4 text-xs font-black uppercase tracking-widest rounded-xl transition-colors ${
+                  isFav
+                    ? "border-red-500 bg-red-50 text-red-600 hover:border-red-600 hover:bg-red-100" 
+                    : "border-gray-200 text-gray-600 hover:border-green-500 hover:text-green-500"
               }`}>
-              {isFav ? "In Wishlist" : "Add to Wishlist"}
+              {isFav ? "Remove from Wishlist" : "Add to Wishlist"}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                fill={isFav ? "currentColor" : "none"}
+                fill={isFav ? "#ef4444" : "none"}
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
