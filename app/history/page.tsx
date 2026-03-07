@@ -151,57 +151,6 @@ export default function HistoryPage() {
           </div>
         )}
       </div>
-
-      {/* Footer */}
-      <footer className="border-t border-gray-200 bg-white px-10 py-10">
-        <div className="mx-auto grid max-w-7xl grid-cols-4 gap-8">
-          <div>
-            <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-gray-900">
-              Resources
-            </h3>
-            <ul className="space-y-2 text-xs text-gray-400">
-              <li><Link href="#" className="transition-colors hover:text-gray-900">Find a Store</Link></li>
-              <li><Link href="#" className="transition-colors hover:text-gray-900">Become a Member</Link></li>
-              <li><Link href="#" className="transition-colors hover:text-gray-900">Student Discounts</Link></li>
-              <li><Link href="#" className="transition-colors hover:text-gray-900">Send Feedback</Link></li>
-              <li><Link href="#" className="transition-colors hover:text-gray-900">Promo Codes</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-gray-900">
-              Help
-            </h3>
-            <ul className="space-y-2 text-xs text-gray-400">
-              <li><Link href="#" className="transition-colors hover:text-gray-900">Get Help</Link></li>
-              <li><Link href="#" className="transition-colors hover:text-gray-900">Order Status</Link></li>
-              <li><Link href="#" className="transition-colors hover:text-gray-900">Shipping</Link></li>
-              <li><Link href="#" className="transition-colors hover:text-gray-900">Returns</Link></li>
-              <li><Link href="#" className="transition-colors hover:text-gray-900">Payment Options</Link></li>
-              <li><Link href="#" className="transition-colors hover:text-gray-900">Contact Us</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-gray-900">
-              Company
-            </h3>
-            <ul className="space-y-2 text-xs text-gray-400">
-              <li><Link href="#" className="transition-colors hover:text-gray-900">About Re-Store</Link></li>
-              <li><Link href="#" className="transition-colors hover:text-gray-900">News</Link></li>
-              <li><Link href="#" className="transition-colors hover:text-gray-900">Careers</Link></li>
-              <li><Link href="#" className="transition-colors hover:text-gray-900">Investors</Link></li>
-              <li><Link href="#" className="transition-colors hover:text-gray-900">Sustainability</Link></li>
-            </ul>
-          </div>
-          <div className="flex justify-end">
-            <div className="flex items-start gap-2 text-xs text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
-              </svg>
-              <span>Thailand</span>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
