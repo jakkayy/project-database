@@ -15,6 +15,20 @@ CREATE TABLE `User` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `Shop` (
+    `shop_id` INTEGER NOT NULL AUTO_INCREMENT,
+    `user_id` INTEGER NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `description` TEXT NULL,
+    `image` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `Shop_user_id_key`(`user_id`),
+    PRIMARY KEY (`shop_id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Order` (
     `order_id` INTEGER NOT NULL AUTO_INCREMENT,
     `user_id` INTEGER NOT NULL,
@@ -134,6 +148,7 @@ CREATE TABLE `FavItem` (
 CREATE TABLE `ProductStock` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `product_id` VARCHAR(24) NOT NULL,
+    `shop_id` INTEGER NULL,
     `color` VARCHAR(191) NOT NULL,
     `size` VARCHAR(191) NOT NULL,
     `stock` INTEGER NOT NULL DEFAULT 0,
@@ -141,9 +156,13 @@ CREATE TABLE `ProductStock` (
     `updatedAt` DATETIME(3) NOT NULL,
 
     INDEX `ProductStock_product_id_idx`(`product_id`),
+    INDEX `ProductStock_shop_id_idx`(`shop_id`),
     UNIQUE INDEX `ProductStock_product_id_color_size_key`(`product_id`, `color`, `size`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `Shop` ADD CONSTRAINT `Shop_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Order` ADD CONSTRAINT `Order_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -174,3 +193,6 @@ ALTER TABLE `Fav` ADD CONSTRAINT `Fav_user_id_fkey` FOREIGN KEY (`user_id`) REFE
 
 -- AddForeignKey
 ALTER TABLE `FavItem` ADD CONSTRAINT `FavItem_fav_id_fkey` FOREIGN KEY (`fav_id`) REFERENCES `Fav`(`fav_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ProductStock` ADD CONSTRAINT `ProductStock_shop_id_fkey` FOREIGN KEY (`shop_id`) REFERENCES `Shop`(`shop_id`) ON DELETE SET NULL ON UPDATE CASCADE;
