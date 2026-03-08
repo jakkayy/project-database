@@ -55,21 +55,23 @@ bunx prisma db push
 
 ---
 
-## 5️⃣ Seed ข้อมูลสินค้า (MongoDB)
-
-```bash
-bun run app/scripts/seedProducts.ts
-```
-
----
-
-## 6️⃣ รัน Next.js
+## 5️⃣ รัน Next.js
 
 ```bash
 bun dev
 ```
 
 ---
+
+## 6️⃣ Seed ข้อมูลสินค้า
+ก่อนจะรัน seed ให้ register ไอดีของผู้ขายมาก่อน 2 ไอดี
+```bash
+bun run app/scripts/seedProducts.ts
+```
+
+---
+
+
 
 # 🌐 URL สำหรับเข้าใช้งาน
 
