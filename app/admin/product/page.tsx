@@ -53,7 +53,7 @@ export default function AdminProductPage() {
       <AdminNav />
       <main className="p-8 mx-auto max-w-7xl">
         <div className="flex justify-between mb-8">
-          <h1 className="text-3xl font-black italic uppercase tracking-tighter text-gray-900">Stock</h1>
+          <h1 className="text-3xl font-black uppercase tracking-tighter text-gray-900">Stock</h1>
           <button onClick={() => setIsModalOpen(true)} className="px-6 py-2 font-bold text-white bg-green-500 rounded-lg shadow-sm hover:bg-green-600 transition-colors">
             ADD PRODUCT
           </button>

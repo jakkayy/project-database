@@ -77,7 +77,12 @@ export default function CheckoutPage() {
 
         if (data.code === "INSUFFICIENT_STOCK") {
           toast.error("Out of stock", {
-            description: `${data.product_name} · Size ${data.size} · ${data.color} — only ${data.in_stock} left`,
+            description: (
+              <>
+                {data.product_name} / Size {data.size} / {data.color}
+                <div>— only {data.in_stock} left</div>
+              </>
+            ),
           });
           return;
         }

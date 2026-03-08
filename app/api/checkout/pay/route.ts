@@ -17,7 +17,15 @@ export async function POST(req: Request) {
 
     const { address_id } = await req.json();
 
+    // fetch product names for error messages
     await connectMongo();
+    const productIds = [...new Set((await prisma.cart.findFirst({
+      where: { user_id: userAuth.user_id },
+      include: { items: true }
+    }))?.items.map(item => item.product_id) || [])];
+
+    const products = await Product.find({ _id: { $in: productIds } });
+    const productMap = new Map(products.map(p => [p._id.toString(), p.name]));
 
     // start transaction
     const orderId = await prisma.$transaction(async (tx) => {
@@ -61,7 +69,6 @@ export async function POST(req: Request) {
             },
       });
         if (result.count === 0) {
-          const product = await Product.findById(item.product_id);
           const stockRow = await tx.productStock.findFirst({
             where: {
               product_id: item.product_id,
@@ -71,7 +78,7 @@ export async function POST(req: Request) {
           });
           throw {
               code: "INSUFFICIENT_STOCK",
-              product_name: product?.name ?? "Unknown Product",
+              product_name: productMap.get(item.product_id) || `Product ${item.product_id}`,
               size: item.size,
               color: item.color,
               in_stock: stockRow?.stock ?? 0,
@@ -80,7 +87,29 @@ export async function POST(req: Request) {
         }
       }
 
-      // update balances
+      // Group cart items by seller and calculate amounts per seller
+      const sellerAmounts = new Map<number, Prisma.Decimal>();
+      
+      for (const item of cart.items) {
+        // Get the product stock to find the shop_id
+        const productStock = await tx.productStock.findFirst({
+          where: {
+            product_id: item.product_id,
+            color: item.color,
+            size: item.size,
+          },
+        });
+        
+        if (!productStock?.shop_id) {
+          throw new Error(`${productMap.get(item.product_id) || `Product ${item.product_id}`} has no seller assigned`);
+        }
+        
+        const itemTotal = item.price.mul(item.quantity);
+        const currentAmount = sellerAmounts.get(productStock.shop_id) || new Prisma.Decimal(0);
+        sellerAmounts.set(productStock.shop_id, currentAmount.plus(itemTotal));
+      }
+
+      // Update buyer balance (decrement total)
       const buyerUpdateResult = await tx.user.updateMany({
         where: { 
           user_id: buyer.user_id,
@@ -98,12 +127,25 @@ export async function POST(req: Request) {
           message: "Balance is not enough",
         };
       }
-      await tx.user.update({
-        where: { user_id: admin.user_id },
-        data: {
-            balance: { increment: total },
-        },
-      });
+
+      // Update each seller's balance (increment their share)
+      for (const [shop_id, amount] of sellerAmounts) {
+        const shop = await tx.shop.findUnique({
+          where: { shop_id },
+          select: { user_id: true }
+        });
+        
+        if (!shop) {
+          throw new Error(`Shop ${shop_id} not found`);
+        }
+
+        await tx.user.update({
+          where: { user_id: shop.user_id },
+          data: {
+            balance: { increment: amount },
+          },
+        });
+      }
   
       // insert new transactions
       await tx.transaction.create({
@@ -113,13 +155,24 @@ export async function POST(req: Request) {
             type: "TRANSFER_OUT",
         },
       });
-      await tx.transaction.create({
-        data: {
-            user_id: admin.user_id,
-            amount: total,
-            type: "TRANSFER_IN",
-        },
-      });
+      
+      // Create transaction records for each seller
+      for (const [shop_id, amount] of sellerAmounts) {
+        const shop = await tx.shop.findUnique({
+          where: { shop_id },
+          select: { user_id: true }
+        });
+        
+        if (shop) {
+          await tx.transaction.create({
+            data: {
+              user_id: shop.user_id,
+              amount: amount,
+              type: "TRANSFER_IN",
+            },
+          });
+        }
+      }
 
       
       // insert new order
