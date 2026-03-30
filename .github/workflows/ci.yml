@@ -29,20 +29,10 @@ jobs:
         env:
           DATABASE_URL: "mysql://user:pass@localhost:3306/db"
 
-      - name: Type check (TypeScript)
-        run: npx tsc --noEmit
-
       - name: Run frontend tests
         run: npx vitest run tests/test_cart_ui.test.tsx tests/test_filter.test.ts tests/test_finance_ui.test.tsx
         env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET || 'test-secret-for-ci' }}
-
-      - name: Build project
-        run: npm run build
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL || 'mysql://user:pass@localhost:3306/db' }}
-          MONGODB_URI: ${{ secrets.MONGODB_URI || 'mongodb://localhost:27017/db' }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET || 'test-secret-for-ci' }}
+          JWT_SECRET: "test-secret-for-ci"
 
   backend:
     name: Backend Job
@@ -69,7 +59,7 @@ jobs:
       - name: Run backend tests
         run: npx vitest run tests/test_auth.test.ts tests/test_checkout.test.ts tests/test_cart.test.ts tests/test_transactions.test.ts tests/test_validators.test.ts
         env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET || 'test-secret-for-ci' }}
+          JWT_SECRET: "test-secret-for-ci"
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4

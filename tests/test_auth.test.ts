@@ -9,7 +9,7 @@ beforeAll(() => {
   process.env.JWT_SECRET = SECRET;
 });
 
-function makeToken(payload: object, expiresIn: string | number = "1d") {
+function makeToken(payload: object, expiresIn = "1d") {
   return jwt.sign(payload, SECRET, { expiresIn });
 }
 
