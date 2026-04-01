@@ -15,22 +15,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-          cache: "npm"
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Generate Prisma client
-        run: npx prisma generate
+        run: bunx prisma generate
         env:
           DATABASE_URL: "mysql://user:pass@localhost:3306/db"
 
       - name: Run frontend tests
-        run: npx vitest run tests/test_cart_ui.test.tsx tests/test_filter.test.ts tests/test_finance_ui.test.tsx
+        run: bunx vitest run tests/test_cart_ui.test.tsx tests/test_filter.test.ts tests/test_finance_ui.test.tsx
         env:
           JWT_SECRET: "test-secret-for-ci"
 
@@ -42,22 +39,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-          cache: "npm"
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Generate Prisma client
-        run: npx prisma generate
+        run: bunx prisma generate
         env:
           DATABASE_URL: "mysql://user:pass@localhost:3306/db"
 
       - name: Run backend tests
-        run: npx vitest run tests/test_auth.test.ts tests/test_checkout.test.ts tests/test_cart.test.ts tests/test_transactions.test.ts tests/test_validators.test.ts
+        run: bunx vitest run tests/test_auth.test.ts tests/test_checkout.test.ts tests/test_cart.test.ts tests/test_transactions.test.ts tests/test_validators.test.ts
         env:
           JWT_SECRET: "test-secret-for-ci"
 
