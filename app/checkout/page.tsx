@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import AddressSelector from "@/app/components/AddressSelector";
 import CheckoutOrderSummary from "@/app/components/CheckoutOrderSummary";
@@ -17,7 +17,7 @@ type CheckoutItem = {
   quantity: number;
 };
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams();
   const [addresses, setAddresses] = useState([]);
   const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
@@ -108,51 +108,56 @@ export default function CheckoutPage() {
   const isReady = selectedId !== undefined && total !== 0 && afterBalance >= 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="p-10">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="lg:col-span-7">
+          <AddressSelector
+            addresses={addresses}
+            selectedAddressId={selectedId}
+            onAddressSelect={(id) => setSelectedId(id)}
+            refreshAddresses={fetchAddresses}
+          />
+        </div>
 
-  <ClientNavbar />
+        <div className="lg:col-span-5">
+          <CheckoutOrderSummary
+            subtotal={total}
+            total={total}
+            items={items}
+            selectedAddress={selectedAddress}
+            currentBalance={currentBalance}
+          />
 
-  <div className="p-10">
-    <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
-      <div className="lg:col-span-7">
-        <AddressSelector 
-          addresses={addresses} 
-          selectedAddressId={selectedId}
-          onAddressSelect={(id) => setSelectedId(id)}
-          refreshAddresses={fetchAddresses}
-        />
-      </div>
-
-      <div className="lg:col-span-5">
-        <CheckoutOrderSummary 
-          subtotal={total} 
-          total={total}
-          items={items} 
-          selectedAddress={selectedAddress}
-          currentBalance={currentBalance}
-        />
-
-        <button
-          onClick={handlePayment}
-          disabled={!isReady}
-          className={`w-full py-4 mt-6 font-black uppercase text-xs tracking-widest rounded-xl transition-all ${
-            isReady
-              ? "bg-green-500 text-white hover:opacity-90"
-              : "bg-gray-100 text-gray-400 cursor-not-allowed"
-          }`}
-        >
-          {total === 0
-            ? "No items in cart"
-            : afterBalance < 0
-            ? "Insufficient balance"
-            : !selectedId
-            ? "Select a delivery address"
-            : "Confirm Payment"}
-        </button>
+          <button
+            onClick={handlePayment}
+            disabled={!isReady}
+            className={`w-full py-4 mt-6 font-black uppercase text-xs tracking-widest rounded-xl transition-all ${
+              isReady
+                ? "bg-green-500 text-white hover:opacity-90"
+                : "bg-gray-100 text-gray-400 cursor-not-allowed"
+            }`}
+          >
+            {total === 0
+              ? "No items in cart"
+              : afterBalance < 0
+              ? "Insufficient balance"
+              : !selectedId
+              ? "Select a delivery address"
+              : "Confirm Payment"}
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  );
+}
 
-</div>
+export default function CheckoutPage() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <ClientNavbar />
+      <Suspense fallback={<div className="p-10">Loading...</div>}>
+        <CheckoutContent />
+      </Suspense>
+    </div>
   );
 }
