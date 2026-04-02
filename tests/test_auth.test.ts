@@ -4,7 +4,7 @@ import { requireAuth } from "../lib/auth";
 import { HttpError } from "../lib/error";
 
 const SECRET = "test-secret";
-
+// testing github action
 beforeAll(() => {
   process.env.JWT_SECRET = SECRET;
 });
